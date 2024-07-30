@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto;
 
-import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 
 
