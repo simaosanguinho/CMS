@@ -1,33 +1,29 @@
-package pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain;
+package pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto;
 
 import jakarta.persistence.*;
-import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 
-public class Candidate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CandidateDto {
     private Long id;
-
     private String name;
-
     private String email;
-
     private String istID;
 
-    public Candidate() {
+    public CandidateDto() {
     }
 
-    public Candidate(String name, String email, String istID) {
+    public CandidateDto(String name, String email, String istID) {
         this.name = name;
         this.email = email;
         this.istID = istID;
     }
 
-    public Candidate(CandidateDto candidateDto) {
-        this.name = candidateDto.getName();
-        this.email = candidateDto.getEmail();
-        this.istID = candidateDto.getIstID();
+    public CandidateDto(Candidate candidate) {
+        this.id = candidate.getId();
+        this.name = candidate.getName();
+        this.email = candidate.getEmail();
+        this.istID = candidate.getIstID();
     }
 
     public Long getId() {
