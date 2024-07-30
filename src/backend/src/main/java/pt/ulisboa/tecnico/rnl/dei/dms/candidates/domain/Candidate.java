@@ -58,4 +58,14 @@ public class Candidate {
         this.istID = istID;
     }
 
+    @Override
+    public String toString() {
+        return "Candidate{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", istID='" + istID + '\'' +
+                '}';
+    }
+
 }
