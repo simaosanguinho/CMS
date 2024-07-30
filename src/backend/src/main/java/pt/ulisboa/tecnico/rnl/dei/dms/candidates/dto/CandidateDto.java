@@ -54,4 +54,13 @@ public class CandidateDto {
         this.istID = istID;
     }
 
+    @Override
+    public String toString() {
+        return "CandidateDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", istID='" + istID + '\'' +
+                '}';
+    }
 }
