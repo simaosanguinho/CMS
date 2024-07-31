@@ -38,6 +38,7 @@ export default class RemoteService {
   // ------------------- Candidates -------------------
   static async getCandidates(): Promise<CandidateDto[]> {
     return httpClient.get('/candidates/all').then((response) => {
+      console.log("GETTING CANDIDATES")
       return response.data.map((candidate: any) => {
         return new CandidateDto(candidate)
       })
@@ -46,6 +47,7 @@ export default class RemoteService {
 
   static async createCandidate(candidate: CandidateDto): Promise<CandidateDto> {
     return httpClient.post('/candidates/create', candidate).then((response) => {
+      console.log(response.data)
       return new CandidateDto(response.data)
     })
   }

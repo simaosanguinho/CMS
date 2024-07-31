@@ -61,6 +61,8 @@
   const saveCandidate = async () => {
 
     await RemoteService.createCandidate(newCandidate.value)
+
+    console.log(newCandidate.value)
     newCandidate.value = {
       name: '',
       email: '',
