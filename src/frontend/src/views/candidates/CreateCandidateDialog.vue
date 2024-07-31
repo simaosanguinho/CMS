@@ -15,9 +15,16 @@
           <v-card-text>
             <v-text-field label="Nome*" required v-model="newCandidate.name"></v-text-field>
   
-            <v-text-field label="Email*" required v-model="newCandidate.email"></v-text-field>
-
-            <v-text-field label="IstID*" required v-model="newCandidate.istID"></v-text-field>
+            <v-text-field 
+              label="Email*" 
+              required 
+              v-model="newCandidate.email" 
+              type="email"
+              :error-messages="emailError"
+              @input="validateEmail"
+            ></v-text-field>
+  
+            <v-text-field label="IstID*" required v-model="newCandidate.istID" type="number"></v-text-field>
           </v-card-text>
   
           <v-divider></v-divider>
@@ -31,10 +38,7 @@
               color="primary"
               text="Save"
               variant="tonal"
-              @click="
-                dialog = false;
-                saveCandidate()
-              "
+              @click="handleSave"
             ></v-btn>
           </v-card-actions>
         </v-card>
@@ -51,17 +55,34 @@
   
   const emit = defineEmits(['candidate-created'])
   
-
   const newCandidate = ref<CandidateDto>({
     name: '',
     email: '',
     istID: ''
   })
   
+  const emailError = ref<string>('')
+  
+  const validateEmail = () => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (newCandidate.value.email && !emailPattern.test(newCandidate.value.email)) {
+      emailError.value = 'Invalid email address'
+    } else {
+      emailError.value = ''
+    }
+  }
+  
+  const handleSave = async () => {
+    validateEmail()
+    if (!emailError.value) {
+      await saveCandidate()
+      dialog.value = false
+    }
+  }
+  
   const saveCandidate = async () => {
-
     await RemoteService.createCandidate(newCandidate.value)
-
+  
     console.log(newCandidate.value)
     newCandidate.value = {
       name: '',
