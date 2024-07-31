@@ -3,6 +3,8 @@ package pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain;
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 
+@Entity
+@Table(name = "candidates")
 public class Candidate {
 
     @Id
