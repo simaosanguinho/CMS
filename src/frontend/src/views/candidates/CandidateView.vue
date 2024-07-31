@@ -52,6 +52,7 @@
     { title: 'Name', value: 'name', key: 'name ' },
     { title: 'Email', value: 'email', key: 'email' },
     { title: 'Ist ID', value: 'istID', key: 'istID' },
+    { title: 'Actions', value: 'actions', key: 'actions' },
 
   ]
   
