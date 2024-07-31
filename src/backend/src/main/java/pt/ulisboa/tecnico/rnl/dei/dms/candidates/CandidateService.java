@@ -20,18 +20,22 @@ public class CandidateService {
 
     
     public CandidateDto createCandidate(CandidateDto candidateDto) {
-        Candidate candidate = new Candidate(candidateDto);
 
-        if(candidate.getName() == null || candidate.getName().isEmpty()) {
+        if(candidateDto.getName() == null || candidateDto.getName().isEmpty()) {
             throw new CMSException(CANDIDATE_NAME_CANNOT_BE_EMPTY);
         }
 
-        // check if email is already in use
-        List<Candidate> candidates = candidateRepository.findByEmail(candidate.getEmail());
-        if (candidates.size() > 0) {
-            throw new CMSException(EMAIL_ALREADY_EXISTS);
+        if(candidateDto.getEmail() == null || candidateDto.getEmail().isEmpty()) {
+            throw new CMSException(CANDIDATE_EMAIL_CANNOT_BE_EMPTY);
         }
 
+        // check if email is already in use
+        List<Candidate> candidates = candidateRepository.findByEmail(candidateDto.getEmail());
+        if (candidates.size() > 0) {
+            throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
+        }
+        
+        Candidate candidate = new Candidate(candidateDto);
         candidateRepository.save(candidate);
 
         return new CandidateDto(candidate);
@@ -47,7 +51,7 @@ public class CandidateService {
         // check if email is already in use
         List<Candidate> candidates = candidateRepository.findByEmail(candidate.getEmail());
         if (candidates.size() > 0) {
-            throw new CMSException(EMAIL_ALREADY_EXISTS);
+            throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
         }
 
         candidate.setName(candidateDto.getName());

@@ -83,9 +83,7 @@ public class Candidate {
         String emailRegex = "^(?=.{1,256}$)(?=.{1,64}@.{1,255}$)(?=.{1,64}@)([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+.[a-zA-Z]{1,})$";
 
         Pattern pat = Pattern.compile(emailRegex);
-        if (email == null) {
-            throw new IllegalArgumentException("Email cannot be null");
-        }
+        
         if(!pat.matcher(email).matches()) {
             System.err.println("Email is invalid");
             throw new IllegalArgumentException("Email is invalid");
