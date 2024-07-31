@@ -45,8 +45,6 @@ export default class RemoteService {
     })
   }
 
-
-
   static async createCandidate(candidate: CandidateDto): Promise<CandidateDto> {
     return httpClient.post('/candidates/create', candidate).then((response) => {
       return new CandidateDto(response.data)
@@ -66,4 +64,22 @@ export default class RemoteService {
     return httpClient.delete(`/candidates/delete/${candidate.id}`)
   }
   
+
+  // ------------------- Grants -------------------
+
+  static async createGrant(candidate: CandidateDto): Promise<CandidateDto> {
+    return httpClient.post('/grants/create', candidate).then((response) => {
+      return new CandidateDto(response.data)
+    })
+  }
+
+  static async updateGrant(candidate: CandidateDto): Promise<CandidateDto> {
+    return httpClient.put('/grants/update', candidate).then((response) => {
+      return new CandidateDto(response.data)
+    })
+  }
+
+  static async deleteGrant(candidate: CandidateDto): Promise<void> {
+    return httpClient.delete(`/grants/delete/${candidate.id}`)
+  }
 }
