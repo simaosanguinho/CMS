@@ -29,6 +29,10 @@ public class CandidateService {
             throw new CMSException(CANDIDATE_EMAIL_CANNOT_BE_EMPTY);
         }
 
+        if(candidateDto.getIstID() == null || candidateDto.getIstID().isEmpty()) {
+            throw new CMSException(CANDIDATE_IST_ID_CANNOT_BE_EMPTY);
+        }
+
         // check if email is already in use
         List<Candidate> candidates = candidateRepository.findByEmail(candidateDto.getEmail());
         if (candidates.size() > 0) {
@@ -47,6 +51,18 @@ public class CandidateService {
 
     public List<CandidateDto> updateCandidate(CandidateDto candidateDto) {
         Candidate candidate = candidateRepository.findById(candidateDto.getId()).get();
+
+        if(candidateDto.getName() == null || candidateDto.getName().isEmpty()) {
+            throw new CMSException(CANDIDATE_NAME_CANNOT_BE_EMPTY);
+        }
+
+        if(candidateDto.getEmail() == null || candidateDto.getEmail().isEmpty()) {
+            throw new CMSException(CANDIDATE_EMAIL_CANNOT_BE_EMPTY);
+        }
+
+        if(candidateDto.getIstID() == null || candidateDto.getIstID().isEmpty()) {
+            throw new CMSException(CANDIDATE_IST_ID_CANNOT_BE_EMPTY);
+        }
 
         // check if email is already in use
         List<Candidate> candidates = candidateRepository.findByEmail(candidate.getEmail());
