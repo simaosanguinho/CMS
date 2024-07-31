@@ -42,13 +42,19 @@ export default class RemoteService {
       return response.data.map((candidate: any) => {
         return new CandidateDto(candidate)
       })
+    }).catch((error) => {
+      console.log(error)
     })
   }
 
+
+
   static async createCandidate(candidate: CandidateDto): Promise<CandidateDto> {
     return httpClient.post('/candidates/create', candidate).then((response) => {
-      console.log(response.data)
       return new CandidateDto(response.data)
+    }).catch((error) => {
+      console.log(error)
+      throw error
     })
   }
 

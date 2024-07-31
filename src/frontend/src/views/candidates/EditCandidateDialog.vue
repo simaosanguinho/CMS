@@ -59,10 +59,21 @@
   }
   
   const saveCandidate = async () => {
-    if (localCandidate.value) {
-      await RemoteService.updateCandidate(localCandidate.value)
-      emit('candidate-updated')
+    try{
+        await RemoteService.createCandidate(localCandidate.value)
     }
+    catch (error) {
+      console.log(error)
+    }
+
+  
+    console.log(localCandidate.value)
+    localCandidate.value = {
+      name: '',
+      email: '',
+      istID: ''
+    }
+    emit('candidate-created')
   }
   
   const closeDialog = () => {

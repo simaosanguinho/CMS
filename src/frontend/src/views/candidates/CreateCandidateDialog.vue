@@ -48,11 +48,10 @@
   
   <script setup lang="ts">
   import { ref } from 'vue'
-  import type CandidateDto from '@/models/candidates/CandidateDto'
+  import type CandidateDto from '@/models/candidates/CandidateDto'  
   import RemoteService from '@/services/RemoteService'
   
   const dialog = ref(false)
-  
   const emit = defineEmits(['candidate-created'])
   
   const newCandidate = ref<CandidateDto>({
@@ -81,7 +80,13 @@
   }
   
   const saveCandidate = async () => {
-    await RemoteService.createCandidate(newCandidate.value)
+    try{
+        await RemoteService.createCandidate(newCandidate.value)
+    }
+    catch (error) {
+      console.log(error)
+    }
+
   
     console.log(newCandidate.value)
     newCandidate.value = {
