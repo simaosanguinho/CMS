@@ -22,6 +22,10 @@ public class CandidateService {
     public CandidateDto createCandidate(CandidateDto candidateDto) {
         Candidate candidate = new Candidate(candidateDto);
 
+        if(candidate.getName() == null || candidate.getName().isEmpty()) {
+            throw new CMSException(CANDIDATE_NAME_CANNOT_BE_EMPTY);
+        }
+
         // check if email is already in use
         List<Candidate> candidates = candidateRepository.findByEmail(candidate.getEmail());
         if (candidates.size() > 0) {
