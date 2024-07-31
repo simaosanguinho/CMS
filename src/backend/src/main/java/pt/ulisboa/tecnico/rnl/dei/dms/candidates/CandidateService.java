@@ -65,8 +65,10 @@ public class CandidateService {
         }
 
         // check if email is already in use
-        List<Candidate> candidates = candidateRepository.findByEmail(candidate.getEmail());
-        if (candidates.size() > 0) {
+        List<Candidate> candidates = candidateRepository.findByEmail(candidateDto.getEmail());
+        System.out.println(candidates);
+        if (candidates.size() > 0 && !candidates.get(0).getId().equals(candidateDto.getId())) {
+            System.out.println(candidates);
             throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
         }
 
