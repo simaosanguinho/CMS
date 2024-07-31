@@ -52,6 +52,10 @@ public class Candidate {
         return istID;
     }
 
+    public Set<Grant> getGrants() {
+        return grants;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

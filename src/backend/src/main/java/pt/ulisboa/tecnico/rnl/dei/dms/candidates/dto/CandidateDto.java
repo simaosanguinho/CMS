@@ -1,21 +1,19 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto;
 
-import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
+import java.util.Set;
 
+import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
+import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
+import java.util.stream.Collectors;
 
 public class CandidateDto {
     private Long id;
     private String name;
     private String email;
     private String istID;
+    private Set <GrantDto> grantDto;
 
     public CandidateDto() {
-    }
-
-    public CandidateDto(String name, String email, String istID) {
-        this.name = name;
-        this.email = email;
-        this.istID = istID;
     }
 
     public CandidateDto(Candidate candidate) {
@@ -23,6 +21,19 @@ public class CandidateDto {
         this.name = candidate.getName();
         this.email = candidate.getEmail();
         this.istID = candidate.getIstID();
+    }
+
+    public CandidateDto(Candidate candidate, boolean deepCopyGrants) {
+        this.id = candidate.getId();
+        this.name = candidate.getName();
+        this.email = candidate.getEmail();
+        this.istID = candidate.getIstID();
+        
+        if(deepCopyGrants) {
+            this.grantDto = candidate.getGrants().stream()
+                                .map(grant -> new GrantDto(grant))
+                                .collect(Collectors.toSet());
+        }
     }
 
     public Long getId() {
