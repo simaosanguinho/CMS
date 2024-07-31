@@ -80,7 +80,7 @@ public class Candidate {
 
     public static boolean isValidEmail(String email) {
 
-        String emailRegex = "^(?=.{1,256}$)(?=.{1,64}@.{1,255}$)(?=.{1,64}@)([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+.[a-zA-Z]{2,})$";
+        String emailRegex = "^(?=.{1,256}$)(?=.{1,64}@.{1,255}$)(?=.{1,64}@)([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+.[a-zA-Z]{1,})$";
 
         Pattern pat = Pattern.compile(emailRegex);
         if (email == null) {

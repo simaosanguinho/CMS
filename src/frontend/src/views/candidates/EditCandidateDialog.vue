@@ -60,7 +60,7 @@
   
   const saveCandidate = async () => {
     try{
-        await RemoteService.createCandidate(localCandidate.value)
+        await RemoteService.updateCandidate(localCandidate.value)
     }
     catch (error) {
       console.log(error)
@@ -73,7 +73,7 @@
       email: '',
       istID: ''
     }
-    emit('candidate-created')
+    emit('candidate-updated')
   }
   
   const closeDialog = () => {

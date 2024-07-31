@@ -9,16 +9,27 @@ import org.springframework.stereotype.Service;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 
+import static pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage.*;
 @Service
 public class CandidateService {
 
     @Autowired
     private CandidateRepository candidateRepository;
 
+    
     public CandidateDto createCandidate(CandidateDto candidateDto) {
         Candidate candidate = new Candidate(candidateDto);
+
+        // check if email is already in use
+        List<Candidate> candidates = candidateRepository.findByEmail(candidate.getEmail());
+        if (candidates.size() > 0) {
+            throw new CMSException(EMAIL_ALREADY_EXISTS);
+        }
+
         candidateRepository.save(candidate);
+
         return new CandidateDto(candidate);
     }
 
@@ -28,6 +39,13 @@ public class CandidateService {
 
     public List<CandidateDto> updateCandidate(CandidateDto candidateDto) {
         Candidate candidate = candidateRepository.findById(candidateDto.getId()).get();
+
+        // check if email is already in use
+        List<Candidate> candidates = candidateRepository.findByEmail(candidate.getEmail());
+        if (candidates.size() > 0) {
+            throw new CMSException(EMAIL_ALREADY_EXISTS);
+        }
+
         candidate.setName(candidateDto.getName());
         candidate.setEmail(candidateDto.getEmail());
         candidate.setIstID(candidateDto.getIstID());

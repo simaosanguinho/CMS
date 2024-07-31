@@ -42,8 +42,6 @@ export default class RemoteService {
       return response.data.map((candidate: any) => {
         return new CandidateDto(candidate)
       })
-    }).catch((error) => {
-      console.log(error)
     })
   }
 
@@ -53,7 +51,7 @@ export default class RemoteService {
     return httpClient.post('/candidates/create', candidate).then((response) => {
       return new CandidateDto(response.data)
     }).catch((error) => {
-      console.log(error)
+      console.log("ERROR CREATING CANDIDATE: ", error)
       throw error
     })
   }
