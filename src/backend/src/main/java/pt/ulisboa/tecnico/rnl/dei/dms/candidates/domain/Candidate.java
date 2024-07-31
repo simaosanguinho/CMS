@@ -4,6 +4,9 @@ import java.util.regex.Pattern;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "candidates")
@@ -19,13 +22,10 @@ public class Candidate {
 
     private String istID;
 
-    public Candidate() {
-    }
+    @ManyToMany
+    private Set<Grant> grants;
 
-    public Candidate(String name, String email, String istID) {
-        this.name = name;
-        this.email = email;
-        this.istID = istID;
+    public Candidate() {
     }
 
     public Candidate(CandidateDto candidateDto) {
