@@ -24,45 +24,43 @@
       :custom-filter="fuzzySearch"
       class="text-left"
     >
-      <template v-slot:[`item.available`]="{ item }">
-        <v-icon v-if="item.available" color="success">mdi-check</v-icon>
-        <v-icon v-else color="error">mdi-close</v-icon>
-      </template>
-      <template v-slot:[`item.type`]="{ item }">
-        <v-chip>{{ item.type }}</v-chip>
-      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon @click="editCandidate(item)" class="mr-2">mdi-pencil</v-icon>
         <v-icon @click="deleteCandidate(item)">mdi-delete</v-icon>
       </template>
     </v-data-table>
+  
+    <EditCandidateDialog
+      :candidate="selectedCandidate"
+      :visible="editDialogVisible"
+      @close="editDialogVisible = false"
+      @candidate-updated="getCandidates"
+    />
   </template>
   
   <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, reactive } from 'vue'
   import RemoteService from '@/services/RemoteService'
-  
-  import { reactive } from 'vue'
   import type CandidateDto from '@/models/candidates/CandidateDto'
   import CreateCandidateDialog from '@/views/candidates/CreateCandidateDialog.vue'
+  import EditCandidateDialog from '@/views/candidates/EditCandidateDialog.vue'
   
   const search = ref('')
   const headers = [
     { title: 'ID', value: 'id', key: 'id' },
-    { title: 'Name', value: 'name', key: 'name ' },
+    { title: 'Name', value: 'name', key: 'name' },
     { title: 'Email', value: 'email', key: 'email' },
     { title: 'Ist ID', value: 'istID', key: 'istID' },
     { title: 'Actions', value: 'actions', key: 'actions' },
-
   ]
   
   const candidates: CandidateDto[] = reactive([])
+  const editDialogVisible = ref(false)
+  const selectedCandidate = ref<CandidateDto | null>(null)
   
-  
-  getCandidates()
   async function getCandidates() {
     candidates.splice(0, candidates.length)
-    RemoteService.getCandidates().then(async (data) => {
+    RemoteService.getCandidates().then((data) => {
       data.forEach((candidate: CandidateDto) => {
         candidates.push(candidate)
       })
@@ -70,9 +68,8 @@
   }
   
   function editCandidate(candidate: CandidateDto) {
-    RemoteService.updateCandidate(candidate).then(() => {
-      getCandidates()
-    })
+    selectedCandidate.value = candidate
+    editDialogVisible.value = true
   }
   
   function deleteCandidate(candidate: CandidateDto) {
@@ -86,5 +83,7 @@
     let searchRegex = new RegExp(search.split('').join('.*'), 'i')
     return searchRegex.test(value)
   }
+  
+  getCandidates()
   </script>
   
