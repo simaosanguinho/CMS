@@ -84,7 +84,7 @@
         await RemoteService.createCandidate(newCandidate.value)
     }
     catch (error) {
-      console.log(error)
+      console.log(error.response.data.message)
     }
 
   
