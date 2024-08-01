@@ -2,16 +2,15 @@
   <v-container>
     <v-card class="elevation-0">
       <v-card-title class="pa-5">
-        <v-row>
+        <v-row align="center">
           <v-btn @click="goBack" icon>
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn @click="editGrant" icon>
+          <v-btn @click="editGrant" icon class="mr-2">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn @click="deleteGrant" icon>
+          <v-btn @click="deleteGrant" icon >
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-row>
@@ -27,7 +26,8 @@
         <v-card-title class="pt-0">
           <h3>Detalhes de Bolsa</h3>
         </v-card-title>
-        <v-card>
+        <v-divider></v-divider>
+        <v-card class="elevation-0">
           <v-card-subtitle class="pa-6">
             <v-row>
               <v-col> <div class="font-weight-medium">ID </div> {{ grant.id }} </v-col>
@@ -36,10 +36,11 @@
               <v-col> <div class="font-weight-medium">Monthly Income (€) </div> {{ grant.monthlyIncome }} </v-col>
             </v-row>
           </v-card-subtitle>
+          <v-divider></v-divider>
         </v-card>
       </v-col>
       <v-row>
-        <v-card-title class="pt-0">
+        <v-card-title class="pt-5">
           <h4>Candidatos Inscritos</h4>
         </v-card-title>
         <v-data-table   
@@ -109,13 +110,3 @@ onMounted(() => {
   fetchGrant(grantId)
 })
 </script>
-
-<style scoped>
-.v-card {
-  margin: 20px;
-}
-.v-spinner {
-  width: 100px;
-  height: 100px;
-}
-</style>
