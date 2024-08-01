@@ -97,8 +97,6 @@ const convertToUTC = (date: string | null): string | null => {
       dateObj.getFullYear(),
       dateObj.getMonth(),
       dateObj.getDate(),
-      dateObj.getHours(),
-      dateObj.getMinutes()
     )).toISOString();
   }
   return null;

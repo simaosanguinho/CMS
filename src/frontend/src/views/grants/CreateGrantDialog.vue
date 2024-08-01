@@ -126,8 +126,6 @@ const convertToUTC = (date: string | null): string | null => {
       dateObj.getFullYear(),
       dateObj.getMonth(),
       dateObj.getDate(),
-      dateObj.getHours(),
-      dateObj.getMinutes()
     )).toISOString();
   }
   return null;
@@ -163,9 +161,8 @@ const saveGrant = async () => {
 
 const formattedStartDate = computed(() => {
   if (newGrant.value.startDate) {
-    console.log('Type of newGrant.value.startDate:', typeof newGrant.value.startDate)
     const date = new Date(newGrant.value.startDate);
-    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`;
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
   return '';
 });
@@ -173,8 +170,9 @@ const formattedStartDate = computed(() => {
 const formattedEndDate = computed(() => {
   if (newGrant.value.endDate) {
     const date = new Date(newGrant.value.endDate);
-    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`;
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
   return '';
 });
+
 </script>
