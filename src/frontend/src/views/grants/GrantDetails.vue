@@ -7,7 +7,7 @@
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn @click="editGrant" icon class="mr-2">
+          <v-btn  @click.stop="editGrant(grant)" icon class="mr-2">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn @click="deleteGrant" icon >
@@ -51,6 +51,13 @@
       </v-row>
     </div>
   </v-container>
+
+  <EditGrantDialog
+    :grant="grant"
+    :visible="editDialogVisible"
+    @close="editDialogVisible = false"
+    @grant-updated="fetchGrant(grant.id)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -58,16 +65,18 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
+import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
-
+const editDialogVisible = ref(false)
 const grant = ref<GrantDto | null>(null)
 const loading = ref(true)
 
 const fetchGrant = async (id: string) => {
   try {
     grant.value = await RemoteService.getGrantById(id)
+    console.log('Grant:', grant.value)
   } catch (error) {
     console.error('Failed to fetch grant details:', error)
   } finally {
@@ -79,10 +88,10 @@ const goBack = () => {
   router.back()
 }
 
-const editGrant = () => {
-  if (grant.value) {
-    router.push({ name: 'EditGrant', params: { id: grant.value.id } })
-  }
+function editGrant(newGrant: GrantDto) {
+  grant.value = newGrant
+  console.log('Selected grant:', grant.value)
+  editDialogVisible.value = true
 }
 
 const deleteGrant = async () => {

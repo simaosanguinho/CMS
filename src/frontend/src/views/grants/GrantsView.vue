@@ -76,6 +76,7 @@ async function getGrants() {
 
 function editGrant(grant: GrantDto) {
   selectedGrant.value = grant
+  console.log("Selected grant: ", selectedGrant.value)
   editDialogVisible.value = true
 }
 

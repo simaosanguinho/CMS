@@ -104,6 +104,7 @@ const convertToUTC = (date: string | null): string | null => {
 
 const saveGrant = async () => {
   try {
+    console.log('Local grant:', localGrant.value)
     localGrant.value.startDate = convertToUTC(localGrant.value.startDate);
     localGrant.value.endDate = convertToUTC(localGrant.value.endDate);
     await RemoteService.updateGrant(localGrant.value)
