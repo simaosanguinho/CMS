@@ -112,9 +112,12 @@ const validateEndDate = () => {
 }
 
 const validateMonthlyIncome = () => {
-  if (!newGrant.value.monthlyIncome || newGrant.value.monthlyIncome < 0) {
+  if (!newGrant.value.monthlyIncome) {
     monthlyIncomeError.value = 'Monthly Income is required'
-  } else {
+  } else if (newGrant.value.monthlyIncome <= 0) {
+    monthlyIncomeError.value = 'Monthly Income must be greater than 0'
+  } 
+  else {
     monthlyIncomeError.value = ''
   }
 }

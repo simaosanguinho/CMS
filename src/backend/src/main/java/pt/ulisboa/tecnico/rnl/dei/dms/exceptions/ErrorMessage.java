@@ -7,6 +7,7 @@ public enum ErrorMessage {
     CANDIDATE_IST_ID_CANNOT_BE_EMPTY("Candidate must have an IST ID."),
     GRANT_START_DATE_CANNOT_BE_EMPTY("Grant must have a start date."),
     GRANT_END_DATE_CANNOT_BE_EMPTY("Grant must have an end date."),
+    GRANT_MONTHLY_INCOME_CANNOT_BE_NEGATIVE("Monthly income cannot be negative."),
     ;
 
     public final String label;

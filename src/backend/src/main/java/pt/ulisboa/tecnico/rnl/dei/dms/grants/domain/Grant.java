@@ -1,9 +1,11 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.grants.domain;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 import jakarta.persistence.*;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -30,9 +32,11 @@ public class Grant {
 
 
     public Grant(GrantDto grantDto) {
-        this.startDate = DateHandler.toLocalDateTime(grantDto.getStartDate());
-        this.endDate = DateHandler.toLocalDateTime(grantDto.getEndDate());
-        this.monthlyIncome = grantDto.getMonthlyIncome();
+        setStartDate(DateHandler.toLocalDateTime(grantDto.getStartDate()));
+        setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
+        setMonthlyIncome(grantDto.getMonthlyIncome());
+
+        verifyInvariants();
     }
 
     public Long getId() {
@@ -88,5 +92,15 @@ public class Grant {
                 ", monthlyIncome=" + monthlyIncome +
                 ", candidates=" + candidates +
                 '}';
+    }
+
+    private void verifyInvariants() {
+        isValidIncome();
+    }
+
+    public void isValidIncome() {
+        if(this.monthlyIncome < 0) {
+            throw new CMSException(ErrorMessage.GRANT_MONTHLY_INCOME_CANNOT_BE_NEGATIVE);
+        }
     }
 }
