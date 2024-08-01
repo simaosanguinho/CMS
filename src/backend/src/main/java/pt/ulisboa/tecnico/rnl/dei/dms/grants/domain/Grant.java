@@ -2,7 +2,9 @@ package pt.ulisboa.tecnico.rnl.dei.dms.grants.domain;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -28,8 +30,8 @@ public class Grant {
 
 
     public Grant(GrantDto grantDto) {
-        this.startDate = grantDto.getStartDate();
-        this.endDate = grantDto.getEndDate();
+        this.startDate = DateHandler.toLocalDateTime(grantDto.getStartDate());
+        this.endDate = DateHandler.toLocalDateTime(grantDto.getEndDate());
         this.monthlyIncome = grantDto.getMonthlyIncome();
     }
 

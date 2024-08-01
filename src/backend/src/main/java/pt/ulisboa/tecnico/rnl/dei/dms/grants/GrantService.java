@@ -5,9 +5,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.repository.GrantRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 
 @Service
 public class GrantService {
@@ -16,6 +20,15 @@ public class GrantService {
     private GrantRepository grantRepository;
 
     public GrantDto createGrant(GrantDto grantDto) {
+
+        if( grantDto.getStartDate() == null) {
+            throw new CMSException(ErrorMessage.GRANT_START_DATE_CANNOT_BE_EMPTY);
+        }
+
+        if( grantDto.getEndDate() == null) {
+            throw new CMSException(ErrorMessage.GRANT_END_DATE_CANNOT_BE_EMPTY);
+        }
+
         Grant grant = new Grant(grantDto);
         grantRepository.save(grant);
         return new GrantDto(grant);
@@ -28,8 +41,8 @@ public class GrantService {
     public List<GrantDto> updateGrant(GrantDto grantDto) {
         Grant grant = grantRepository.findById(grantDto.getId()).get();
     
-        grant.setStartDate(grantDto.getStartDate());
-        grant.setEndDate(grantDto.getEndDate());
+        grant.setStartDate(DateHandler.toLocalDateTime(grantDto.getStartDate()));
+        grant.setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
         grant.setMonthlyIncome(grantDto.getMonthlyIncome());
 
         grantRepository.save(grant);

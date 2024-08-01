@@ -1,17 +1,17 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.grants.dto;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 
 
 public class GrantDto {
     private Long id;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private String startDate;
+    private String endDate;
     private Long monthlyIncome;
     private Set <CandidateDto> candidateDto;
 
@@ -20,15 +20,15 @@ public class GrantDto {
 
     public GrantDto(Grant grant) {
         this.id = grant.getId();
-        this.startDate = grant.getStartDate();
-        this.endDate = grant.getEndDate();
+        this.startDate = DateHandler.toISOString(grant.getStartDate());
+        this.endDate = DateHandler.toISOString(grant.getEndDate());
         this.monthlyIncome = grant.getMonthlyIncome();
     }
 
     public GrantDto(Grant grant, boolean deepCopyCandidates) {
         this.id = grant.getId();
-        this.startDate = grant.getStartDate();
-        this.endDate = grant.getEndDate();
+        this.startDate = DateHandler.toISOString(grant.getStartDate());
+        this.endDate = DateHandler.toISOString(grant.getEndDate());
         this.monthlyIncome = grant.getMonthlyIncome();
         
         if(deepCopyCandidates) {
@@ -42,11 +42,11 @@ public class GrantDto {
         return id;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -58,11 +58,11 @@ public class GrantDto {
         return candidateDto;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
