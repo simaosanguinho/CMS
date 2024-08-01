@@ -7,8 +7,8 @@ export function ISOtoString(dateString: string | null): string {
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
       const day = date.getDate();
-      const hour = date.getHours();
-      const min = date.getMinutes();
+      const hour = 0;
+      const min = 0;
 
       // Format components with leading zeros where needed
       const monthString = month < 10 ? '0' + month : '' + month;
@@ -48,7 +48,8 @@ export function stringToISO(dateString: string | null): string {
   if (dateString) {
       // Parse the dateString into a Date object
       const date = new Date(dateString);
-      // Return the ISO string
+
+      // Return the ISO string in UTC
       return date.toISOString();
   } else {
       return '';
