@@ -87,7 +87,7 @@ function deleteGrant(grant: GrantDto) {
 
 function onRowClick(grant: GrantDto) {
   console.log("Grant: ", grant)
-  router.push({ name: 'GrantDetails', params: { id: grant.id } })
+  router.push({ name: 'grant-details', params: { id: grant.id } })
 }
 
 const fuzzySearch = (value: string, search: string) => {

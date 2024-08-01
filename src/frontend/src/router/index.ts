@@ -55,7 +55,7 @@ const router = createRouter({
     },
     {
       path: '/grant/:id',
-      name: 'GrantDetails',
+      name: 'grant-details',
       component: GrantDetails,
     },
   ]

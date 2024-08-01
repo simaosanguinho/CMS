@@ -75,7 +75,7 @@
     if (grant.value) {
       try {
         await RemoteService.deleteGrant(grant.value)
-        router.push({ name: 'GrantsList' }) // Assuming 'GrantsList' is the name of the page listing grants
+        router.push({ name: 'grants' })
       } catch (error) {
         console.error('Failed to delete grant:', error)
       }
