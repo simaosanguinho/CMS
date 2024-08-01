@@ -91,4 +91,11 @@ export default class RemoteService {
   static async deleteGrant(grant: GrantDto): Promise<void> {
     return httpClient.delete(`/grants/delete/${grant.id}`)
   }
+
+  static async getGrantById(id: number): Promise<GrantDto> {
+    console.log("GETTING GRANT BY ID: ", id)
+    return httpClient.get(`/grants/${id}`).then((response) => {
+      return new GrantDto(response.data)
+    })
+  }
 }

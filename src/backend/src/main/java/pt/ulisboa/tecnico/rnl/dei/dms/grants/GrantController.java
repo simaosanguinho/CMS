@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/grants")
@@ -34,4 +35,10 @@ public class GrantController {
     public List<GrantDto> deleteGrant(@PathVariable Long id) {
         return grantService.deleteGrant(id);
     }
+
+    @GetMapping("/{id}")
+    public GrantDto getGrantById(@PathVariable Long id) {
+        return grantService.getGrantById(id);
+    }
+    
 }

@@ -55,4 +55,14 @@ public class GrantService {
         return grantRepository.findAll().stream().map(GrantDto::new).collect(Collectors.toList());
     }
 
+    public GrantDto getGrantById(Long id) {
+
+        try {
+            Grant grant = grantRepository.findById(id).get();
+            return new GrantDto(grant);
+        } catch (Exception e) {
+            throw new CMSException(ErrorMessage.GRANT_NOT_FOUND);
+        }
+    }
+
 }

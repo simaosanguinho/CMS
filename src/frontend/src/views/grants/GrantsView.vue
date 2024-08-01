@@ -23,18 +23,19 @@
     :search="search"
     :custom-filter="fuzzySearch"
     class="text-left custom-data-table"
-    @click:row="onRowClick"
     :hover="true"
-  > 
-    <template v-slot:[`item.startDate`]="{ item }">
-      {{ formatDate(item.startDate) }}
-    </template>
-    <template v-slot:[`item.endDate`]="{ item }">
-      {{ formatDate(item.endDate) }}
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon @click.stop="editGrant(item)" class="mr-2">mdi-pencil</v-icon>
-      <v-icon @click.stop="deleteGrant(item)">mdi-delete</v-icon>
+  >
+    <template v-slot:item="{ item }">
+      <tr @click="onRowClick(item)">
+        <td>{{ item.id }}</td>
+        <td>{{ formatDate(item.startDate) }}</td>
+        <td>{{ formatDate(item.endDate) }}</td>
+        <td>{{ item.monthlyIncome }}</td>
+        <td>
+          <v-icon @click.stop="editGrant(item)" class="mr-2">mdi-pencil</v-icon>
+          <v-icon @click.stop="deleteGrant(item)">mdi-delete</v-icon>
+        </td>
+      </tr>
     </template>
   </v-data-table>
 
@@ -48,12 +49,14 @@
 
 <script setup lang="ts">
 import { ref, Ref } from 'vue'
+import { useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
 import CreateGrantDialog from '@/views/grants/CreateGrantDialog.vue'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 
 const search = ref('')
+const router = useRouter()
 
 const headers = [
   { title: 'ID', value: 'id', key: 'id' },
@@ -82,8 +85,9 @@ function deleteGrant(grant: GrantDto) {
   })
 }
 
-function onRowClick(item: GrantDto) {
-  editGrant(item)
+function onRowClick(grant: GrantDto) {
+  console.log("Grant: ", grant)
+  router.push({ name: 'GrantDetails', params: { id: grant.id } })
 }
 
 const fuzzySearch = (value: string, search: string) => {
@@ -102,9 +106,3 @@ const formatDate = (date: string) => {
 
 getGrants()
 </script>
-
-<style scoped>
-.custom-data-table .v-data-table__wrapper tbody tr:hover {
-  background-color: #f0f0f0 !important; /* Lighter background color on hover */
-}
-</style>
