@@ -22,6 +22,7 @@
       :items="candidates"
       :search="search"
       :custom-filter="fuzzySearch"
+      :hover="true"
       class="text-left"
     >
       <template v-slot:[`item.actions`]="{ item }">
