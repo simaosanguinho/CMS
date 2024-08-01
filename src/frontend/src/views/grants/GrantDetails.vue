@@ -17,13 +17,12 @@
         </v-row>
       </v-card-title>
     </v-card>
-    <!-- Loading Spinner -->
     <v-row v-if="loading" justify="center" align="center">
       <v-col>
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
       </v-col>
     </v-row>
-    <v-row v-else>
+    <div v-else>
       <v-col cols="12" class="pt-0">
         <v-card-title class="pt-0">
           <h3>Detalhes de Bolsa</h3>
@@ -39,7 +38,17 @@
           </v-card-subtitle>
         </v-card>
       </v-col>
-    </v-row>
+      <v-row>
+        <v-card-title class="pt-0">
+          <h4>Candidatos Inscritos</h4>
+        </v-card-title>
+        <v-data-table   
+        :hover="true"
+        class="text-left"
+        >
+        </v-data-table>
+      </v-row>
+    </div>
   </v-container>
 </template>
 
