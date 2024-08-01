@@ -22,8 +22,10 @@
     :items="grants"
     :search="search"
     :custom-filter="fuzzySearch"
-    class="text-left"
-  >
+    class="text-left custom-data-table"
+    @click:row="onRowClick"
+    :hover="true"
+  > 
     <template v-slot:[`item.startDate`]="{ item }">
       {{ formatDate(item.startDate) }}
     </template>
@@ -31,8 +33,8 @@
       {{ formatDate(item.endDate) }}
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon @click="editGrant(item)" class="mr-2">mdi-pencil</v-icon>
-      <v-icon @click="deleteGrant(item)">mdi-delete</v-icon>
+      <v-icon @click.stop="editGrant(item)" class="mr-2">mdi-pencil</v-icon>
+      <v-icon @click.stop="deleteGrant(item)">mdi-delete</v-icon>
     </template>
   </v-data-table>
 
@@ -61,13 +63,11 @@ const headers = [
   { title: 'Actions', value: 'actions', key: 'actions' }
 ]
 
-// Use Ref<GrantDto[]> for the grants array
-const grants: Ref<GrantDto[]> = ref([]) // Correct type declaration
+const grants: Ref<GrantDto[]> = ref([])
 const editDialogVisible = ref(false)
 const selectedGrant = ref<GrantDto | null>(null)
 
 async function getGrants() {
-  // Ensure the value is assigned correctly
   grants.value = await RemoteService.getGrants()
 }
 
@@ -80,6 +80,10 @@ function deleteGrant(grant: GrantDto) {
   RemoteService.deleteGrant(grant).then(() => {
     getGrants()
   })
+}
+
+function onRowClick(item: GrantDto) {
+  editGrant(item)
 }
 
 const fuzzySearch = (value: string, search: string) => {
@@ -98,3 +102,9 @@ const formatDate = (date: string) => {
 
 getGrants()
 </script>
+
+<style scoped>
+.custom-data-table .v-data-table__wrapper tbody tr:hover {
+  background-color: #f0f0f0 !important; /* Lighter background color on hover */
+}
+</style>
