@@ -24,6 +24,12 @@
     :custom-filter="fuzzySearch"
     class="text-left"
   >
+    <template v-slot:[`item.startDate`]="{ item }">
+      {{ formatDate(item.startDate) }}
+    </template>
+    <template v-slot:[`item.endDate`]="{ item }">
+      {{ formatDate(item.endDate) }}
+    </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon @click="editGrant(item)" class="mr-2">mdi-pencil</v-icon>
       <v-icon @click="deleteGrant(item)">mdi-delete</v-icon>
@@ -39,13 +45,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, Ref } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
 import CreateGrantDialog from '@/views/grants/CreateGrantDialog.vue'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 
 const search = ref('')
+
 const headers = [
   { title: 'ID', value: 'id', key: 'id' },
   { title: 'Start Date', value: 'startDate', key: 'startDate' },
@@ -54,17 +61,14 @@ const headers = [
   { title: 'Actions', value: 'actions', key: 'actions' }
 ]
 
-const grants: GrantDto[] = reactive([])
+// Use Ref<GrantDto[]> for the grants array
+const grants: Ref<GrantDto[]> = ref([]) // Correct type declaration
 const editDialogVisible = ref(false)
 const selectedGrant = ref<GrantDto | null>(null)
 
 async function getGrants() {
-  grants.splice(0, grants.length)
-  RemoteService.getGrants().then((data) => {
-    data.forEach((grant: GrantDto) => {
-      grants.push(grant)
-    })
-  })
+  // Ensure the value is assigned correctly
+  grants.value = await RemoteService.getGrants()
 }
 
 function editGrant(grant: GrantDto) {
@@ -79,9 +83,17 @@ function deleteGrant(grant: GrantDto) {
 }
 
 const fuzzySearch = (value: string, search: string) => {
-  // Regex to match any character in between the search characters
   let searchRegex = new RegExp(search.split('').join('.*'), 'i')
   return searchRegex.test(value)
+}
+
+const formatDate = (date: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric', 
+    month: '2-digit',
+    day: '2-digit'
+  }
+  return new Intl.DateTimeFormat('pt-PT', options).format(new Date(date))
 }
 
 getGrants()
