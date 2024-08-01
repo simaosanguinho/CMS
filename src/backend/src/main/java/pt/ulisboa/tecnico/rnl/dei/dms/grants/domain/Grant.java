@@ -39,6 +39,14 @@ public class Grant {
         verifyInvariants();
     }
 
+    public void update(GrantDto grantDto) {
+        setStartDate(DateHandler.toLocalDateTime(grantDto.getStartDate()));
+        setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
+        setMonthlyIncome(grantDto.getMonthlyIncome());
+
+        verifyInvariants();
+    }
+
     public Long getId() {
         return id;
     }

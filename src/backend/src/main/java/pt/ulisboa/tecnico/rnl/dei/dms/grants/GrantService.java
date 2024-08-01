@@ -40,11 +40,8 @@ public class GrantService {
 
     public List<GrantDto> updateGrant(GrantDto grantDto) {
         Grant grant = grantRepository.findById(grantDto.getId()).get();
-    
-        grant.setStartDate(DateHandler.toLocalDateTime(grantDto.getStartDate()));
-        grant.setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
-        grant.setMonthlyIncome(grantDto.getMonthlyIncome());
 
+        grant.update(grantDto);
         grantRepository.save(grant);
 
         return grantRepository.findAll().stream().map(GrantDto::new).collect(Collectors.toList());
