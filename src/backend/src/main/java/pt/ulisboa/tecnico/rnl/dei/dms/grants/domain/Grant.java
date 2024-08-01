@@ -7,6 +7,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -25,8 +26,9 @@ public class Grant {
 
     private Long monthlyIncome;
 
-    @ManyToMany(mappedBy = "grants")
+    @ManyToMany(mappedBy = "grants", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Candidate> candidates;
+
     public Grant() {
     }
 

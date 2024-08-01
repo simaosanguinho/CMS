@@ -23,6 +23,11 @@ public class Candidate {
     private String istID;
 
     @ManyToMany
+    @JoinTable(
+        name = "candidate_grants",
+        joinColumns = @JoinColumn(name = "candidates_id"),
+        inverseJoinColumns = @JoinColumn(name = "grants_id")
+    )
     private Set<Grant> grants;
 
     public Candidate() {
