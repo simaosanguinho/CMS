@@ -7,10 +7,10 @@
             <v-icon>mdi-arrow-left</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn  @click.stop="editGrant(grant)" icon class="mr-2">
+          <v-btn @click.stop="editGrant(grant)" icon class="mr-2">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn @click="deleteGrant" icon >
+          <v-btn @click="deleteGrant" icon>
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-row>
@@ -30,24 +30,45 @@
         <v-card class="elevation-0">
           <v-card-subtitle class="pa-6">
             <v-row>
-              <v-col> <div class="font-weight-medium">ID </div> {{ grant.id }} </v-col>
-              <v-col> <div class="font-weight-medium">Start </div> {{ formatDate(grant.startDate) }} </v-col>
-              <v-col> <div class="font-weight-medium">End </div> {{ formatDate(grant.endDate) }} </v-col>
-              <v-col> <div class="font-weight-medium">Monthly Income (€) </div> {{ grant.monthlyIncome }} </v-col>
+              <v-col>
+                <div class="font-weight-black">ID</div>
+                {{ grant.id }}
+              </v-col>
+              <v-col>
+                <div class="font-weight-black">Start</div>
+                {{ formatDate(grant.startDate) }}
+              </v-col>
+              <v-col>
+                <div class="font-weight-black">End</div>
+                {{ formatDate(grant.endDate) }}
+              </v-col>
+              <v-col>
+                <div class="font-weight-black">Monthly Income (€)</div>
+                {{ grant.monthlyIncome }}
+              </v-col>
             </v-row>
           </v-card-subtitle>
           <v-divider></v-divider>
         </v-card>
       </v-col>
       <v-row>
-        <v-card-title class="pt-5">
-          <h4>Candidatos Inscritos</h4>
-        </v-card-title>
-        <v-data-table   
-        :hover="true"
-        class="text-left"
-        >
-        </v-data-table>
+        <v-col>
+          <v-row align="center">
+            <v-card-title class="pt-5">
+              <v-card-title class="pt-5">
+                <h4>Candidatos Inscritos</h4>
+              </v-card-title>
+            </v-card-title>
+            <v-spacer></v-spacer>
+            <v-btn
+              class="text-none font-weight-regular mr-6"
+              prepend-icon="mdi-plus"
+              text="Selecionar Vencedor"
+              color="primary"
+            ></v-btn>
+          </v-row>
+          <v-data-table :hover="true" class="text-left"></v-data-table>
+        </v-col>
       </v-row>
     </div>
   </v-container>

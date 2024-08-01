@@ -11,7 +11,6 @@ import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.repository.GrantRepository;
-import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 
 @Service
 public class GrantService {

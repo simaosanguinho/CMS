@@ -11,15 +11,14 @@
         ></v-btn>
       </template>
 
-      <v-card prepend-icon="mdi-account" title="Nova Bolsa">
+      <v-card prepend-icon="mdi-briefcase" title="Nova Bolsa">
         <v-card-text>
           <v-row>
-            <v-col cols="6">
-              <v-text-field
-                label="Start Date"
-                :value="formattedStartDate"
-                disabled
-              ></v-text-field>
+            <v-col cols="6" >
+              <v-card-title class="text-center justify-center">
+                <h4>Start Date</h4>
+              </v-card-title>
+              <v-divider></v-divider>
               <v-date-picker
                 v-model="newGrant.startDate"
                 label="Start Date*"
@@ -31,11 +30,10 @@
             </v-col>
 
             <v-col cols="6">
-              <v-text-field
-                label="End Date"
-                :value="formattedEndDate"
-                disabled
-              ></v-text-field>
+              <v-card-title class="text-center justify-center">
+                <h4>End Date</h4>
+              </v-card-title>
+              <v-divider></v-divider> 
               <v-date-picker
                 v-model="newGrant.endDate"
                 label="End Date*"
@@ -77,10 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type GrantDto from '@/models/Grants/GrantDto'
 import RemoteService from '@/services/RemoteService'
-import { stringToISO } from '@/services/ConvertDateService'
 
 const dialog = ref(false)
 const emit = defineEmits(['grant-created'])
@@ -161,21 +158,5 @@ const saveGrant = async () => {
   }
   emit('grant-created')
 }
-
-const formattedStartDate = computed(() => {
-  if (newGrant.value.startDate) {
-    const date = new Date(newGrant.value.startDate);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-  }
-  return '';
-});
-
-const formattedEndDate = computed(() => {
-  if (newGrant.value.endDate) {
-    const date = new Date(newGrant.value.endDate);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-  }
-  return '';
-});
 
 </script>
