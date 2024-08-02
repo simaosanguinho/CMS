@@ -1,18 +1,26 @@
 <template>
     <v-dialog v-model="dialogVisible" max-width="900" @click:outside="handleOutsideClick">
-      <v-card prepend-icon="mdi-account" title="Inscrever Candidatos">
+      <v-card class="dialog-card">
+        <div class="header-container">
+          <v-icon class="close-icon">mdi-account</v-icon>
+          <h2 class="title">Inscrever Candidatos</h2>
+          <span class="font-weight-bold" v-if="props.grant">Grant ID: {{ props.grant?.id }}</span>
+        </div>
+  
         <v-divider></v-divider>
   
         <v-data-table
           :headers="headers"
           :items="candidates"
           :hover="true"
-          class="text-left"
+          class="text-left table-container"
+          show-select
+          item-value="id"
+          v-model:selected="selectedCandidates"
         >
         </v-data-table>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text="Close" variant="plain" @click="closeDialog"></v-btn>
+        <v-card-actions class="justify-end">
+          <v-btn text="Close" variant="plain" @click="closeDialog" class="mr-4"></v-btn>
           <v-btn color="primary" text="Save" variant="tonal" @click="handleSave"></v-btn>
         </v-card-actions>
       </v-card>
@@ -28,12 +36,12 @@
   const props = defineProps<{ grant: GrantDto | null; visible: boolean }>()
   const emit = defineEmits(['close', 'candidates-enrolled'])
   const candidates = ref<CandidateDto[]>([])
+  const selectedCandidates = ref<CandidateDto[]>([])
   const dialogVisible = ref(props.visible)
   
   const headers = [
     { title: 'Name', value: 'name', key: 'name' },
     { title: 'Ist ID', value: 'istID', key: 'istID' },
-    { title: 'Actions', value: 'actions', key: 'actions' }
   ]
   
   watch(
@@ -63,16 +71,19 @@
   }
   
   const handleSave = async () => {
+    console.log('Selected candidates', selectedCandidates.value)
+    await saveCandidate()
     closeDialog()
   }
   
   const saveCandidate = async () => {
     try {
       console.log('Saving candidate')
+      // Handle saving selected candidates
     } catch (error) {
       console.log(error)
     }
-    emit('candidates-enrolled')
+    emit('candidates-enrolled', selectedCandidates.value)
   }
   
   const closeDialog = () => {
@@ -83,6 +94,36 @@
   const handleOutsideClick = () => {
     closeDialog()
   }
-  
   </script>
+  
+  <style scoped>
+  .dialog-card {
+    padding: 16px;
+    overflow: hidden;
+  }
+  
+  .header-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px; /* Space below the header */
+    position: relative;
+  }
+  
+  .close-icon {
+    cursor: pointer;
+    margin-right: 16px; /* Space between icon and title */
+  }
+  
+  .title {
+    font-weight: bold;
+    margin: 0; /* Remove default margin */
+    flex-grow: 1; /* Allow title to take available space */
+  }
+  
+  .table-container {
+    margin: 16px;
+    max-width: calc(100% - 32px); /* Ensures table fits within dialog */
+  }
+  
+  </style>
   
