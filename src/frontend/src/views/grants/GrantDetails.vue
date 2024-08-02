@@ -79,6 +79,9 @@
             :hover="true"
             class="text-left"
           >
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-icon @click="unenrollCandidate(item)">mdi-delete</v-icon>
+            </template>
           </v-data-table>
         </v-col>
       </v-row>
@@ -110,16 +113,26 @@ const enrolledCandidates = ref<CandidateDto | null>(null)
 
 const search = ref('')
 const headers = [
-    { title: 'ID', value: 'id', key: 'id' },
+    { title: 'ID Inscrição', value: 'enrollmentId', key: 'enrollmentId' },
     { title: 'Name', value: 'name', key: 'name' },
     { title: 'Ist ID', value: 'istID', key: 'istID' },
+    { title: 'Actions', value: 'actions', key: 'actions' }
   ]
 
   const fetchGrant = async (id: string) => {
   try {
     grant.value = await RemoteService.getGrantById(id)
     const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
+
     enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
+
+    // take the enroll cnandidates list and add to each candidate the enrollment id
+    enrolledCandidates.value.forEach((candidate: CandidateDto) => {
+      const enrollment = fetchedCandidates.find((enrollment: any) => enrollment.candidate.id === candidate.id)
+      if (enrollment) {
+        candidate.enrollmentId = enrollment.id
+      }
+    })
 
   } catch (error) {
     console.error('Failed to fetch grant details:', error)
@@ -147,6 +160,18 @@ const deleteGrant = async () => {
       console.error('Failed to delete grant:', error)
     }
   }
+}
+
+const unenrollCandidate = async (candidate: CandidateDto) => {
+  if (grant.value) {
+    try {
+      console.log('Unenrolling candidate:', candidate.enrollmentId)
+      await RemoteService.unenrollCandidate(candidate.enrollmentId)
+      fetchGrant(grant.value.id)
+    } catch (error) {
+      console.error('Failed to unenroll candidate:', error)
+    }
+  } 
 }
 
 const formatDate = (date: string) => {

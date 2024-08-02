@@ -106,9 +106,17 @@ export default class RemoteService {
 
   static getEnrollmentsByGrantId(grantId: string): Promise<CandidateDto[]> {
     return httpClient.get(`/grants/${grantId}/enrollments`).then((response) => {
-      return response.data.map((candidate: any) => {
+      console.log("GETTING ENROLLMENTS BY GRANT ID: ", grantId)
+      console.log("RESPONSE: ", response)
+      /* return response.data.map((candidate: any) => {
         return new CandidateDto(candidate)
+      }) */
+
+      // return a mapping of the candidates coupled with the enrollment id
+      return response.data.map((enrollment: any) => {
+        return new CandidateDto(enrollment)
       })
+
     })
   }
 
@@ -118,5 +126,9 @@ export default class RemoteService {
         return new GrantDto(grant)
       })
     })
+  }
+
+  static async unenrollCandidate(enrollmentId: string): Promise<void> {
+    return httpClient.delete(`/grants/enrollments/${enrollmentId}`)
   }
 }

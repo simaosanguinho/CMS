@@ -19,6 +19,7 @@ public enum ErrorMessage {
     ENROLLMENT_CANDIDATE_CANNOT_BE_EMPTY("Candidate cannot be empty."),
     ENROLLMENT_GRANT_CANNOT_BE_EMPTY("Grant cannot be empty."),
     ENROLLMENT_CANNOT_BE_EMPTY("Enrollment cannot be empty."),
+    ENROLLMENT_NOT_FOUND("Enrollment was not found.")
     ;
 
     public final String label;

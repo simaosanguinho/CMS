@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,5 +34,10 @@ public class EnrollmentController {
     @GetMapping("/candidates/enrollments/{candidateId}")
     public List<EnrollmentDto> getEnrollmentsByCandidateId(@PathVariable Long candidateId) {
         return enrollmentService.getEnrollmentsByCandidateId(candidateId);
+    }
+
+    @DeleteMapping("/grants/enrollments/{enrollmentId}")
+    public void deleteEnrollment(@PathVariable Long enrollmentId) {
+        enrollmentService.deleteEnrollment(enrollmentId);
     }
 }

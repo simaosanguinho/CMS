@@ -72,4 +72,12 @@ public class EnrollmentService {
                 .map(EnrollmentDto::new)
                 .toList();
     }
+
+    public void deleteEnrollment(Long enrollmentId) {
+        if(enrollmentId == null) {
+            throw new CMSException(ErrorMessage.ENROLLMENT_NOT_FOUND);
+        }
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow(() -> new CMSException(ErrorMessage.ENROLLMENT_NOT_FOUND));
+        enrollmentRepository.delete(enrollment);
+    }
 }

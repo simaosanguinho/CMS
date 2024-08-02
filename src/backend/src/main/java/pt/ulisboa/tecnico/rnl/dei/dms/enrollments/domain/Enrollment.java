@@ -3,10 +3,8 @@ package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
-import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 
-import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import jakarta.persistence.*;
 
 @Entity
