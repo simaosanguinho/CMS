@@ -106,12 +106,26 @@ public class Grant {
 
     private void verifyInvariants() {
         isValidIncome();
+        isStartDateValid();
+        isEndDateValid();
         isGrantDurationValid();
     }
 
     public void isValidIncome() {
         if(this.monthlyIncome < 0) {
             throw new CMSException(ErrorMessage.GRANT_MONTHLY_INCOME_CANNOT_BE_NEGATIVE);
+        }
+    }
+
+    public void isStartDateValid() {
+        if(this.startDate == null) {
+            throw new CMSException(ErrorMessage.GRANT_START_DATE_CANNOT_BE_EMPTY);
+        }
+    }
+
+    public void isEndDateValid() {
+        if(this.endDate == null) {
+            throw new CMSException(ErrorMessage.GRANT_END_DATE_CANNOT_BE_EMPTY);
         }
     }
 

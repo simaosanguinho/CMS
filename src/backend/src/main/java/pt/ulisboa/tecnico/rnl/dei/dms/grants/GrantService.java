@@ -20,14 +20,6 @@ public class GrantService {
 
     public GrantDto createGrant(GrantDto grantDto) {
 
-        if( grantDto.getStartDate() == null) {
-            throw new CMSException(ErrorMessage.GRANT_START_DATE_CANNOT_BE_EMPTY);
-        }
-
-        if( grantDto.getEndDate() == null) {
-            throw new CMSException(ErrorMessage.GRANT_END_DATE_CANNOT_BE_EMPTY);
-        }
-
         Grant grant = new Grant(grantDto);
         grantRepository.save(grant);
         return new GrantDto(grant);

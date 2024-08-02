@@ -4,7 +4,9 @@ import java.util.regex.Pattern;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 
 import java.util.Set;
 
@@ -34,6 +36,14 @@ public class Candidate {
     }
 
     public Candidate(CandidateDto candidateDto) {
+        setName(candidateDto.getName());
+        setEmail(candidateDto.getEmail());
+        setIstID(candidateDto.getIstID());
+
+        verifyInvariants();
+    }
+
+    public void update(CandidateDto candidateDto) {
         setName(candidateDto.getName());
         setEmail(candidateDto.getEmail());
         setIstID(candidateDto.getIstID());
@@ -74,7 +84,10 @@ public class Candidate {
     }
 
     private void verifyInvariants() {
-        System.out.println(isValidEmail(email));
+        isValidEmail();
+        isValidName();
+        isValidIstID();
+        
     }
 
     @Override
@@ -87,18 +100,36 @@ public class Candidate {
                 '}';
     }
 
-    public static boolean isValidEmail(String email) {
+    public void isValidName() {
+        if(this.name == null || this.name.isEmpty()) {
+            System.err.println("Name is invalid");
+            throw new CMSException(ErrorMessage.CANDIDATE_NAME_CANNOT_BE_EMPTY);
+        }
+    }
+
+
+    public void isValidEmail() {
+
+        if(this.email == null || this.email.isEmpty()) {
+            System.err.println("Email is invalid");
+            throw new CMSException(ErrorMessage.CANDIDATE_EMAIL_CANNOT_BE_EMPTY);
+        }
 
         String emailRegex = "^(?=.{1,256}$)(?=.{1,64}@.{1,255}$)(?=.{1,64}@)([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+.[a-zA-Z]{1,})$";
 
         Pattern pat = Pattern.compile(emailRegex);
         
-        if(!pat.matcher(email).matches()) {
+        if(!pat.matcher(this.email).matches()) {
             System.err.println("Email is invalid");
-            throw new IllegalArgumentException("Email is invalid");
+            throw new CMSException(ErrorMessage.CANDIDATE_EMAIL_IS_INVALID);
         }
+    }
 
-        return true;
+    public void isValidIstID() {
+        if(this.istID == null || this.istID.isEmpty()) {
+            System.err.println("IST ID is invalid");
+            throw new CMSException(ErrorMessage.CANDIDATE_IST_ID_CANNOT_BE_EMPTY);
+        }
     }
 
 }
