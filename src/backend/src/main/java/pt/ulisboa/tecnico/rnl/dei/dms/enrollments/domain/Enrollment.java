@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain;
 
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
-import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import jakarta.persistence.*;
 
@@ -15,9 +14,11 @@ public class Enrollment {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 
-    @ManyToMany
+    @ManyToOne
+    @JoinColumn(name = "grant_id")
     private Grant grant;
 
     public Enrollment() {

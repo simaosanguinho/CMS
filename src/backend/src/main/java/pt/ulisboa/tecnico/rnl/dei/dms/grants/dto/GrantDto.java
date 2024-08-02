@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms.grants.dto;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
@@ -13,33 +14,22 @@ public class GrantDto {
     private String startDate;
     private String endDate;
     private Long monthlyIncome;
-    private Set <CandidateDto> candidateDto;
     private Integer vacancy;
+    private Integer numberOfEnrollments;
 
     public GrantDto() {
     }
 
     public GrantDto(Grant grant) {
-        this.id = grant.getId();
-        this.startDate = DateHandler.toISOString(grant.getStartDate());
-        this.endDate = DateHandler.toISOString(grant.getEndDate());
-        this.monthlyIncome = grant.getMonthlyIncome();
-        this.vacancy = grant.getVacancy();
+        setId(grant.getId());
+        setStartDate(DateHandler.toISOString(grant.getStartDate()));
+        setEndDate(DateHandler.toISOString(grant.getEndDate()));
+        setMonthlyIncome(grant.getMonthlyIncome());
+        setVacancy(grant.getVacancy());
+        setNumberOfEnrollments(grant.getEnrollments().size());
+
     }
 
-    public GrantDto(Grant grant, boolean deepCopyCandidates) {
-        this.id = grant.getId();
-        this.startDate = DateHandler.toISOString(grant.getStartDate());
-        this.endDate = DateHandler.toISOString(grant.getEndDate());
-        this.monthlyIncome = grant.getMonthlyIncome();
-        this.vacancy = grant.getVacancy();
-        
-        if(deepCopyCandidates) {
-            this.candidateDto = grant.getCandidates().stream()
-                                .map(candidate -> new CandidateDto(candidate))
-                                .collect(Collectors.toSet());
-        }
-    }
 
     public Long getId() {
         return id;
@@ -57,12 +47,17 @@ public class GrantDto {
         return monthlyIncome;
     }
 
-    public Set<CandidateDto> getCandidateDto() {
-        return candidateDto;
+    public Integer getNumberOfEnrollments() {
+        return numberOfEnrollments;
     }
+
 
     public Integer getVacancy() {
         return vacancy;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setStartDate(String startDate) {
@@ -77,8 +72,8 @@ public class GrantDto {
         this.monthlyIncome = monthlyIncome;
     }
 
-    public void setCandidateDto(Set<CandidateDto> candidateDto) {
-        this.candidateDto = candidateDto;
+    public void setNumberOfEnrollments(Integer numberOfEnrollments) {
+        this.numberOfEnrollments = numberOfEnrollments;
     }
 
     public void setVacancy(Integer vacancy) {

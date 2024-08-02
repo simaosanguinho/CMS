@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.grants.domain;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
@@ -9,7 +10,9 @@ import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 @Entity
@@ -28,8 +31,8 @@ public class Grant {
 
     private Integer vacancy;
 
-    @ManyToMany(mappedBy = "grants", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Candidate> candidates;
+    @OneToMany(mappedBy = "grant")
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     public Grant() {
     }
@@ -69,12 +72,12 @@ public class Grant {
         return monthlyIncome;
     }
 
-    public Set<Candidate> getCandidates() {
-        return candidates;
-    }
-
     public Integer getVacancy() {
         return vacancy;
+    }
+
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
     }
 
     public void setStartDate(LocalDateTime startDate) {
@@ -89,21 +92,19 @@ public class Grant {
         this.monthlyIncome = monthlyIncome;
     }
 
-    public void setCandidates(Set<Candidate> candidates) {
-        this.candidates = candidates;
-    }
 
     public void setVacancy(Integer vacancy) {
         this.vacancy = vacancy;
     }
 
-    public void addCandidate(Candidate candidate) {
-        this.candidates.add(candidate);
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
     }
 
-    public void removeCandidate(Candidate candidate) {
-        this.candidates.remove(candidate);
+    public void addEnrollment(Enrollment enrollment) {
+        this.enrollments.add(enrollment);
     }
+    
 
     @Override
     public String toString() {
@@ -112,7 +113,7 @@ public class Grant {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", monthlyIncome=" + monthlyIncome +
-                ", candidates=" + candidates +
+                ", vacancy=" + vacancy +
                 '}';
     }
 

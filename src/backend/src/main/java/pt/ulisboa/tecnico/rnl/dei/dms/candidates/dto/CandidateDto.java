@@ -1,39 +1,23 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto;
 
-import java.util.Set;
-
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
-import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
-import java.util.stream.Collectors;
 
 public class CandidateDto {
     private Long id;
     private String name;
     private String email;
     private String istID;
-    private Set <GrantDto> grantDto;
+    private Integer numberOfEnrollments;
 
     public CandidateDto() {
     }
 
     public CandidateDto(Candidate candidate) {
-        this.id = candidate.getId();
-        this.name = candidate.getName();
-        this.email = candidate.getEmail();
-        this.istID = candidate.getIstID();
-    }
-
-    public CandidateDto(Candidate candidate, boolean deepCopyGrants) {
-        this.id = candidate.getId();
-        this.name = candidate.getName();
-        this.email = candidate.getEmail();
-        this.istID = candidate.getIstID();
-        
-        if(deepCopyGrants) {
-            this.grantDto = candidate.getGrants().stream()
-                                .map(grant -> new GrantDto(grant))
-                                .collect(Collectors.toSet());
-        }
+        setId(candidate.getId());
+        setIstID(candidate.getIstID());
+        setEmail(candidate.getEmail());
+        setName(candidate.getName());
+        setNumberOfEnrollments(candidate.getEnrollments().size());
     }
 
     public Long getId() {
@@ -50,6 +34,18 @@ public class CandidateDto {
 
     public String getIstID() {
         return istID;
+    }
+
+    public Integer getNumberOfEnrollments() {
+        return numberOfEnrollments;
+    }
+
+    public void setNumberOfEnrollments(Integer numberOfEnrollments) {
+        this.numberOfEnrollments = numberOfEnrollments;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -71,6 +67,7 @@ public class CandidateDto {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", istID='" + istID + '\'' +
+                ", numberOfEnrollments=" + numberOfEnrollments +
                 '}';
     }
 }
