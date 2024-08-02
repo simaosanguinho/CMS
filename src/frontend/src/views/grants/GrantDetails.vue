@@ -46,6 +46,10 @@
                 <div class="font-weight-black">Monthly Income (€)</div>
                 {{ grant.monthlyIncome }}
               </v-col>
+              <v-col>
+                <div class="font-weight-black">Vacancies</div>
+                {{ grant.vacancy }}
+              </v-col>
             </v-row>
           </v-card-subtitle>
           <v-divider></v-divider>
@@ -63,7 +67,7 @@
             <v-btn
               class="text-none font-weight-regular mr-6"
               prepend-icon="mdi-plus"
-              text="Selecionar Vencedor"
+              :text="winnerButtonText"
               color="primary"
             ></v-btn>
           </v-row>
@@ -82,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
@@ -134,6 +138,10 @@ const formatDate = (date: string) => {
   }
   return new Intl.DateTimeFormat('pt-PT', options).format(new Date(date))
 }
+
+const winnerButtonText = computed(() => {
+  return grant.value && grant.value.vacancy > 1 ? 'Selecionar Vencedores' : 'Selecionar Vencedor'
+})
 
 onMounted(() => {
   const grantId = route.params.id as string

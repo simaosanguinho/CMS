@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogVisible" max-width="900">
+  <v-dialog v-model="dialogVisible" max-width="900" @click:outside="handleOutsideClick">
     <v-card>
       <v-card-title>Edit Grant</v-card-title>
       <v-card-text>
@@ -21,15 +21,27 @@
             ></v-date-picker>
           </v-col>
         </v-row>
+        <v-row>
+            <v-text-field
+              label="Monthly Income (€)*"
+              required
+              v-model="localGrant.monthlyIncome"
+              type="number"
+              :error-messages="monthlyIncomeError"
+              @input="validateMonthlyIncome"
+              class="mx-6"
+            ></v-text-field>
 
-        <v-text-field
-          label="Monthly Income*"
-          required
-          v-model="localGrant.monthlyIncome"
-          type="number"
-          :error-messages="monthlyIncomeError"
-          @input="validateMonthlyIncome"
-        ></v-text-field>
+            <v-text-field
+              label="Vacancy*"
+              required
+              v-model="localGrant.vacancy"
+              type="number"
+              :error-messages="vacancyError"
+              @input="validateVacancy"
+              class="mx-6"
+            ></v-text-field>
+          </v-row>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -55,6 +67,9 @@ const localGrant = ref<GrantDto>({ id: '', startDate: null, endDate: null, month
 const localStartDate = ref<Date | null>(null)
 const localEndDate = ref<Date | null>(null)
 const monthlyIncomeError = ref<string>('')
+const startDateError = ref<string>('')
+const endDateError = ref<string>('')
+const vacancyError = ref<string>('')
 
 watch(() => props.visible, (newVal) => {
   dialogVisible.value = newVal
@@ -80,9 +95,39 @@ const validateMonthlyIncome = () => {
   }
 }
 
+const validateVacancy = () => {
+  if (!localGrant.value.vacancy) {
+    vacancyError.value = 'Vacancy is required'
+  } else if (localGrant.value.vacancy <= 0) {
+    vacancyError.value = 'Invalid Vacancy'
+  } 
+  else {
+    vacancyError.value = ''
+  }
+}
+
+const validateStartDate = () => {
+  if (!localGrant.value.startDate) {
+    startDateError.value = 'Start date is required'
+  } else {
+    startDateError.value = ''
+  }
+}
+
+const validateEndDate = () => {
+  if (!localGrant.value.endDate) {
+    endDateError.value = 'End date is required'
+  } else {
+    endDateError.value = ''
+  }
+}
+
 const handleSave = async () => {
   validateMonthlyIncome()
-  if (!monthlyIncomeError.value && localGrant.value) {
+  validateVacancy()
+  validateEndDate()
+  validateStartDate()
+  if (!monthlyIncomeError.value && !vacancyError.value && !startDateError.value && !endDateError.value) {
     localGrant.value.startDate = localStartDate.value ? ISOtoString(localStartDate.value) : null
     localGrant.value.endDate = localEndDate.value ? ISOtoString(localEndDate.value) : null
     await saveGrant()
@@ -116,5 +161,9 @@ const saveGrant = async () => {
 
 const closeDialog = () => {
   dialogVisible.value = false
+}
+
+const handleOutsideClick = () => {
+  closeDialog()
 }
 </script>

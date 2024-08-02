@@ -7,6 +7,7 @@ export default class GrantDto {
     endDate!: string
     monthlyIncome?: number
     candidates?: CandidateDto[]
+    vacancy?: number
 
     constructor(jsonObj: Partial<GrantDto>) {
         if (jsonObj) {
@@ -15,6 +16,7 @@ export default class GrantDto {
             this.endDate = ISOtoString(jsonObj.endDate ?? null) 
             this.monthlyIncome = jsonObj.monthlyIncome
             this.candidates = jsonObj.candidates ? jsonObj.candidates.map(candidate => new CandidateDto(candidate)) : []
+            this.vacancy = jsonObj.vacancy
         }
     }
 }

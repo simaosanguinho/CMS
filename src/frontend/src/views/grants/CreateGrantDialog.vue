@@ -14,7 +14,7 @@
       <v-card prepend-icon="mdi-briefcase" title="Nova Bolsa">
         <v-card-text>
           <v-row>
-            <v-col cols="6" >
+            <v-col cols="6">
               <v-card-title class="text-center justify-center">
                 <h4>Start Date</h4>
               </v-card-title>
@@ -33,7 +33,7 @@
               <v-card-title class="text-center justify-center">
                 <h4>End Date</h4>
               </v-card-title>
-              <v-divider></v-divider> 
+              <v-divider></v-divider>
               <v-date-picker
                 v-model="newGrant.endDate"
                 label="End Date*"
@@ -44,15 +44,27 @@
               ></v-date-picker>
             </v-col>
           </v-row>
+          <v-row>
+            <v-text-field
+              label="Monthly Income (€)*"
+              required
+              v-model="newGrant.monthlyIncome"
+              type="number"
+              :error-messages="monthlyIncomeError"
+              @input="validateMonthlyIncome"
+              class="mx-6"
+            ></v-text-field>
 
-          <v-text-field
-            label="Monthly Income (€)*"
-            required
-            v-model="newGrant.monthlyIncome"
-            type="number"
-            :error-messages="monthlyIncomeError"
-            @input="validateMonthlyIncome"
-          ></v-text-field>
+            <v-text-field
+              label="Vacancy*"
+              required
+              v-model="newGrant.vacancy"
+              type="number"
+              :error-messages="vacancyError"
+              @input="validateVacancy"
+              class="mx-6"
+            ></v-text-field>
+          </v-row>
         </v-card-text>
 
         <v-divider></v-divider>
@@ -62,12 +74,7 @@
 
           <v-btn text="Close" variant="plain" @click="dialog = false"></v-btn>
 
-          <v-btn
-            color="primary"
-            text="Save"
-            variant="tonal"
-            @click="handleSave"
-          ></v-btn>
+          <v-btn color="primary" text="Save" variant="tonal" @click="handleSave"></v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -91,6 +98,7 @@ const newGrant = ref<GrantDto>({
 const startDateError = ref<string>('')
 const endDateError = ref<string>('')
 const monthlyIncomeError = ref<string>('')
+const vacancyError = ref<string>('')
 
 const validateStartDate = () => {
   if (!newGrant.value.startDate) {
@@ -113,28 +121,36 @@ const validateMonthlyIncome = () => {
     monthlyIncomeError.value = 'Monthly Income is required'
   } else if (newGrant.value.monthlyIncome <= 0) {
     monthlyIncomeError.value = 'Monthly Income must be greater than 0'
-  } 
-  else {
+  } else {
     monthlyIncomeError.value = ''
+  }
+}
+
+const validateVacancy = () => {
+  if (!newGrant.value.vacancy) {
+    vacancyError.value = 'Vacancy is required'
+  } else if (newGrant.value.vacancy <= 0) {
+    vacancyError.value = 'Invalid Vacancy'
+  } else {
+    vacancyError.value = ''
   }
 }
 
 const convertToUTC = (date: string | null): string | null => {
   if (date) {
-    const dateObj = new Date(date);
-    return new Date(Date.UTC(
-      dateObj.getFullYear(),
-      dateObj.getMonth(),
-      dateObj.getDate(),
-    )).toISOString();
+    const dateObj = new Date(date)
+    return new Date(
+      Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate())
+    ).toISOString()
   }
-  return null;
+  return null
 }
 
 const handleSave = async () => {
   validateStartDate()
   validateEndDate()
   validateMonthlyIncome()
+  validateVacancy()
   if (!startDateError.value && !endDateError.value && !monthlyIncomeError.value) {
     console.log('newGrant.value:', newGrant.value)
     await saveGrant()
@@ -144,8 +160,8 @@ const handleSave = async () => {
 
 const saveGrant = async () => {
   try {
-    newGrant.value.startDate = convertToUTC(newGrant.value.startDate);
-    newGrant.value.endDate = convertToUTC(newGrant.value.endDate);
+    newGrant.value.startDate = convertToUTC(newGrant.value.startDate)
+    newGrant.value.endDate = convertToUTC(newGrant.value.endDate)
     await RemoteService.createGrant(newGrant.value)
   } catch (error) {
     console.log((error as any).response.data.message)
@@ -154,9 +170,8 @@ const saveGrant = async () => {
   newGrant.value = {
     startDate: null,
     endDate: null,
-    monthlyIncome: null,
+    monthlyIncome: null
   }
   emit('grant-created')
 }
-
 </script>

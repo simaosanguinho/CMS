@@ -69,6 +69,7 @@
   }
   
   function editCandidate(candidate: CandidateDto) {
+    console.log(editDialogVisible.value)
     selectedCandidate.value = candidate
     editDialogVisible.value = true
   }

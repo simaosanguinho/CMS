@@ -31,6 +31,7 @@
         <td>{{ formatDate(item.startDate) }}</td>
         <td>{{ formatDate(item.endDate) }}</td>
         <td>{{ item.monthlyIncome }}</td>
+        <td>{{ item.vacancy }}</td>
         <td>
           <v-icon @click.stop="editGrant(item)" class="mr-2">mdi-pencil</v-icon>
           <v-icon @click.stop="deleteGrant(item)">mdi-delete</v-icon>
@@ -63,6 +64,7 @@ const headers = [
   { title: 'Start Date', value: 'startDate', key: 'startDate' },
   { title: 'End Date', value: 'endDate', key: 'endDate' },
   { title: 'Monthly Income (€)', value: 'monthlyIncome', key: 'monthlyIncome' },
+  { title: 'Vacancies', value: 'vacancy', key: 'vacancy' },
   { title: 'Actions', value: 'actions', key: 'actions' }
 ]
 
@@ -88,6 +90,7 @@ function deleteGrant(grant: GrantDto) {
 
 function onRowClick(grant: GrantDto) {
   console.log("Grant: ", grant)
+  editDialogVisible.value = false
   router.push({ name: 'grant-details', params: { id: grant.id } })
 }
 

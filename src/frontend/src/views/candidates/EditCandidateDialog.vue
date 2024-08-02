@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialogVisible" max-width="400">
+    <v-dialog v-model="dialogVisible" max-width="400" @click:outside="handleOutsideClick">
     <v-card prepend-icon="mdi-account" title="Edit Candidate">
       <v-card-text>
         <v-text-field
@@ -113,5 +113,9 @@ const saveCandidate = async () => {
 
 const closeDialog = () => {
   emit('close')
+}
+
+const handleOutsideClick = () => {
+  closeDialog()
 }
 </script>
