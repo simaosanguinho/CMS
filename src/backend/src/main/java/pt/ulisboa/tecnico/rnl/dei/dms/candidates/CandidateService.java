@@ -21,22 +21,17 @@ public class CandidateService {
     
     public CandidateDto createCandidate(CandidateDto candidateDto) {
 
-        if(candidateDto.getName() == null || candidateDto.getName().isEmpty()) {
-            throw new CMSException(CANDIDATE_NAME_CANNOT_BE_EMPTY);
-        }
-
-        if(candidateDto.getEmail() == null || candidateDto.getEmail().isEmpty()) {
-            throw new CMSException(CANDIDATE_EMAIL_CANNOT_BE_EMPTY);
-        }
-
-        if(candidateDto.getIstID() == null || candidateDto.getIstID().isEmpty()) {
-            throw new CMSException(CANDIDATE_IST_ID_CANNOT_BE_EMPTY);
-        }
 
         // check if email is already in use
         List<Candidate> candidates = candidateRepository.findByEmail(candidateDto.getEmail());
         if (candidates.size() > 0) {
             throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
+        }
+
+        // check if IST ID is already in use
+        candidates = candidateRepository.findByIstID(candidateDto.getIstID());
+        if (candidates.size() > 0) {
+            throw new CMSException(CANDIDATE_IST_ID_ALREADY_EXISTS);
         }
         
         Candidate candidate = new Candidate(candidateDto);
@@ -52,29 +47,23 @@ public class CandidateService {
     public List<CandidateDto> updateCandidate(CandidateDto candidateDto) {
         Candidate candidate = candidateRepository.findById(candidateDto.getId()).get();
 
-        if(candidateDto.getName() == null || candidateDto.getName().isEmpty()) {
-            throw new CMSException(CANDIDATE_NAME_CANNOT_BE_EMPTY);
-        }
-
-        if(candidateDto.getEmail() == null || candidateDto.getEmail().isEmpty()) {
-            throw new CMSException(CANDIDATE_EMAIL_CANNOT_BE_EMPTY);
-        }
-
-        if(candidateDto.getIstID() == null || candidateDto.getIstID().isEmpty()) {
-            throw new CMSException(CANDIDATE_IST_ID_CANNOT_BE_EMPTY);
-        }
-
         // check if email is already in use
         List<Candidate> candidates = candidateRepository.findByEmail(candidateDto.getEmail());
         System.out.println(candidates);
-        if (candidates.size() > 0 && !candidates.get(0).getId().equals(candidateDto.getId())) {
+        if (candidates.size() > 0 && 
+            candidates.stream().anyMatch(c -> !c.getId().equals(candidate.getId()))) {
             System.out.println(candidates);
             throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
         }
 
-        candidate.setName(candidateDto.getName());
-        candidate.setEmail(candidateDto.getEmail());
-        candidate.setIstID(candidateDto.getIstID());
+        // check if IST ID is already in use
+        candidates = candidateRepository.findByIstID(candidateDto.getIstID());
+        if (candidates.size() > 0 && 
+            candidates.stream().anyMatch(c -> !c.getId().equals(candidate.getId()))) {
+            throw new CMSException(CANDIDATE_IST_ID_ALREADY_EXISTS);
+        }
+
+        candidate.update(candidateDto);
         candidateRepository.save(candidate);
         return getCandidates();
     }

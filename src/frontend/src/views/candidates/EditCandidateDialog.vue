@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogVisible" max-width="400">
+    <v-dialog v-model="dialogVisible" max-width="400" @click:outside="handleOutsideClick">
     <v-card prepend-icon="mdi-account" title="Edit Candidate">
       <v-card-text>
         <v-text-field
@@ -39,7 +39,7 @@ import { ref, watch, defineProps, defineEmits } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type CandidateDto from '@/models/candidates/CandidateDto'
 
-const props = defineProps<{ candidate: CandidateDto | null, visible: boolean }>()
+const props = defineProps<{ candidate: CandidateDto | null; visible: boolean }>()
 const emit = defineEmits(['close', 'candidate-updated'])
 
 const dialogVisible = ref(false)
@@ -48,16 +48,19 @@ const emailError = ref<string>('')
 const nameError = ref<string>('')
 const istIDError = ref<string>('')
 
-watch(() => props.visible, (newVal) => {
-  dialogVisible.value = newVal
-  if (newVal && props.candidate) {
-    localCandidate.value = { ...props.candidate }
+watch(
+  () => props.visible,
+  (newVal) => {
+    dialogVisible.value = newVal
+    if (newVal && props.candidate) {
+      localCandidate.value = { ...props.candidate }
+    }
   }
-})
+)
 
 const validateEmail = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!localCandidate.value?.email) {
+  if (!localCandidate.value.email) {
     emailError.value = 'Email is required'
   } else if (!emailPattern.test(localCandidate.value.email)) {
     emailError.value = 'Invalid email address'
@@ -67,7 +70,7 @@ const validateEmail = () => {
 }
 
 const validateName = () => {
-  if (!localCandidate.value?.name) {
+  if (!localCandidate.value.name) {
     nameError.value = 'Name is required'
   } else {
     nameError.value = ''
@@ -75,8 +78,8 @@ const validateName = () => {
 }
 
 const validateIstID = () => {
-  if (!localCandidate.value?.istID) {
-    istIDError.value = 'IstID is required'
+  if (!localCandidate.value.istID) {
+    istIDError.value = 'Ist ID is required'
   } else {
     istIDError.value = ''
   }
@@ -86,7 +89,7 @@ const handleSave = async () => {
   validateName()
   validateEmail()
   validateIstID()
-  if (!nameError.value && !emailError.value && !istIDError.value && localCandidate.value) {
+  if (!emailError.value && !emailError.value && !istIDError.value) {
     await saveCandidate()
     closeDialog()
   }
@@ -96,7 +99,7 @@ const saveCandidate = async () => {
   try {
     await RemoteService.updateCandidate(localCandidate.value)
   } catch (error) {
-    console.log(error.response.data.message)
+    console.log(error)
   }
 
   console.log(localCandidate.value)
@@ -110,5 +113,9 @@ const saveCandidate = async () => {
 
 const closeDialog = () => {
   emit('close')
+}
+
+const handleOutsideClick = () => {
+  closeDialog()
 }
 </script>

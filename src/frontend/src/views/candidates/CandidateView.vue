@@ -22,6 +22,7 @@
       :items="candidates"
       :search="search"
       :custom-filter="fuzzySearch"
+      :hover="true"
       class="text-left"
     >
       <template v-slot:[`item.actions`]="{ item }">
@@ -68,6 +69,7 @@
   }
   
   function editCandidate(candidate: CandidateDto) {
+    console.log(editDialogVisible.value)
     selectedCandidate.value = candidate
     editDialogVisible.value = true
   }
