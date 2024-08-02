@@ -136,4 +136,9 @@ public class Candidate {
         }
     }
 
+    public Candidate orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
+
 }

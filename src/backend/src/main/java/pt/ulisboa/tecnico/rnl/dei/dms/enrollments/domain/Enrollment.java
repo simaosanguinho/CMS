@@ -2,7 +2,11 @@ package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain;
 
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
+
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,11 +28,12 @@ public class Enrollment {
     public Enrollment() {
     }
 
-    public Enrollment(Candidate candidate, Grant grant) {
-        this.candidate = candidate;
-        this.grant = grant;
-    }
+    public Enrollment(Candidate candidate, Grant grant, EnrollmentDto enrollmentDto) {
+        setCandidate(candidate);
+        setGrant(grant);
 
+        verifyInvariants();
+    }
     public Long getId() {
         return id;
     }
@@ -49,5 +54,8 @@ public class Enrollment {
         this.grant = grant;
     }
 
-    
+    public void verifyInvariants() {
+        // no invarinats to be checked
+    }
+
 }
