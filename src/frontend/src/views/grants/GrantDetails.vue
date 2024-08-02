@@ -60,7 +60,7 @@
           <v-row align="center">
             <v-card-title class="pt-5">
               <v-card-title class="pt-5">
-                <h4>Candidatos Inscritos</h4>
+                <h4>Candidatos Inscritos ( {{ enrolledCandidates.length }} )</h4>
               </v-card-title>
             </v-card-title>
             <v-spacer></v-spacer>
@@ -71,7 +71,15 @@
               color="primary"
             ></v-btn>
           </v-row>
-          <v-data-table :hover="true" class="text-left"></v-data-table>
+          <v-data-table
+            :headers="headers"
+            :items="enrolledCandidates"
+            :search="search"
+            :custom-filter="fuzzySearch"
+            :hover="true"
+            class="text-left"
+          >
+          </v-data-table>
         </v-col>
       </v-row>
     </div>
@@ -90,6 +98,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
+import type CandidateDto from '@/models/candidates/CandidateDto'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 
 const route = useRoute()
@@ -97,11 +106,21 @@ const router = useRouter()
 const editDialogVisible = ref(false)
 const grant = ref<GrantDto | null>(null)
 const loading = ref(true)
+const enrolledCandidates = ref<CandidateDto | null>(null)
 
-const fetchGrant = async (id: string) => {
+const search = ref('')
+const headers = [
+    { title: 'ID', value: 'id', key: 'id' },
+    { title: 'Name', value: 'name', key: 'name' },
+    { title: 'Ist ID', value: 'istID', key: 'istID' },
+  ]
+
+  const fetchGrant = async (id: string) => {
   try {
     grant.value = await RemoteService.getGrantById(id)
-    console.log('Grant:', grant.value)
+    const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
+    enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
+
   } catch (error) {
     console.error('Failed to fetch grant details:', error)
   } finally {
@@ -143,6 +162,11 @@ const winnerButtonText = computed(() => {
   return grant.value && grant.value.vacancy > 1 ? 'Selecionar Vencedores' : 'Selecionar Vencedor'
 })
 
+const fuzzySearch = (value: string, search: string) => {
+    // Regex to match any character in between the search characters
+    let searchRegex = new RegExp(search.split('').join('.*'), 'i')
+    return searchRegex.test(value)
+  }
 onMounted(() => {
   const grantId = route.params.id as string
   fetchGrant(grantId)
