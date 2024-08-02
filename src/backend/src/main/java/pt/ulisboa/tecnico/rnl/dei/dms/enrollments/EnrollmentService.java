@@ -16,8 +16,8 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.repository.GrantRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EnrollmentService {
@@ -54,10 +54,22 @@ public class EnrollmentService {
     }
 
     public List<EnrollmentDto> getEnrollmentsByGrantId(Long grantId) {
-        return enrollmentRepository.findByGrantId(grantId).stream().map(EnrollmentDto::new).collect(Collectors.toList());
+        if(grantId == null) {
+            throw new CMSException(ErrorMessage.GRANT_NOT_FOUND);
+        }
+        return enrollmentRepository.findByGrantId(grantId).stream()
+                .sorted(Comparator.comparing(Enrollment::getId))
+                .map(EnrollmentDto::new)
+                .toList();
     }
 
     public List<EnrollmentDto> getEnrollmentsByCandidateId(Long candidateId) {
-        return enrollmentRepository.findByCandidateId(candidateId).stream().map(EnrollmentDto::new).collect(Collectors.toList());
+        if(candidateId == null) {
+            throw new CMSException(ErrorMessage.CANDIDATE_NOT_FOUND);
+        }
+        return enrollmentRepository.findByCandidateId(candidateId).stream()
+                .sorted(Comparator.comparing(Enrollment::getId))
+                .map(EnrollmentDto::new)
+                .toList();
     }
 }
