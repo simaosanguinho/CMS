@@ -112,6 +112,10 @@ public class Grant {
     }
 
     public void isValidIncome() {
+        if(this.monthlyIncome == null) {
+            throw new CMSException(ErrorMessage.GRANT_MONTHLY_INCOME_CANNOT_BE_EMPTY);
+        }
+
         if(this.monthlyIncome < 0) {
             throw new CMSException(ErrorMessage.GRANT_MONTHLY_INCOME_CANNOT_BE_NEGATIVE);
         }

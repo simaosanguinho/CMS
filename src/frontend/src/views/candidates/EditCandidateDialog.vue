@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogVisible" max-width="400">
+    <v-dialog v-model="dialogVisible" max-width="400">
     <v-card prepend-icon="mdi-account" title="Edit Candidate">
       <v-card-text>
         <v-text-field
