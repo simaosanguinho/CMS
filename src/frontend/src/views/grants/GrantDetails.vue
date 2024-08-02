@@ -67,6 +67,13 @@
             <v-btn
               class="text-none font-weight-regular mr-6"
               prepend-icon="mdi-plus"
+              text="Adicionar Candidato"
+              color="primary"
+              @click="enrollCandidates()"
+            ></v-btn>
+            <v-btn
+              class="text-none font-weight-regular mr-6"
+              prepend-icon="mdi-plus"
               :text="winnerButtonText"
               color="primary"
             ></v-btn>
@@ -94,6 +101,13 @@
     @close="editDialogVisible = false"
     @grant-updated="fetchGrant(grant.id)"
   />
+
+  <EnrollCandidatesDialog 
+    :grant="grant"
+    :visible="enrollDialogVisible"
+    @close="enrollDialogVisible = false"
+    @candidates-enrolled="fetchGrant" 
+  />
 </template>
 
 <script setup lang="ts">
@@ -103,10 +117,12 @@ import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
 import type CandidateDto from '@/models/candidates/CandidateDto'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
+import EnrollCandidatesDialog from '@/views/enrollments/EnrollCandidatesDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
 const editDialogVisible = ref(false)
+const enrollDialogVisible = ref(false)
 const grant = ref<GrantDto | null>(null)
 const loading = ref(true)
 const enrolledCandidates = ref<CandidateDto | null>(null)
@@ -121,7 +137,9 @@ const headers = [
 
   const fetchGrant = async (id: string) => {
   try {
+    
     grant.value = await RemoteService.getGrantById(id)
+    console.log('Type of grant.value:', typeof grant.value.id)
     const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
 
     enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
@@ -160,6 +178,11 @@ const deleteGrant = async () => {
       console.error('Failed to delete grant:', error)
     }
   }
+}
+
+const enrollCandidates = () => {
+  console.log('Selected grant:', grant.value)
+  enrollDialogVisible.value = true
 }
 
 const unenrollCandidate = async (candidate: CandidateDto) => {

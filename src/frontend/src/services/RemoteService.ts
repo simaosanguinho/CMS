@@ -108,11 +108,7 @@ export default class RemoteService {
     return httpClient.get(`/grants/${grantId}/enrollments`).then((response) => {
       console.log("GETTING ENROLLMENTS BY GRANT ID: ", grantId)
       console.log("RESPONSE: ", response)
-      /* return response.data.map((candidate: any) => {
-        return new CandidateDto(candidate)
-      }) */
 
-      // return a mapping of the candidates coupled with the enrollment id
       return response.data.map((enrollment: any) => {
         return new CandidateDto(enrollment)
       })
@@ -130,5 +126,13 @@ export default class RemoteService {
 
   static async unenrollCandidate(enrollmentId: string): Promise<void> {
     return httpClient.delete(`/grants/enrollments/${enrollmentId}`)
+  }
+
+  static async getUnenrolledCandidates(grantId: string): Promise<CandidateDto[]> {
+    return httpClient.get(`/grants/${grantId}/unenrolled`).then((response) => {
+      return response.data.map((candidate: any) => {
+        return new CandidateDto(candidate)
+      })
+    })
   }
 }

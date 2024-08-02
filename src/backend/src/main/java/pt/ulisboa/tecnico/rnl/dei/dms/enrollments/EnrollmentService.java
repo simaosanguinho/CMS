@@ -9,7 +9,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.repository.EnrollmentRepository;
-
+import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.repository.GrantRepository;
 
@@ -79,5 +79,19 @@ public class EnrollmentService {
         }
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow(() -> new CMSException(ErrorMessage.ENROLLMENT_NOT_FOUND));
         enrollmentRepository.delete(enrollment);
+    }
+
+    public List<CandidateDto> getUnenrolledCandidates(Long grantId) {
+        if(grantId == null) {
+            throw new CMSException(ErrorMessage.GRANT_NOT_FOUND);
+        }
+        
+        Grant grant = grantRepository.findById(grantId).orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
+
+        return candidateRepository.findAll().stream()
+                .filter(candidate -> !enrollmentRepository.existsByCandidateAndGrant(candidate, grant))
+                .sorted(Comparator.comparing(Candidate::getId))
+                .map(CandidateDto::new)
+                .toList();
     }
 }
