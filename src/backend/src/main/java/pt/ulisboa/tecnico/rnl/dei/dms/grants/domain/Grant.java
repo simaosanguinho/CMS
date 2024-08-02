@@ -26,6 +26,8 @@ public class Grant {
 
     private Long monthlyIncome;
 
+    private Integer vacancy;
+
     @ManyToMany(mappedBy = "grants", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Candidate> candidates;
 
@@ -37,6 +39,7 @@ public class Grant {
         setStartDate(DateHandler.toLocalDateTime(grantDto.getStartDate()));
         setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
         setMonthlyIncome(grantDto.getMonthlyIncome());
+        setVacancy(grantDto.getVacancy());
 
         verifyInvariants();
     }
@@ -45,6 +48,7 @@ public class Grant {
         setStartDate(DateHandler.toLocalDateTime(grantDto.getStartDate()));
         setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
         setMonthlyIncome(grantDto.getMonthlyIncome());
+        setVacancy(grantDto.getVacancy());
 
         verifyInvariants();
     }
@@ -69,6 +73,10 @@ public class Grant {
         return candidates;
     }
 
+    public Integer getVacancy() {
+        return vacancy;
+    }
+
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
@@ -83,6 +91,10 @@ public class Grant {
 
     public void setCandidates(Set<Candidate> candidates) {
         this.candidates = candidates;
+    }
+
+    public void setVacancy(Integer vacancy) {
+        this.vacancy = vacancy;
     }
 
     public void addCandidate(Candidate candidate) {
@@ -109,6 +121,7 @@ public class Grant {
         isStartDateValid();
         isEndDateValid();
         isGrantDurationValid();
+        isVancancyValid();
     }
 
     public void isValidIncome() {
@@ -136,6 +149,16 @@ public class Grant {
     public void isGrantDurationValid() {
         if(this.startDate.isAfter(this.endDate)) {
             throw new CMSException(ErrorMessage.GRANT_START_DATE_CANNOT_BE_AFTER_END_DATE);
+        }
+    }
+
+    public void isVancancyValid() {
+        if(this.vacancy == null || this.vacancy == 0) {
+            throw new CMSException(ErrorMessage.GRANT_VACANCY_CANNOT_BE_EMPTY);
+        }
+
+        if(this.vacancy < 0) {
+            throw new CMSException(ErrorMessage.GRANT_VACANCY_CANNOT_BE_NEGATIVE);
         }
     }
 }

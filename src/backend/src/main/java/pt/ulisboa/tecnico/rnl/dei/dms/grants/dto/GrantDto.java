@@ -14,6 +14,7 @@ public class GrantDto {
     private String endDate;
     private Long monthlyIncome;
     private Set <CandidateDto> candidateDto;
+    private Integer vacancy;
 
     public GrantDto() {
     }
@@ -23,6 +24,7 @@ public class GrantDto {
         this.startDate = DateHandler.toISOString(grant.getStartDate());
         this.endDate = DateHandler.toISOString(grant.getEndDate());
         this.monthlyIncome = grant.getMonthlyIncome();
+        this.vacancy = grant.getVacancy();
     }
 
     public GrantDto(Grant grant, boolean deepCopyCandidates) {
@@ -30,6 +32,7 @@ public class GrantDto {
         this.startDate = DateHandler.toISOString(grant.getStartDate());
         this.endDate = DateHandler.toISOString(grant.getEndDate());
         this.monthlyIncome = grant.getMonthlyIncome();
+        this.vacancy = grant.getVacancy();
         
         if(deepCopyCandidates) {
             this.candidateDto = grant.getCandidates().stream()
@@ -58,6 +61,10 @@ public class GrantDto {
         return candidateDto;
     }
 
+    public Integer getVacancy() {
+        return vacancy;
+    }
+
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
@@ -72,6 +79,10 @@ public class GrantDto {
 
     public void setCandidateDto(Set<CandidateDto> candidateDto) {
         this.candidateDto = candidateDto;
+    }
+
+    public void setVacancy(Integer vacancy) {
+        this.vacancy = vacancy;
     }
 
     @Override

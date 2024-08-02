@@ -27,6 +27,12 @@ public class CandidateService {
         if (candidates.size() > 0) {
             throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
         }
+
+        // check if IST ID is already in use
+        candidates = candidateRepository.findByIstID(candidateDto.getIstID());
+        if (candidates.size() > 0) {
+            throw new CMSException(CANDIDATE_IST_ID_ALREADY_EXISTS);
+        }
         
         Candidate candidate = new Candidate(candidateDto);
         candidateRepository.save(candidate);
@@ -48,6 +54,13 @@ public class CandidateService {
             candidates.stream().anyMatch(c -> !c.getId().equals(candidate.getId()))) {
             System.out.println(candidates);
             throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
+        }
+
+        // check if IST ID is already in use
+        candidates = candidateRepository.findByIstID(candidateDto.getIstID());
+        if (candidates.size() > 0 && 
+            candidates.stream().anyMatch(c -> !c.getId().equals(candidate.getId()))) {
+            throw new CMSException(CANDIDATE_IST_ID_ALREADY_EXISTS);
         }
 
         candidate.update(candidateDto);
