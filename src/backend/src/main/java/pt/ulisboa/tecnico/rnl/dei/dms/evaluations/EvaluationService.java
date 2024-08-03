@@ -23,5 +23,15 @@ public class EvaluationService {
         return new EvaluationDto(evaluation);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public void getEvaluationById(Long id) {
+        evaluationRepository.findById(id);
+    }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public void deleteEvaluation(Long id) {
+        evaluationRepository.deleteById(id);
+    }
+
 
 }
