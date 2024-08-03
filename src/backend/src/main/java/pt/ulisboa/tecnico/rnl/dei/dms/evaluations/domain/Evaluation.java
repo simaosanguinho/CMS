@@ -2,11 +2,12 @@ package pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.dto.EvaluationDto;
-
-
+import java.util.EnumMap;
+import java.util.Map;
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
 
 @Entity
 @Table(name = "evaluations")
@@ -16,14 +17,9 @@ public class Evaluation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "curricular_evaluation")
-    private Double curricularEvaluation;
-
-    @Column(name = "interview")
-    private Double interview;
-
-    @Column(name = "practical_exercise")
-    private Double practicalExercise;
+    @ElementCollection
+    @CollectionTable(name = "evaluation_scores")
+    private Map<GrantEvaluationCategory, Double> scores = new EnumMap<>(GrantEvaluationCategory.class);
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "enrollment_id")
@@ -51,27 +47,27 @@ public class Evaluation {
     }
 
     public Double getCurricularEvaluation() {
-        return curricularEvaluation;
+        return scores.get(GrantEvaluationCategory.CURRICULAR_EVALUATION);
     }
 
     public Double getInterview() {
-        return interview;
+        return scores.get(GrantEvaluationCategory.INTERVIEW);
     }
 
     public Double getPracticalExercise() {
-        return practicalExercise;
+        return scores.get(GrantEvaluationCategory.PRACTICAL_EXERCISE);
     }
 
     public void setCurricularEvaluation(Double curricularEvaluation) {
-        this.curricularEvaluation = curricularEvaluation;
+        scores.put(GrantEvaluationCategory.CURRICULAR_EVALUATION, curricularEvaluation);
     }
 
     public void setInterview(Double interview) {
-        this.interview = interview;
+        scores.put(GrantEvaluationCategory.INTERVIEW, interview);
     }
 
     public void setPracticalExercise(Double practicalExercise) {
-        this.practicalExercise = practicalExercise;
+        scores.put(GrantEvaluationCategory.PRACTICAL_EXERCISE, practicalExercise);
     }
 
     public Enrollment getEnrollment() {
@@ -83,13 +79,19 @@ public class Evaluation {
     }
 
     public void verifyInvariants() {
-        if (curricularEvaluation < 0 || curricularEvaluation > 20) {
+        if (getCurricularEvaluation() == null || getInterview() == null || getPracticalExercise() == null) {
+            throw new CMSException(ErrorMessage.EVALUATION_PARAMETERS_CANNOT_BE_EMPTY);
+        }
+
+        if (getCurricularEvaluation() < 0 || getCurricularEvaluation() > 20) {
             throw new CMSException(ErrorMessage.EVALUATION_PARAMETERS_OUT_OF_BOUNDS);
         }
-        if (interview < 0 || interview > 20) {
+
+        if (getInterview() < 0 || getInterview() > 20) {
             throw new CMSException(ErrorMessage.EVALUATION_PARAMETERS_OUT_OF_BOUNDS);
         }
-        if (practicalExercise < 0 || practicalExercise > 20) {
+
+        if (getPracticalExercise() < 0 || getPracticalExercise() > 20) {
             throw new CMSException(ErrorMessage.EVALUATION_PARAMETERS_OUT_OF_BOUNDS);
         }
     }
@@ -97,9 +99,10 @@ public class Evaluation {
     public String toString() {
         return "Evaluation{" +
                 "id=" + id +
-                ", curricularEvaluation=" + curricularEvaluation +
-                ", interview=" + interview +
-                ", practicalExercise=" + practicalExercise +
+                ", curricularEvaluation=" + getCurricularEvaluation() +
+                ", interview=" + getInterview() +
+                ", practicalExercise=" + getPracticalExercise() +
+                ", enrollmentId=" + enrollment.getId() +
                 '}';
     }
     

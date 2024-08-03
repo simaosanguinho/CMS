@@ -4,7 +4,7 @@ import java.util.Map;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
-import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationMethods;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
 
 
 public class GrantDto {
@@ -58,11 +58,11 @@ public class GrantDto {
         return ongoing;
     }
 
-    public Map<GrantEvaluationMethods, Double> getEvaluationWeights() {
+    public Map<GrantEvaluationCategory, Double> getEvaluationWeights() {
         return Map.of(
-                GrantEvaluationMethods.CURRICULAR_EVALUATION, curricularEvaluationWeight,
-                GrantEvaluationMethods.INTERVIEW, interviewWeight,
-                GrantEvaluationMethods.PRACTICAL_EXERCISE, practicalExerciseWeight
+                GrantEvaluationCategory.CURRICULAR_EVALUATION, curricularEvaluationWeight,
+                GrantEvaluationCategory.INTERVIEW, interviewWeight,
+                GrantEvaluationCategory.PRACTICAL_EXERCISE, practicalExerciseWeight
         );
     }
 
@@ -86,10 +86,10 @@ public class GrantDto {
         this.vacancy = vacancy;
     }
 
-    public void setEvaluationWeights(Map<GrantEvaluationMethods, Double> weights) {
-        this.curricularEvaluationWeight = weights.get(GrantEvaluationMethods.CURRICULAR_EVALUATION);
-        this.interviewWeight = weights.get(GrantEvaluationMethods.INTERVIEW);
-        this.practicalExerciseWeight = weights.get(GrantEvaluationMethods.PRACTICAL_EXERCISE);
+    public void setEvaluationWeights(Map<GrantEvaluationCategory, Double> weights) {
+        this.curricularEvaluationWeight = weights.get(GrantEvaluationCategory.CURRICULAR_EVALUATION);
+        this.interviewWeight = weights.get(GrantEvaluationCategory.INTERVIEW);
+        this.practicalExerciseWeight = weights.get(GrantEvaluationCategory.PRACTICAL_EXERCISE);
     }
 
     public void setOngoing(boolean ongoing) {

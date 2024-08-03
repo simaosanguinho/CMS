@@ -5,7 +5,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
-import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationMethods;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -89,11 +89,11 @@ public class Grant {
         return ongoing;
     }
 
-    public Map<GrantEvaluationMethods, Double> getWeights() {
+    public Map<GrantEvaluationCategory, Double> getWeights() {
         return Map.of(
-                GrantEvaluationMethods.CURRICULAR_EVALUATION, curricularEvaluationWeight,
-                GrantEvaluationMethods.INTERVIEW, interviewWeight,
-                GrantEvaluationMethods.PRACTICAL_EXERCISE, practicalExerciseWeight
+                GrantEvaluationCategory.CURRICULAR_EVALUATION, curricularEvaluationWeight,
+                GrantEvaluationCategory.INTERVIEW, interviewWeight,
+                GrantEvaluationCategory.PRACTICAL_EXERCISE, practicalExerciseWeight
         );
     }
         
@@ -115,10 +115,10 @@ public class Grant {
         this.vacancy = vacancy;
     }
 
-    public void setWeights(Map<GrantEvaluationMethods, Double> weights) {
-        this.curricularEvaluationWeight = weights.get(GrantEvaluationMethods.CURRICULAR_EVALUATION);
-        this.interviewWeight = weights.get(GrantEvaluationMethods.INTERVIEW);
-        this.practicalExerciseWeight = weights.get(GrantEvaluationMethods.PRACTICAL_EXERCISE);
+    public void setWeights(Map<GrantEvaluationCategory, Double> weights) {
+        this.curricularEvaluationWeight = weights.get(GrantEvaluationCategory.CURRICULAR_EVALUATION);
+        this.interviewWeight = weights.get(GrantEvaluationCategory.INTERVIEW);
+        this.practicalExerciseWeight = weights.get(GrantEvaluationCategory.PRACTICAL_EXERCISE);
     }
 
     public void setDefaultWeights() {

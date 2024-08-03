@@ -5,7 +5,6 @@ import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
 public class EvaluationDto {
     private Long id;
 
-    // Parameters of Evaluation
     private Double curricularEvaluation;
     private Double interview;
     private Double practicalExercise;
