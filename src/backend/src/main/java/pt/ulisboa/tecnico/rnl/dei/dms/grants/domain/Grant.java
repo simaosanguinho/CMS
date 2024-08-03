@@ -1,7 +1,5 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.grants.domain;
 
-import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
-import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
@@ -9,13 +7,8 @@ import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationMethods;
 
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-
-
 
 @Entity
 @Table(name = "grants")

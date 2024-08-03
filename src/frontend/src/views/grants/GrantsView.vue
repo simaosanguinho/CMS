@@ -32,6 +32,7 @@
         <td>{{ formatDate(item.endDate) }}</td>
         <td>{{ item.monthlyIncome }}</td>
         <td>{{ item.vacancy }}</td>
+        <td>{{ item.isOngoing ? 'A decorrer' : 'Fechado' }}</td>
         <td>
           <v-icon @click.stop="editGrant(item)" class="mr-2">mdi-pencil</v-icon>
           <v-icon @click.stop="deleteGrant(item)">mdi-delete</v-icon>
@@ -67,6 +68,7 @@ const headers = [
   { title: 'End Date', value: 'endDate', key: 'endDate' },
   { title: 'Monthly Income (€)', value: 'monthlyIncome', key: 'monthlyIncome' },
   { title: 'Vacancies', value: 'vacancy', key: 'vacancy' },
+  { title: 'Estado', value: 'isOngoing', key: 'isOngoing' },
   { title: 'Actions', value: 'actions', key: 'actions' }
 ]
 
@@ -76,6 +78,7 @@ const selectedGrant = ref<GrantDto | null>(null)
 
 async function getGrants() {
   grants.value = await RemoteService.getGrants()
+  console.log("Grants: ", grants.value)
 }
 
 function editGrant(grant: GrantDto) {
