@@ -20,7 +20,9 @@ public enum ErrorMessage {
     ENROLLMENT_CANDIDATE_CANNOT_BE_EMPTY("Candidate cannot be empty."),
     ENROLLMENT_GRANT_CANNOT_BE_EMPTY("Grant cannot be empty."),
     ENROLLMENT_CANNOT_BE_EMPTY("Enrollment cannot be empty."),
-    ENROLLMENT_NOT_FOUND("Enrollment was not found.")
+    ENROLLMENT_NOT_FOUND("Enrollment was not found."),
+    EVALUATION_PARAMETERS_CANNOT_BE_EMPTY("Evaluation parameters cannot be empty."),
+    EVALUATION_PARAMETERS_OUT_OF_BOUNDS("Evaluation parameters must be between 0 and 20."),
     ;
 
     public final String label;
