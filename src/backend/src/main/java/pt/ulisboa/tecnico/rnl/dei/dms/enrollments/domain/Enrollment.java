@@ -4,6 +4,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
 
 import jakarta.persistence.*;
 
@@ -22,6 +23,11 @@ public class Enrollment {
     @ManyToOne
     @JoinColumn(name = "grant_id")
     private Grant grant;
+
+    @OneToOne(mappedBy = "enrollment", cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "evaluation_id")
+    private Evaluation evaluation; 
+
 
     public Enrollment() {
     }

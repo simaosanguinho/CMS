@@ -23,11 +23,9 @@ public class Evaluation {
     @Column(name = "practical_exercise")
     private Double practicalExercise;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "enrollment_id")
     private Enrollment enrollment;
-
-
 
     public Evaluation() {
     }
