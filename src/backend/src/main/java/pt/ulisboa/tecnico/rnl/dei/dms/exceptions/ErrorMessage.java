@@ -23,6 +23,8 @@ public enum ErrorMessage {
     ENROLLMENT_NOT_FOUND("Enrollment was not found."),
     EVALUATION_PARAMETERS_CANNOT_BE_EMPTY("Evaluation parameters cannot be empty."),
     EVALUATION_PARAMETERS_OUT_OF_BOUNDS("Evaluation parameters must be between 0 and 20."),
+    EVALUATION_NOT_FOUND("Evaluation was not found."),
+
     ;
 
     public final String label;

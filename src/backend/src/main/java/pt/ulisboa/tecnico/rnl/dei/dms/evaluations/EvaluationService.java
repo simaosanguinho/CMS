@@ -10,9 +10,12 @@ import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.dto.EvaluationDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.repository.EvaluationRepository;
 
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
+
 @Service
 public class EvaluationService {
-    
+
     @Autowired
     private EvaluationRepository evaluationRepository;
 
@@ -33,5 +36,12 @@ public class EvaluationService {
         evaluationRepository.deleteById(id);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public EvaluationDto updateEvaluation(Long id, EvaluationDto evaluationDto) {
+        Evaluation evaluation = evaluationRepository.findById(id).orElseThrow(()-> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
+        evaluation.update(evaluationDto);
+        evaluationRepository.save(evaluation);
+        return new EvaluationDto(evaluation);
+    }
 
 }
