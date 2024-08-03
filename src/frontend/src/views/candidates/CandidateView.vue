@@ -24,7 +24,10 @@
       :custom-filter="fuzzySearch"
       :hover="true"
       class="text-left"
-    >
+    > 
+      <template v-slot:[`item.grants`]="{ item }">
+        <v-icon @click="showGrants(item)" class="mr-2">mdi-list-box</v-icon>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon @click="editCandidate(item)" class="mr-2">mdi-pencil</v-icon>
         <v-icon @click="deleteCandidate(item)">mdi-delete</v-icon>
@@ -37,6 +40,13 @@
       @close="editDialogVisible = false"
       @candidate-updated="getCandidates"
     />
+
+    <CandidateEnrollmentsDialog
+      :candidate="selectedCandidate"
+      :visible="enrolledGrantsDialogVisible"
+      @close="enrolledGrantsDialogVisible = false"
+      @candidates-enrolled="getCandidates"
+    />
   </template>
   
   <script setup lang="ts">
@@ -45,6 +55,7 @@
   import type CandidateDto from '@/models/candidates/CandidateDto'
   import CreateCandidateDialog from '@/views/candidates/CreateCandidateDialog.vue'
   import EditCandidateDialog from '@/views/candidates/EditCandidateDialog.vue'
+  import CandidateEnrollmentsDialog from '@/views/enrollments/CandidateEnrollmentsDialog.vue'
   
   const search = ref('')
   const headers = [
@@ -52,11 +63,13 @@
     { title: 'Name', value: 'name', key: 'name' },
     { title: 'Email', value: 'email', key: 'email' },
     { title: 'Ist ID', value: 'istID', key: 'istID' },
+    { title: 'Bolsas Inscrito', value: 'grants', key: 'grants' },
     { title: 'Actions', value: 'actions', key: 'actions' },
   ]
   
   const candidates: CandidateDto[] = reactive([])
   const editDialogVisible = ref(false)
+  const enrolledGrantsDialogVisible = ref(false)
   const selectedCandidate = ref<CandidateDto | null>(null)
   
   async function getCandidates() {
@@ -78,6 +91,12 @@
     RemoteService.deleteCandidate(candidate).then(() => {
       getCandidates()
     })
+  }
+
+  function showGrants(candidate: CandidateDto) {
+    selectedCandidate.value = candidate
+    console.log('Showing grants for candidate:', candidate)
+    enrolledGrantsDialogVisible.value = true
   }
   
   const fuzzySearch = (value: string, search: string) => {

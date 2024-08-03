@@ -132,4 +132,14 @@ export default class RemoteService {
       })
     })
   }
+
+  static async getEnrolledGrantsByCandidateId(candidateId: string): Promise<GrantDto[]> {
+    console.log("GETTING ENROLLED GRANTS BY CANDIDATE ID: ", candidateId)
+    return httpClient.get(`/grants/${candidateId}/enrolled`).then((response) => {
+      return response.data.map((grant: any) => {
+        console.log("GRANT: ", grant)
+        return new GrantDto(grant)
+      })
+    })
+  }
 }
