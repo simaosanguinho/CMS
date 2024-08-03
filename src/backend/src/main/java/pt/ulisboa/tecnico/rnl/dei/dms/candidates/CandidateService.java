@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
@@ -18,7 +20,7 @@ public class CandidateService {
     @Autowired
     private CandidateRepository candidateRepository;
 
-    
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public CandidateDto createCandidate(CandidateDto candidateDto) {
 
 
@@ -40,10 +42,12 @@ public class CandidateService {
         return new CandidateDto(candidate);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<CandidateDto> getCandidates() {
         return candidateRepository.findAll().stream().map(CandidateDto::new).collect(Collectors.toList());
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<CandidateDto> updateCandidate(CandidateDto candidateDto) {
         Candidate candidate = candidateRepository.findById(candidateDto.getId()).get();
 
@@ -68,6 +72,7 @@ public class CandidateService {
         return getCandidates();
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<CandidateDto> deleteCandidate(Long id) {
         candidateRepository.deleteById(id);
         return getCandidates();

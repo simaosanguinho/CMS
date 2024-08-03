@@ -31,7 +31,7 @@ public class Grant {
 
     private Integer vacancy;
 
-    @OneToMany(mappedBy = "grant")
+    @OneToMany(mappedBy = "grant", cascade = CascadeType.REMOVE)
     private List<Enrollment> enrollments = new ArrayList<>();
 
     public Grant() {

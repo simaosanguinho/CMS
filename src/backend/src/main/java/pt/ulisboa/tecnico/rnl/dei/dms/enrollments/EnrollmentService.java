@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.rnl.dei.dms.enrollments;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
@@ -31,6 +33,7 @@ public class EnrollmentService {
     @Autowired
     private GrantRepository grantRepository;
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public EnrollmentDto createEnrollment(Long candidateId, Long grantId, EnrollmentDto enrollmentDto) {
         
         if(enrollmentDto == null) {
@@ -53,6 +56,7 @@ public class EnrollmentService {
 
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<EnrollmentDto> getEnrollmentsByGrantId(Long grantId) {
         if(grantId == null) {
             throw new CMSException(ErrorMessage.GRANT_NOT_FOUND);
@@ -63,6 +67,7 @@ public class EnrollmentService {
                 .toList();
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<EnrollmentDto> getEnrollmentsByCandidateId(Long candidateId) {
         if(candidateId == null) {
             throw new CMSException(ErrorMessage.CANDIDATE_NOT_FOUND);
@@ -73,6 +78,7 @@ public class EnrollmentService {
                 .toList();
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void deleteEnrollment(Long enrollmentId) {
         if(enrollmentId == null) {
             throw new CMSException(ErrorMessage.ENROLLMENT_NOT_FOUND);
@@ -81,6 +87,7 @@ public class EnrollmentService {
         enrollmentRepository.delete(enrollment);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<CandidateDto> getUnenrolledCandidates(Long grantId) {
         if(grantId == null) {
             throw new CMSException(ErrorMessage.GRANT_NOT_FOUND);

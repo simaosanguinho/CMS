@@ -25,7 +25,7 @@ public class Candidate {
 
     private String istID;
 
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.REMOVE)
     private List<Enrollment> enrollments = new ArrayList<>();
 
     public Candidate() {
