@@ -5,6 +5,10 @@
       <v-card-text>
         <v-row>
           <v-col cols="6">
+            <v-card-title class="text-center justify-center">
+              <h4>Start Date</h4>
+            </v-card-title>
+            <v-divider></v-divider>
             <v-date-picker
               v-model="localStartDate"
               label="Start Date*"
@@ -13,6 +17,10 @@
             ></v-date-picker>
           </v-col>
           <v-col cols="6">
+            <v-card-title class="text-center justify-center">
+              <h4>End Date</h4>
+            </v-card-title>
+            <v-divider></v-divider>
             <v-date-picker
               v-model="localEndDate"
               label="End Date*"
@@ -22,26 +30,26 @@
           </v-col>
         </v-row>
         <v-row>
-            <v-text-field
-              label="Monthly Income (€)*"
-              required
-              v-model="localGrant.monthlyIncome"
-              type="number"
-              :error-messages="monthlyIncomeError"
-              @input="validateMonthlyIncome"
-              class="mx-6"
-            ></v-text-field>
+          <v-text-field
+            label="Monthly Income (€)*"
+            required
+            v-model="localGrant.monthlyIncome"
+            type="number"
+            :error-messages="monthlyIncomeError"
+            @input="validateMonthlyIncome"
+            class="mx-6"
+          ></v-text-field>
 
-            <v-text-field
-              label="Vacancy*"
-              required
-              v-model="localGrant.vacancy"
-              type="number"
-              :error-messages="vacancyError"
-              @input="validateVacancy"
-              class="mx-6"
-            ></v-text-field>
-          </v-row>
+          <v-text-field
+            label="Vacancy*"
+            required
+            v-model="localGrant.vacancy"
+            type="number"
+            :error-messages="vacancyError"
+            @input="validateVacancy"
+            class="mx-6"
+          ></v-text-field>
+        </v-row>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -71,21 +79,27 @@ const startDateError = ref<string>('')
 const endDateError = ref<string>('')
 const vacancyError = ref<string>('')
 
-watch(() => props.visible, (newVal) => {
-  dialogVisible.value = newVal
-  if (props.grant) {
-    console.log('Type of props.grant.startDate:', typeof props.grant.startDate)
-    localGrant.value = { ...props.grant }
-    localStartDate.value = props.grant.startDate ? new Date(props.grant.startDate) : null
-    localEndDate.value = props.grant.endDate ? new Date(props.grant.endDate) : null
+watch(
+  () => props.visible,
+  (newVal) => {
+    dialogVisible.value = newVal
+    if (props.grant) {
+      console.log('Type of props.grant.startDate:', typeof props.grant.startDate)
+      localGrant.value = { ...props.grant }
+      localStartDate.value = props.grant.startDate ? new Date(props.grant.startDate) : null
+      localEndDate.value = props.grant.endDate ? new Date(props.grant.endDate) : null
+    }
   }
-})
+)
 
-watch(() => dialogVisible.value, (newVal) => {
-  if (!newVal) {
-    emit('close')
+watch(
+  () => dialogVisible.value,
+  (newVal) => {
+    if (!newVal) {
+      emit('close')
+    }
   }
-})
+)
 
 const validateMonthlyIncome = () => {
   if (!localGrant.value.monthlyIncome) {
@@ -100,8 +114,7 @@ const validateVacancy = () => {
     vacancyError.value = 'Vacancy is required'
   } else if (localGrant.value.vacancy <= 0) {
     vacancyError.value = 'Invalid Vacancy'
-  } 
-  else {
+  } else {
     vacancyError.value = ''
   }
 }
@@ -127,7 +140,12 @@ const handleSave = async () => {
   validateVacancy()
   validateEndDate()
   validateStartDate()
-  if (!monthlyIncomeError.value && !vacancyError.value && !startDateError.value && !endDateError.value) {
+  if (
+    !monthlyIncomeError.value &&
+    !vacancyError.value &&
+    !startDateError.value &&
+    !endDateError.value
+  ) {
     localGrant.value.startDate = localStartDate.value ? ISOtoString(localStartDate.value) : null
     localGrant.value.endDate = localEndDate.value ? ISOtoString(localEndDate.value) : null
     await saveGrant()
@@ -137,21 +155,19 @@ const handleSave = async () => {
 
 const convertToUTC = (date: string | null): string | null => {
   if (date) {
-    const dateObj = new Date(date);
-    return new Date(Date.UTC(
-      dateObj.getFullYear(),
-      dateObj.getMonth(),
-      dateObj.getDate(),
-    )).toISOString();
+    const dateObj = new Date(date)
+    return new Date(
+      Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate())
+    ).toISOString()
   }
-  return null;
+  return null
 }
 
 const saveGrant = async () => {
   try {
     console.log('Local grant:', localGrant.value)
-    localGrant.value.startDate = convertToUTC(localGrant.value.startDate);
-    localGrant.value.endDate = convertToUTC(localGrant.value.endDate);
+    localGrant.value.startDate = convertToUTC(localGrant.value.startDate)
+    localGrant.value.endDate = convertToUTC(localGrant.value.endDate)
     await RemoteService.updateGrant(localGrant.value)
     emit('grant-updated')
   } catch (error) {

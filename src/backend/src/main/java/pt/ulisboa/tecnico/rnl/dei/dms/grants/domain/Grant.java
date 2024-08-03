@@ -1,15 +1,20 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.grants.domain;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationMethods;
 
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 
 
 @Entity
@@ -28,8 +33,18 @@ public class Grant {
 
     private Integer vacancy;
 
-    @ManyToMany(mappedBy = "grants", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Candidate> candidates;
+    @Column(name = "curricular_evaluation_weight")
+    private Double curricularEvaluationWeight;
+
+    @Column(name = "interview_weight")
+    private Double interviewWeight;
+
+    @Column(name = "practical_exercise_weight")
+    private Double practicalExerciseWeight;
+
+    private static final double DEFAULT_CURRICULAR_EVALUATION_WEIGHT = 0.4;
+    private static final double DEFAULT_INTERVIEW_WEIGHT = 0.4;
+    private static final double DEFAULT_PRACTICAL_EXERCISE_WEIGHT = 0.2;
 
     public Grant() {
     }
@@ -40,6 +55,7 @@ public class Grant {
         setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
         setMonthlyIncome(grantDto.getMonthlyIncome());
         setVacancy(grantDto.getVacancy());
+        setDefaultWeights();
 
         verifyInvariants();
     }
@@ -49,6 +65,7 @@ public class Grant {
         setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
         setMonthlyIncome(grantDto.getMonthlyIncome());
         setVacancy(grantDto.getVacancy());
+        setWeights(grantDto.getEvaluationWeights());
 
         verifyInvariants();
     }
@@ -69,13 +86,18 @@ public class Grant {
         return monthlyIncome;
     }
 
-    public Set<Candidate> getCandidates() {
-        return candidates;
-    }
-
     public Integer getVacancy() {
         return vacancy;
     }
+
+    public Map<GrantEvaluationMethods, Double> getWeights() {
+        return Map.of(
+                GrantEvaluationMethods.CURRICULAR_EVALUATION, curricularEvaluationWeight,
+                GrantEvaluationMethods.INTERVIEW, interviewWeight,
+                GrantEvaluationMethods.PRACTICAL_EXERCISE, practicalExerciseWeight
+        );
+    }
+        
 
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
@@ -89,21 +111,23 @@ public class Grant {
         this.monthlyIncome = monthlyIncome;
     }
 
-    public void setCandidates(Set<Candidate> candidates) {
-        this.candidates = candidates;
-    }
 
     public void setVacancy(Integer vacancy) {
         this.vacancy = vacancy;
     }
 
-    public void addCandidate(Candidate candidate) {
-        this.candidates.add(candidate);
+    public void setWeights(Map<GrantEvaluationMethods, Double> weights) {
+        this.curricularEvaluationWeight = weights.get(GrantEvaluationMethods.CURRICULAR_EVALUATION);
+        this.interviewWeight = weights.get(GrantEvaluationMethods.INTERVIEW);
+        this.practicalExerciseWeight = weights.get(GrantEvaluationMethods.PRACTICAL_EXERCISE);
     }
 
-    public void removeCandidate(Candidate candidate) {
-        this.candidates.remove(candidate);
+    public void setDefaultWeights() {
+        this.curricularEvaluationWeight = DEFAULT_CURRICULAR_EVALUATION_WEIGHT;
+        this.interviewWeight = DEFAULT_INTERVIEW_WEIGHT;
+        this.practicalExerciseWeight = DEFAULT_PRACTICAL_EXERCISE_WEIGHT;
     }
+    
 
     @Override
     public String toString() {
@@ -112,7 +136,7 @@ public class Grant {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", monthlyIncome=" + monthlyIncome +
-                ", candidates=" + candidates +
+                ", vacancy=" + vacancy +
                 '}';
     }
 
@@ -122,6 +146,7 @@ public class Grant {
         isEndDateValid();
         isGrantDurationValid();
         isVancancyValid();
+        areWeightsValid();
     }
 
     public void isValidIncome() {
@@ -159,6 +184,12 @@ public class Grant {
 
         if(this.vacancy < 0) {
             throw new CMSException(ErrorMessage.GRANT_VACANCY_CANNOT_BE_NEGATIVE);
+        }
+    }
+
+    public void areWeightsValid() {
+        if(this.curricularEvaluationWeight + this.interviewWeight + this.practicalExerciseWeight != 1) {
+            throw new CMSException(ErrorMessage.CATEGORIES_WEIGHT_MUST_SUM_TO_ONE);
         }
     }
 }

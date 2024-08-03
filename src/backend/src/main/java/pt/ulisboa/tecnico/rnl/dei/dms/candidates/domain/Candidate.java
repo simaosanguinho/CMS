@@ -4,11 +4,12 @@ import java.util.regex.Pattern;
 
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
-import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "candidates")
@@ -24,13 +25,8 @@ public class Candidate {
 
     private String istID;
 
-    @ManyToMany
-    @JoinTable(
-        name = "candidate_grants",
-        joinColumns = @JoinColumn(name = "candidates_id"),
-        inverseJoinColumns = @JoinColumn(name = "grants_id")
-    )
-    private Set<Grant> grants;
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.REMOVE)
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     public Candidate() {
     }
@@ -67,8 +63,8 @@ public class Candidate {
         return istID;
     }
 
-    public Set<Grant> getGrants() {
-        return grants;
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
     }
 
     public void setName(String name) {
@@ -81,6 +77,14 @@ public class Candidate {
 
     public void setIstID(String istID) {
         this.istID = istID;
+    }
+
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
+    }
+
+    public void addEnrollment(Enrollment enrollment) {
+        this.enrollments.add(enrollment);
     }
 
     private void verifyInvariants() {
@@ -130,6 +134,11 @@ public class Candidate {
             System.err.println("IST ID is invalid");
             throw new CMSException(ErrorMessage.CANDIDATE_IST_ID_CANNOT_BE_EMPTY);
         }
+    }
+
+    public Candidate orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
     }
 
 }

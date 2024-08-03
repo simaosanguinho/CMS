@@ -60,10 +60,17 @@
           <v-row align="center">
             <v-card-title class="pt-5">
               <v-card-title class="pt-5">
-                <h4>Candidatos Inscritos</h4>
+                <h4>Candidatos Inscritos ( {{ enrolledCandidates.length }} )</h4>
               </v-card-title>
             </v-card-title>
             <v-spacer></v-spacer>
+            <v-btn
+              class="text-none font-weight-regular mr-6"
+              prepend-icon="mdi-plus"
+              text="Adicionar Candidato"
+              color="primary"
+              @click="enrollCandidates()"
+            ></v-btn>
             <v-btn
               class="text-none font-weight-regular mr-6"
               prepend-icon="mdi-plus"
@@ -71,7 +78,18 @@
               color="primary"
             ></v-btn>
           </v-row>
-          <v-data-table :hover="true" class="text-left"></v-data-table>
+          <v-data-table
+            :headers="headers"
+            :items="enrolledCandidates"
+            :search="search"
+            :custom-filter="fuzzySearch"
+            :hover="true"
+            class="text-left"
+          >
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-icon @click="unenrollCandidate(item)">mdi-delete</v-icon>
+            </template>
+          </v-data-table>
         </v-col>
       </v-row>
     </div>
@@ -83,6 +101,13 @@
     @close="editDialogVisible = false"
     @grant-updated="fetchGrant(grant.id)"
   />
+
+  <EnrollCandidatesDialog 
+    :grant="grant"
+    :visible="enrollDialogVisible"
+    @close="enrollDialogVisible = false"
+    @candidates-enrolled="fetchGrant(grant.id)" 
+  />
 </template>
 
 <script setup lang="ts">
@@ -90,18 +115,40 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
+import type CandidateDto from '@/models/candidates/CandidateDto'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
+import EnrollCandidatesDialog from '@/views/enrollments/EnrollCandidatesDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
 const editDialogVisible = ref(false)
+const enrollDialogVisible = ref(false)
 const grant = ref<GrantDto | null>(null)
 const loading = ref(true)
+const enrolledCandidates = ref<CandidateDto | null>(null)
 
-const fetchGrant = async (id: string) => {
+const search = ref('')
+const headers = [
+    { title: 'ID Inscrição', value: 'enrollmentId', key: 'enrollmentId' },
+    { title: 'Name', value: 'name', key: 'name' },
+    { title: 'Ist ID', value: 'istID', key: 'istID' },
+    { title: 'Actions', value: 'actions', key: 'actions' }
+  ]
+
+  const fetchGrant = async (id: string) => {
   try {
     grant.value = await RemoteService.getGrantById(id)
-    console.log('Grant:', grant.value)
+    const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
+
+    enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
+
+    enrolledCandidates.value.forEach((candidate: CandidateDto) => {
+      const enrollment = fetchedCandidates.find((enrollment: any) => enrollment.candidate.id === candidate.id)
+      if (enrollment) {
+        candidate.enrollmentId = enrollment.id
+      }
+    })
+
   } catch (error) {
     console.error('Failed to fetch grant details:', error)
   } finally {
@@ -130,6 +177,23 @@ const deleteGrant = async () => {
   }
 }
 
+const enrollCandidates = () => {
+  console.log('Selected grant:', grant.value)
+  enrollDialogVisible.value = true
+}
+
+const unenrollCandidate = async (candidate: CandidateDto) => {
+  if (grant.value) {
+    try {
+      console.log('Unenrolling candidate:', candidate.enrollmentId)
+      await RemoteService.unenrollCandidate(candidate.enrollmentId)
+      fetchGrant(grant.value.id)
+    } catch (error) {
+      console.error('Failed to unenroll candidate:', error)
+    }
+  } 
+}
+
 const formatDate = (date: string) => {
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
@@ -143,6 +207,11 @@ const winnerButtonText = computed(() => {
   return grant.value && grant.value.vacancy > 1 ? 'Selecionar Vencedores' : 'Selecionar Vencedor'
 })
 
+const fuzzySearch = (value: string, search: string) => {
+    // Regex to match any character in between the search characters
+    let searchRegex = new RegExp(search.split('').join('.*'), 'i')
+    return searchRegex.test(value)
+  }
 onMounted(() => {
   const grantId = route.params.id as string
   fetchGrant(grantId)

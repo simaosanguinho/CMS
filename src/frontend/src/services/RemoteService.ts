@@ -98,4 +98,48 @@ export default class RemoteService {
       return new GrantDto(response.data)
     })
   }
+
+  // ------------------- Enrollments -------------------
+  static async enrollCandidate(candidateId: string, grantId: string): Promise<void> {
+    return httpClient.post(`/grants/${grantId}/enrollments/${candidateId}`, { candidateId, grantId })
+  }
+
+  static getEnrollmentsByGrantId(grantId: string): Promise<CandidateDto[]> {
+    return httpClient.get(`/grants/${grantId}/enrollments`).then((response) => {
+      return response.data.map((enrollment: any) => {
+        return new CandidateDto(enrollment)
+      })
+
+    })
+  }
+
+  static getEnrollmentsByCandidateId(candidateId: string): Promise<GrantDto[]> {
+    return httpClient.get(`/candidates/${candidateId}/enrollments`).then((response) => {
+      return response.data.map((grant: any) => {
+        return new GrantDto(grant)
+      })
+    })
+  }
+
+  static async unenrollCandidate(enrollmentId: string): Promise<void> {
+    return httpClient.delete(`/grants/enrollments/${enrollmentId}`)
+  }
+
+  static async getUnenrolledCandidates(grantId: string): Promise<CandidateDto[]> {
+    return httpClient.get(`/grants/${grantId}/unenrolled`).then((response) => {
+      return response.data.map((candidate: any) => {
+        return new CandidateDto(candidate)
+      })
+    })
+  }
+
+  static async getEnrolledGrantsByCandidateId(candidateId: string): Promise<GrantDto[]> {
+    console.log("GETTING ENROLLED GRANTS BY CANDIDATE ID: ", candidateId)
+    return httpClient.get(`/grants/${candidateId}/enrolled`).then((response) => {
+      return response.data.map((grant: any) => {
+        console.log("GRANT: ", grant)
+        return new GrantDto(grant)
+      })
+    })
+  }
 }
