@@ -101,14 +101,11 @@ export default class RemoteService {
 
   // ------------------- Enrollments -------------------
   static async enrollCandidate(candidateId: string, grantId: string): Promise<void> {
-    return httpClient.post(`/grants/${grantId}/create/${candidateId}`, { candidateId, grantId })
+    return httpClient.post(`/grants/${grantId}/enrollments/${candidateId}`, { candidateId, grantId })
   }
 
   static getEnrollmentsByGrantId(grantId: string): Promise<CandidateDto[]> {
     return httpClient.get(`/grants/${grantId}/enrollments`).then((response) => {
-      console.log("GETTING ENROLLMENTS BY GRANT ID: ", grantId)
-      console.log("RESPONSE: ", response)
-
       return response.data.map((enrollment: any) => {
         return new CandidateDto(enrollment)
       })

@@ -16,7 +16,7 @@
           class="text-left table-container"
           show-select
           item-value="id"
-          v-model:selected="selectedCandidates"
+          v-model="selectedCandidates"
         >
         </v-data-table>
         <v-card-actions class="justify-end">
@@ -40,8 +40,8 @@
   const dialogVisible = ref(props.visible)
   
   const headers = [
-    { title: 'Name', value: 'name', key: 'name' },
-    { title: 'Ist ID', value: 'istID', key: 'istID' },
+    { title: 'Name', value: 'name' },
+    { title: 'Ist ID', value: 'istID' },
   ]
   
   watch(
@@ -66,24 +66,33 @@
       const response = await RemoteService.getUnenrolledCandidates(props.grant?.id ?? '')
       candidates.value = response // Assuming response contains the list of candidates
     } catch (error) {
-      console.log(error)
+      console.log('Error fetching candidates:', error)
     }
   }
   
   const handleSave = async () => {
-    console.log('Selected candidates', selectedCandidates.value)
-    await saveCandidate()
-    closeDialog()
+    console.log('Selected candidates:', selectedCandidates.value)
+    try {
+      await Promise.all(selectedCandidates.value.map(candidate => enrollCandidate(candidate)))
+      selectedCandidates.value = []
+      emit('candidates-enrolled', selectedCandidates.value)
+    } catch (error) {
+      console.log('Error saving candidates:', error)
+    } finally {
+      closeDialog()
+    }
   }
   
-  const saveCandidate = async () => {
+  const enrollCandidate = async (candidateId: number) => {
     try {
-      console.log('Saving candidate')
-      // Handle saving selected candidates
+      if(!candidateId) {
+        throw new Error('Candidate ID is missing')
+      }
+      await RemoteService.enrollCandidate(candidateId, props.grant?.id ?? '')
     } catch (error) {
-      console.log(error)
+      console.log('Error saving candidate:', error)
+      throw error
     }
-    emit('candidates-enrolled', selectedCandidates.value)
   }
   
   const closeDialog = () => {
@@ -105,25 +114,24 @@
   .header-container {
     display: flex;
     align-items: center;
-    margin-bottom: 8px; /* Space below the header */
+    margin-bottom: 8px;
     position: relative;
   }
   
   .close-icon {
     cursor: pointer;
-    margin-right: 16px; /* Space between icon and title */
+    margin-right: 16px;
   }
   
   .title {
     font-weight: bold;
-    margin: 0; /* Remove default margin */
-    flex-grow: 1; /* Allow title to take available space */
+    margin: 0;
+    flex-grow: 1;
   }
   
   .table-container {
     margin: 16px;
-    max-width: calc(100% - 32px); /* Ensures table fits within dialog */
+    max-width: calc(100% - 32px);
   }
-  
   </style>
   

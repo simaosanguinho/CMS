@@ -106,7 +106,7 @@
     :grant="grant"
     :visible="enrollDialogVisible"
     @close="enrollDialogVisible = false"
-    @candidates-enrolled="fetchGrant" 
+    @candidates-enrolled="fetchGrant(grant.id)" 
   />
 </template>
 
@@ -137,14 +137,11 @@ const headers = [
 
   const fetchGrant = async (id: string) => {
   try {
-    
     grant.value = await RemoteService.getGrantById(id)
-    console.log('Type of grant.value:', typeof grant.value.id)
     const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
 
     enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
 
-    // take the enroll cnandidates list and add to each candidate the enrollment id
     enrolledCandidates.value.forEach((candidate: CandidateDto) => {
       const enrollment = fetchedCandidates.find((enrollment: any) => enrollment.candidate.id === candidate.id)
       if (enrollment) {
