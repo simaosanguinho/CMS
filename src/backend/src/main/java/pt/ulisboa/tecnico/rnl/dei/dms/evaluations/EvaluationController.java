@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -21,4 +22,9 @@ public class EvaluationController {
     public EvaluationDto updateEvaluation(@PathVariable Long enrollmentId, @RequestBody EvaluationDto evaluationDto) {
         return evaluationService.updateEvaluation(enrollmentId, evaluationDto);
     }
+
+    @GetMapping("/enrollments/{enrollmentId}/evaluations")
+    public EvaluationDto getEvaluation(@PathVariable Long enrollmentId) {
+        return evaluationService.getEvaluationByEnrollmentId(enrollmentId);
+    }   
 }

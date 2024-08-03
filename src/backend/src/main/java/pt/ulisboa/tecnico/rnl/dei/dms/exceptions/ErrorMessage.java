@@ -24,6 +24,8 @@ public enum ErrorMessage {
     EVALUATION_PARAMETERS_CANNOT_BE_EMPTY("Evaluation parameters cannot be empty."),
     EVALUATION_PARAMETERS_OUT_OF_BOUNDS("Evaluation parameters must be between 0 and 20."),
     EVALUATION_NOT_FOUND("Evaluation was not found."),
+    EVALUATION_ENROLLMENT_CANNOT_BE_EMPTY("Enrollment cannot be empty."),
+    EVALUATION_CANNOT_BE_EMPTY("Evaluation cannot be empty."),
 
     ;
 

@@ -64,7 +64,8 @@ public class EnrollmentService {
 
         EvaluationDto evaluationDto = new EvaluationDto();
         evaluationDto.setEnrollmentId(enrollment.getId());
-        evaluationService.createEvaluation(evaluationDto);
+        evaluationService.createEvaluation(enrollment.getId(), evaluationDto);
+
         
         return new EnrollmentDto(enrollment);
 
@@ -75,10 +76,11 @@ public class EnrollmentService {
         if (grantId == null) {
             throw new CMSException(ErrorMessage.GRANT_NOT_FOUND);
         }
-        return enrollmentRepository.findByGrantId(grantId).stream()
+        List<EnrollmentDto> enrollments = enrollmentRepository.findByGrantId(grantId).stream()
                 .sorted(Comparator.comparing(Enrollment::getId))
                 .map(EnrollmentDto::new)
                 .toList();
+        return enrollments;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)

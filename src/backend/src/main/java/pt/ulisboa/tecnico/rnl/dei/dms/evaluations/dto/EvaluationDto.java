@@ -14,6 +14,7 @@ public class EvaluationDto {
 
 
     public EvaluationDto() {
+        setDefaultScoreValues();
     }
 
     public EvaluationDto(Evaluation evaluation) {
@@ -62,6 +63,12 @@ public class EvaluationDto {
     
     public void setEnrollmentId(Long enrollmentId) {
         this.enrollmentId = enrollmentId;
+    }
+
+    private void setDefaultScoreValues() {
+        curricularEvaluation = 0.0;
+        interview = 0.0;
+        practicalExercise = 0.0;
     }
 
 }

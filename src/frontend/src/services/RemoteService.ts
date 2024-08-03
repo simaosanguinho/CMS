@@ -144,5 +144,14 @@ export default class RemoteService {
   }
 
   // ------------------- Evaluations -------------------
+  static async evaluateCandidate(enrollmentId: number, scores: number[]): Promise<void> {
+    return httpClient.post(`/enrollments/${enrollmentId}/evaluations/update`, { scores })
+  }
+
+  static async getEvaluationByEnrollmentId(enrollmentId: number): Promise<number[]> {
+    return httpClient.get(`/enrollments/${enrollmentId}/evaluations`).then((response) => {
+      return response.data.scores
+    })
+  }
   
 }

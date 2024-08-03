@@ -28,11 +28,11 @@ public class Evaluation {
     public Evaluation() {
     }
 
-    public Evaluation(EvaluationDto evaluationDto) {
+    public Evaluation(Enrollment enrollment, EvaluationDto evaluationDto) {
         setCurricularEvaluation(evaluationDto.getCurricularEvaluation());
         setInterview(evaluationDto.getInterview());
         setPracticalExercise(evaluationDto.getPracticalExercise());
-
+        setEnrollment(enrollment);
         verifyInvariants();
     }
 

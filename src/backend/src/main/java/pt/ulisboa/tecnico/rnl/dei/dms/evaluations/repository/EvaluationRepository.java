@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import java.util.List;
 import java.util.Optional;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
 
@@ -18,6 +17,6 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
     Optional<Evaluation> findById(Long id);
 
     @Query("SELECT e FROM Evaluation e WHERE e.enrollment.id = :enrollmentId")
-    List<Evaluation> findByEnrollmentId(Long enrollmentId);
+    Optional<Evaluation> findByEnrollmentId(Long enrollmentId);
 
 }
