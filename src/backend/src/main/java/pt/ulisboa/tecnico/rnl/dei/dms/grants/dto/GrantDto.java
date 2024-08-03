@@ -16,6 +16,7 @@ public class GrantDto {
     private Double curricularEvaluationWeight;
     private Double interviewWeight;
     private Double practicalExerciseWeight;
+    private boolean ongoing;
 
     public GrantDto() {
     }
@@ -27,6 +28,7 @@ public class GrantDto {
         setMonthlyIncome(grant.getMonthlyIncome());
         setVacancy(grant.getVacancy());
         setEvaluationWeights(grant.getWeights());
+        setOngoing(grant.isOngoing());
 
     }
 
@@ -50,6 +52,10 @@ public class GrantDto {
 
     public Integer getVacancy() {
         return vacancy;
+    }
+
+    public boolean isOngoing() {
+        return ongoing;
     }
 
     public Map<GrantEvaluationMethods, Double> getEvaluationWeights() {
@@ -84,6 +90,10 @@ public class GrantDto {
         this.curricularEvaluationWeight = weights.get(GrantEvaluationMethods.CURRICULAR_EVALUATION);
         this.interviewWeight = weights.get(GrantEvaluationMethods.INTERVIEW);
         this.practicalExerciseWeight = weights.get(GrantEvaluationMethods.PRACTICAL_EXERCISE);
+    }
+
+    public void setOngoing(boolean ongoing) {
+        this.ongoing = ongoing;
     }
 
     @Override

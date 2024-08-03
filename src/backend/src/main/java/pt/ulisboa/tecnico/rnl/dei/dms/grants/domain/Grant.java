@@ -42,6 +42,8 @@ public class Grant {
     @Column(name = "practical_exercise_weight")
     private Double practicalExerciseWeight;
 
+    private boolean ongoing = true;
+
     private static final double DEFAULT_CURRICULAR_EVALUATION_WEIGHT = 0.4;
     private static final double DEFAULT_INTERVIEW_WEIGHT = 0.4;
     private static final double DEFAULT_PRACTICAL_EXERCISE_WEIGHT = 0.2;
@@ -90,6 +92,10 @@ public class Grant {
         return vacancy;
     }
 
+    public boolean isOngoing() {
+        return ongoing;
+    }
+
     public Map<GrantEvaluationMethods, Double> getWeights() {
         return Map.of(
                 GrantEvaluationMethods.CURRICULAR_EVALUATION, curricularEvaluationWeight,
@@ -126,6 +132,10 @@ public class Grant {
         this.curricularEvaluationWeight = DEFAULT_CURRICULAR_EVALUATION_WEIGHT;
         this.interviewWeight = DEFAULT_INTERVIEW_WEIGHT;
         this.practicalExerciseWeight = DEFAULT_PRACTICAL_EXERCISE_WEIGHT;
+    }
+    
+    public void setOngoing(boolean ongoing) {
+        this.ongoing = ongoing;
     }
     
 

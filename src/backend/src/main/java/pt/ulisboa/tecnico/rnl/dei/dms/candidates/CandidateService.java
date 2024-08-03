@@ -23,14 +23,11 @@ public class CandidateService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public CandidateDto createCandidate(CandidateDto candidateDto) {
 
-
-        // check if email is already in use
         List<Candidate> candidates = candidateRepository.findByEmail(candidateDto.getEmail());
         if (candidates.size() > 0) {
             throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
         }
 
-        // check if IST ID is already in use
         candidates = candidateRepository.findByIstID(candidateDto.getIstID());
         if (candidates.size() > 0) {
             throw new CMSException(CANDIDATE_IST_ID_ALREADY_EXISTS);
@@ -51,7 +48,6 @@ public class CandidateService {
     public List<CandidateDto> updateCandidate(CandidateDto candidateDto) {
         Candidate candidate = candidateRepository.findById(candidateDto.getId()).get();
 
-        // check if email is already in use
         List<Candidate> candidates = candidateRepository.findByEmail(candidateDto.getEmail());
         System.out.println(candidates);
         if (candidates.size() > 0 && 
@@ -60,7 +56,6 @@ public class CandidateService {
             throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
         }
 
-        // check if IST ID is already in use
         candidates = candidateRepository.findByIstID(candidateDto.getIstID());
         if (candidates.size() > 0 && 
             candidates.stream().anyMatch(c -> !c.getId().equals(candidate.getId()))) {

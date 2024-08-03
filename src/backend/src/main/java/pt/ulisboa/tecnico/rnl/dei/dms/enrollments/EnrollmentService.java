@@ -117,7 +117,7 @@ public class EnrollmentService {
         System.out.println("Grants: " + enrollments.stream()
                 .map(Enrollment::getGrant)
                 .toList());
-        // get grants from enrollments and return them
+                
         return enrollments.stream()
                 .map(Enrollment::getGrant)
                 .sorted(Comparator.comparing(Grant::getId))
