@@ -5,7 +5,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 
 public class EnrollmentDto {
     private Long id;
-    private CandidateDto candidateDto;
+    private Long candidateId;
     private Long grantId;
 
     public EnrollmentDto() {
@@ -14,7 +14,7 @@ public class EnrollmentDto {
     public EnrollmentDto(Enrollment enrollment) {
         setId(enrollment.getId());
         setGrantId(enrollment.getGrant().getId());
-        setCandidate(new CandidateDto(enrollment.getCandidate()));
+        setCandidateId(enrollment.getCandidate().getId());
     }
 
     public Long getId() {
@@ -25,12 +25,12 @@ public class EnrollmentDto {
         return grantId;
     }
 
-    public CandidateDto getCandidate() {
-        return candidateDto;
+    public Long getCandidate() {
+        return candidateId;
     }
 
-    public void setCandidate(CandidateDto candidateDto) {
-        this.candidateDto = candidateDto;
+    public void setCandidateId(Long candidateId) {
+        this.candidateId = candidateId;
     }
 
     public void setId(Long id) {

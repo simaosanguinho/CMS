@@ -10,6 +10,9 @@ public class EvaluationDto {
     private Double interview;
     private Double practicalExercise;
 
+    private Long enrollmentId;
+
+
 
     public EvaluationDto() {
     }
@@ -19,6 +22,7 @@ public class EvaluationDto {
         setCurricularEvaluation(evaluation.getCurricularEvaluation());
         setInterview(evaluation.getInterview());
         setPracticalExercise(evaluation.getPracticalExercise());
+        setEnrollmentId(evaluation.getEnrollment().getId());
     }
 
     public Long getId() {
@@ -37,6 +41,10 @@ public class EvaluationDto {
         return practicalExercise;
     }
 
+    public Long getEnrollmentId() {
+        return enrollmentId;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -52,6 +60,9 @@ public class EvaluationDto {
     public void setPracticalExercise(Double practicalExercise) {
         this.practicalExercise = practicalExercise;
     }
-
+    
+    public void setEnrollmentId(Long enrollmentId) {
+        this.enrollmentId = enrollmentId;
+    }
 
 }

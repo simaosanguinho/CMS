@@ -19,6 +19,9 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.EvaluationService;
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.dto.EvaluationDto;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -33,6 +36,9 @@ public class EnrollmentService {
 
     @Autowired
     private GrantRepository grantRepository;
+
+    @Autowired
+    private EvaluationService evaluationService;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public EnrollmentDto createEnrollment(Long candidateId, Long grantId, EnrollmentDto enrollmentDto) {
@@ -55,6 +61,11 @@ public class EnrollmentService {
 
         Enrollment enrollment = new Enrollment(candidate, grant, enrollmentDto);
         enrollmentRepository.save(enrollment);
+
+        EvaluationDto evaluationDto = new EvaluationDto();
+        evaluationDto.setEnrollmentId(enrollment.getId());
+        evaluationService.createEvaluation(evaluationDto);
+        
         return new EnrollmentDto(enrollment);
 
     }
@@ -117,7 +128,7 @@ public class EnrollmentService {
         System.out.println("Grants: " + enrollments.stream()
                 .map(Enrollment::getGrant)
                 .toList());
-                
+
         return enrollments.stream()
                 .map(Enrollment::getGrant)
                 .sorted(Comparator.comparing(Grant::getId))
