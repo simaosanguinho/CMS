@@ -1,12 +1,10 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.grants.dto;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
-import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationMethods;
 
 
 public class GrantDto {
@@ -15,7 +13,9 @@ public class GrantDto {
     private String endDate;
     private Long monthlyIncome;
     private Integer vacancy;
-    private Integer numberOfEnrollments;
+    private Double curricularEvaluationWeight;
+    private Double interviewWeight;
+    private Double practicalExerciseWeight;
 
     public GrantDto() {
     }
@@ -26,7 +26,7 @@ public class GrantDto {
         setEndDate(DateHandler.toISOString(grant.getEndDate()));
         setMonthlyIncome(grant.getMonthlyIncome());
         setVacancy(grant.getVacancy());
-        setNumberOfEnrollments(grant.getEnrollments().size());
+        setEvaluationWeights(grant.getWeights());
 
     }
 
@@ -47,13 +47,17 @@ public class GrantDto {
         return monthlyIncome;
     }
 
-    public Integer getNumberOfEnrollments() {
-        return numberOfEnrollments;
-    }
-
 
     public Integer getVacancy() {
         return vacancy;
+    }
+
+    public Map<GrantEvaluationMethods, Double> getEvaluationWeights() {
+        return Map.of(
+                GrantEvaluationMethods.CURRICULAR_EVALUATION, curricularEvaluationWeight,
+                GrantEvaluationMethods.INTERVIEW, interviewWeight,
+                GrantEvaluationMethods.PRACTICAL_EXERCISE, practicalExerciseWeight
+        );
     }
 
     public void setId(Long id) {
@@ -72,12 +76,14 @@ public class GrantDto {
         this.monthlyIncome = monthlyIncome;
     }
 
-    public void setNumberOfEnrollments(Integer numberOfEnrollments) {
-        this.numberOfEnrollments = numberOfEnrollments;
-    }
-
     public void setVacancy(Integer vacancy) {
         this.vacancy = vacancy;
+    }
+
+    public void setEvaluationWeights(Map<GrantEvaluationMethods, Double> weights) {
+        this.curricularEvaluationWeight = weights.get(GrantEvaluationMethods.CURRICULAR_EVALUATION);
+        this.interviewWeight = weights.get(GrantEvaluationMethods.INTERVIEW);
+        this.practicalExerciseWeight = weights.get(GrantEvaluationMethods.PRACTICAL_EXERCISE);
     }
 
     @Override

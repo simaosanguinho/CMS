@@ -16,6 +16,7 @@ public enum ErrorMessage {
     GRANT_NOT_FOUND("Grant was not found."),
     GRANT_VACANCY_CANNOT_BE_EMPTY("Grant must have a vacancy."),
     GRANT_VACANCY_CANNOT_BE_NEGATIVE("Grant vacancy cannot be negative."),
+    CATEGORIES_WEIGHT_MUST_SUM_TO_ONE("Categories weight must sum to one."),
     ENROLLMENT_CANDIDATE_CANNOT_BE_EMPTY("Candidate cannot be empty."),
     ENROLLMENT_GRANT_CANNOT_BE_EMPTY("Grant cannot be empty."),
     ENROLLMENT_CANNOT_BE_EMPTY("Enrollment cannot be empty."),
