@@ -146,11 +146,11 @@ export default class RemoteService {
   }
 
   // ------------------- Evaluations -------------------
-  static async evaluateCandidate(enrollmentId: number, scores: number[]): Promise<void> {
+  static async evaluateCandidate(enrollmentId: string, scores: number[]): Promise<void> {
     return httpClient.post(`/enrollments/${enrollmentId}/evaluations/update`, { scores })
   }
 
-  static async getEvaluationByEnrollmentId(enrollmentId: number): Promise<EvaluationDto> {
+  static async getEvaluationByEnrollmentId(enrollmentId: string): Promise<EvaluationDto> {
     return httpClient.get(`/enrollments/${enrollmentId}/evaluations`).then((response) => {
       const data = response.data;
       const scoresArray = Object.keys(data.scores).map(key => data.scores[key]);

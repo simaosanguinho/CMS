@@ -76,7 +76,6 @@
               prepend-icon="mdi-plus"
               :text="winnerButtonText"
               color="primary"
-              @click="getEvaluation()"
             ></v-btn>
           </v-row>
           <v-data-table
@@ -86,14 +85,17 @@
             :custom-filter="fuzzySearch"
             :hover="true"
             class="text-left"
-          > 
+          >
             <template v-slot:[`item.evaluation`]="{ item }">
+              <v-btn
+              class="elevation-0 text-none font-weight-regular"
+              @click="evaluateCandidate(item.enrollmentId, item.name, item.id)"
+              >
               <v-chip v-if="item.isEvaluated" color="primary" class="white--text">
                 {{ item.finalScore }}
               </v-chip>
-              <v-chip v-else color="grey" class="white--text">
-                Não avaliado
-              </v-chip>
+              <v-chip v-else color="error" class="white--text"> Não avaliado </v-chip>
+              </v-btn>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
               <v-icon @click="unenrollCandidate(item)">mdi-delete</v-icon>
@@ -117,6 +119,13 @@
     @close="enrollDialogVisible = false"
     @candidates-enrolled="fetchGrant(grant.id)"
   />
+
+  <EvaluateCandidateDialog
+    :enrollment="selectedEnrollment"
+    :visible="evaluateDialogVisible"
+    @close="evaluateDialogVisible = false"
+    @candidate-evaluated="fetchGrant(grant.id)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -128,16 +137,18 @@ import type CandidateDto from '@/models/candidates/CandidateDto'
 import type EvaluationDto from '@/models/evaluations/EvaluationDto'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 import EnrollCandidatesDialog from '@/views/enrollments/EnrollCandidatesDialog.vue'
-import { get } from 'http'
+import EvaluateCandidateDialog from '@/views/evaluations/EvaluateCandidateDialog.vue'
+import EnrollmentDto from '../../models/enrollments/EnrollmentDto'
 
 const route = useRoute()
 const router = useRouter()
 const editDialogVisible = ref(false)
 const enrollDialogVisible = ref(false)
+const evaluateDialogVisible = ref(false)
 const grant = ref<GrantDto | null>(null)
 const loading = ref(true)
 const enrolledCandidates = ref<CandidateDto | null>(null)
-const selectedEvaluation = ref<EvaluationDto | null>(null)
+const selectedEnrollment = ref<EnrollmentDto | null>(null)
 
 const search = ref('')
 const headers = [
@@ -162,7 +173,7 @@ const fetchGrant = async (id: string) => {
       if (enrollment) {
         console.log('Enrollment:', enrollment)
         candidate.enrollmentId = enrollment.id
-        candidate.isEvaluated = enrollment.evaluated  
+        candidate.isEvaluated = enrollment.evaluated
         candidate.finalScore = enrollment.finalScore
         console.log('Enrollment ID:', candidate)
       }
@@ -203,6 +214,15 @@ const enrollCandidates = () => {
   enrollDialogVisible.value = true
 }
 
+const evaluateCandidate = (enrollmentId: number, candidateName: string, candidateIstId: string) => {
+  selectedEnrollment.value = {
+    id: enrollmentId.toString(),
+    candidateName: candidateName,
+    candidateIstId: candidateIstId
+  }
+  evaluateDialogVisible.value = true
+}
+
 const getEvaluation = async () => {
   // for each enrollment, call the getEvaluationByEnrollmentId
   enrolledCandidates.value.forEach((candidate: CandidateDto) => {
@@ -210,6 +230,7 @@ const getEvaluation = async () => {
       candidate.evaluation = RemoteService.getEvaluationByEnrollmentId(candidate.enrollmentId).then(
         (evaluation: EvaluationDto) => {
           candidate.evaluation = evaluation
+          candidate.evaluation.candidateId = candidate.id
           console.log('Evaluation:', evaluation)
         }
       )
