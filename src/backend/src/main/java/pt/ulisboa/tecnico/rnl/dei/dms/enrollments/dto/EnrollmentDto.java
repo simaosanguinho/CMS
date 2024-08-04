@@ -7,6 +7,8 @@ public class EnrollmentDto {
     private Long id;
     private CandidateDto candidate;
     private Long grantId;
+    private boolean isEvaluated;
+    
 
     public EnrollmentDto() {
     }
@@ -15,6 +17,7 @@ public class EnrollmentDto {
         setId(enrollment.getId());
         setGrantId(enrollment.getGrant().getId());
         setCandidate(new CandidateDto(enrollment.getCandidate()));
+        setIsEvaluated(enrollment.isEvaluated());
         
     }
 
@@ -30,6 +33,10 @@ public class EnrollmentDto {
         return candidate;
     }
 
+    public boolean isisEvaluated() {
+        return isEvaluated;
+    }
+
     public void setCandidate(CandidateDto candidate) {
         this.candidate = candidate;
     }
@@ -41,6 +48,10 @@ public class EnrollmentDto {
 
     public void setGrantId(Long grantId) {
         this.grantId = grantId;
+    }
+
+    public void setIsEvaluated(boolean isEvaluated) {
+        this.isEvaluated = isEvaluated;
     }
 
 }

@@ -86,7 +86,15 @@
             :custom-filter="fuzzySearch"
             :hover="true"
             class="text-left"
-          >
+          > 
+            <template v-slot:[`item.evaluation`]="{ item }">
+              <v-chip v-if="item.isEvaluated" color="primary" class="white--text">
+                {{ item.evaluation.scores }}
+              </v-chip>
+              <v-chip v-else color="grey" class="white--text">
+                Não avaliado
+              </v-chip>
+            </template>
             <template v-slot:[`item.actions`]="{ item }">
               <v-icon @click="unenrollCandidate(item)">mdi-delete</v-icon>
             </template>
@@ -143,6 +151,7 @@ const fetchGrant = async (id: string) => {
   try {
     grant.value = await RemoteService.getGrantById(id)
     const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
+    console.log('Fetched candidates:', fetchedCandidates)
 
     enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
 
@@ -152,8 +161,13 @@ const fetchGrant = async (id: string) => {
       )
       if (enrollment) {
         candidate.enrollmentId = enrollment.id
+        candidate.isEvaluated = enrollment.isEvaluated
+        console.log('Enrollment ID:', candidate)
       }
     })
+    getEvaluation()
+
+    console.log('Enrolled candidates:', enrolledCandidates.value)
   } catch (error) {
     console.error('Failed to fetch grant details:', error)
   } finally {
@@ -194,6 +208,7 @@ const getEvaluation = async () => {
       candidate.evaluation = RemoteService.getEvaluationByEnrollmentId(candidate.enrollmentId).then(
         (evaluation: EvaluationDto) => {
           candidate.evaluation = evaluation
+          console.log('Evaluation:', evaluation)
         }
       )
     }

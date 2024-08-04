@@ -28,6 +28,7 @@ public class Enrollment {
     @JoinColumn(name = "evaluation_id")
     private Evaluation evaluation; 
 
+    private boolean isEvaluated = false;
 
     public Enrollment() {
     }
@@ -56,6 +57,14 @@ public class Enrollment {
 
     public void setGrant(Grant grant) {
         this.grant = grant;
+    }
+
+    public boolean isEvaluated() {
+        return isEvaluated;
+    }
+
+    public void setIsEvaluated(boolean isEvaluated) {
+        this.isEvaluated = isEvaluated;
     }
 
     public void verifyInvariants() {
