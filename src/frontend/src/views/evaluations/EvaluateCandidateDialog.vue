@@ -8,9 +8,12 @@
           >Candidato: {{ props.enrollment?.candidateName }}</span
         >
       </div>
+      <v-divider></v-divider>
       <v-card-text>
-        <span class="font-weight-bold"
-          >Avaliação Curricular - {{ (props.grant?.curricularEvaluationWeight ?? 0) * 100 }} %</span
+        <v-chip color="primary"
+          >Avaliação Curricular ({{
+            (props.grant?.curricularEvaluationWeight ?? 0) * 100
+          }}%)</v-chip
         >
         <v-slider
           v-model="slider1"
@@ -19,9 +22,8 @@
           max="20"
           min="0"
         ></v-slider>
-        <span class="font-weight-bold"
-          >Exercício Prático 
-          z- {{ (props.grant?.practicalExerciseWeight ?? 0) * 100 }}%</span
+        <v-chip color="primary"
+          >Exercício Prático ({{ (props.grant?.practicalExerciseWeight ?? 0) * 100 }}%)</v-chip
         >
         <v-slider
           v-model="slider2"
@@ -30,8 +32,8 @@
           max="20"
           min="0"
         ></v-slider>
-        <span class="font-weight-bold"
-          >Entrevista - {{ (props.grant?.interviewWeight ?? 0) * 100 }}%</span
+        <v-chip color="primary"
+          >Entrevista ({{ (props.grant?.interviewWeight ?? 0) * 100 }}%)</v-chip
         >
         <v-slider
           v-model="slider3"
@@ -56,6 +58,7 @@ import { ref, watch, defineProps, defineEmits } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type EnrollmentDto from '@/models/enrollments/EnrollmentDto'
 import type grantDto from '@/models/grants/GrantDto'
+import EvaluationDto from '@/models/evaluations/EvaluationDto'
 
 const props = defineProps<{
   grant: grantDto | null
@@ -67,6 +70,7 @@ const scores = ref<number[]>([])
 const slider1 = ref<number>(0)
 const slider2 = ref<number>(0)
 const slider3 = ref<number>(0)
+const evaluationId = ref<string | null>(null)
 
 const dialogVisible = ref(false)
 
@@ -88,7 +92,18 @@ const handleSave = async () => {
 const saveEvaluation = async () => {
   try {
     if (props.enrollment && props.enrollment.id) {
-      await RemoteService.evaluateCandidate(props.enrollment.id, scores.value)
+      scores.value = [
+        Math.round(slider1.value * 10) / 10,
+        Math.round(slider2.value * 10) / 10,
+        Math.round(slider3.value * 10) / 10
+      ]
+
+      console.log('Scores:', scores.value)
+      const evaluation = new EvaluationDto({
+        id: evaluationId.value ?? undefined,
+        scores: scores.value
+      })
+      await RemoteService.evaluateCandidate(evaluation)
     }
     emit('candidate-evaluated')
   } catch (error) {
@@ -106,8 +121,13 @@ const getEvaluation = async () => {
   if (props.enrollment && props.enrollment.id) {
     const evaluation = RemoteService.getEvaluationByEnrollmentId(props.enrollment.id ?? '').then(
       (data) => {
-        console.log('Evaluation:', data)
+        evaluationId.value = data.id ?? null
         scores.value = data.scores ?? []
+
+        // Set slider values
+        slider1.value = scores.value[0] ?? 0
+        slider2.value = scores.value[1] ?? 0
+        slider3.value = scores.value[2] ?? 0
       }
     )
     console.log('Evaluation:', evaluation)

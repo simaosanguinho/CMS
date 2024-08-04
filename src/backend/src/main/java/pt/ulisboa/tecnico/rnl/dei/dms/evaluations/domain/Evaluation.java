@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.dto.EvaluationDto;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
@@ -69,8 +70,10 @@ public class Evaluation {
         scores.put(GrantEvaluationCategory.PRACTICAL_EXERCISE, practicalExercise);
     }
 
-    public Map<GrantEvaluationCategory, Double> getScores() {
-        return scores;
+    public List<Double> getScores() {
+        // return a list of doubles  with the scores
+        return List.of(getCurricularEvaluation(), getInterview(), getPracticalExercise());
+
     }
 
     public Enrollment getEnrollment() {

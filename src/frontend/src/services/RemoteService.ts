@@ -4,6 +4,7 @@ import MaterialDto from '@/models/materials/MaterialDto'
 import CandidateDto from '@/models/candidates/CandidateDto'
 import GrantDto from '@/models/grants/GrantDto'
 import EvaluationDto from '@/models/evaluations/EvaluationDto'
+import evaluationDto from '@/models/evaluations/EvaluationDto'
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -146,8 +147,8 @@ export default class RemoteService {
   }
 
   // ------------------- Evaluations -------------------
-  static async evaluateCandidate(enrollmentId: string, scores: number[]): Promise<void> {
-    return httpClient.post(`/enrollments/${enrollmentId}/evaluations/update`, { scores })
+  static async evaluateCandidate(evaluation: evaluationDto): Promise<void> {
+    return httpClient.post(`/enrollments/evaluations/${evaluation.id}/update`, evaluation)
   }
 
   static async getEvaluationByEnrollmentId(enrollmentId: string): Promise<EvaluationDto> {

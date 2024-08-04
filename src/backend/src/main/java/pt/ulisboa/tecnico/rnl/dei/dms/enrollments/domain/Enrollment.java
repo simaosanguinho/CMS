@@ -7,6 +7,10 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
+
+import java.util.EnumMap;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -77,6 +81,11 @@ public class Enrollment {
 
     public void setFinalScore(Double finalScore) {
         this.finalScore = finalScore;
+
+        // flag the enrollment as evaluated
+        if(!isEvaluated) {
+            isEvaluated = true;
+        }
     }
 
     public void verifyInvariants() {

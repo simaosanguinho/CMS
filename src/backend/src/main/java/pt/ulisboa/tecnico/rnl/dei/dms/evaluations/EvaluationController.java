@@ -18,9 +18,11 @@ public class EvaluationController {
     @Autowired
     EvaluationService evaluationService;
 
-    @PostMapping("/enrollments/{enrollmentId}/evaluations/update")
-    public EvaluationDto updateEvaluation(@PathVariable Long enrollmentId, @RequestBody EvaluationDto evaluationDto) {
-        return evaluationService.updateEvaluation(enrollmentId, evaluationDto);
+    @PostMapping("/enrollments/evaluations/{evaluationId}/update")
+    public EvaluationDto updateEvaluation(@PathVariable Long evaluationId, @RequestBody EvaluationDto evaluationDto) {
+        System.out.println("EvaluationController.updateEvaluation");
+        return evaluationService.updateEvaluation(evaluationId, evaluationDto);
+
     }
 
     @GetMapping("/enrollments/{enrollmentId}/evaluations")

@@ -91,7 +91,7 @@
               class="elevation-0 text-none font-weight-regular"
               @click="evaluateCandidate(item.enrollmentId, item.name, item.id)"
               >
-              <v-chip v-if="item.isEvaluated" color="primary" class="white--text">
+              <v-chip v-if="item.isEvaluated" color="green" class="white--text">
                 {{ item.finalScore }}
               </v-chip>
               <v-chip v-else color="error" class="white--text"> Não avaliado </v-chip>
@@ -154,8 +154,8 @@ const search = ref('')
 const headers = [
   { title: 'Name', value: 'name', key: 'name' },
   { title: 'Ist ID', value: 'istID', key: 'istID' },
-  { title: 'Score', value: 'evaluation', key: 'evaluation' },
-  { title: 'Actions', value: 'actions', key: 'actions' }
+  { title: 'Nota Final', value: 'evaluation', key: 'evaluation' },
+  { title: 'Anular Inscrição', value: 'actions', key: 'actions' }
 ]
 
 const fetchGrant = async (id: string) => {
@@ -174,7 +174,7 @@ const fetchGrant = async (id: string) => {
         console.log('Enrollment:', enrollment)
         candidate.enrollmentId = enrollment.id
         candidate.isEvaluated = enrollment.evaluated
-        candidate.finalScore = enrollment.finalScore
+        candidate.finalScore = Math.round(enrollment.finalScore * 100) / 100
         console.log('Enrollment ID:', candidate)
       }
     })

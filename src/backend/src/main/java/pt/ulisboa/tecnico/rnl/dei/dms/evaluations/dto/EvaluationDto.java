@@ -5,11 +5,11 @@ import java.util.Map;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
-
+import java.util.List;
 public class EvaluationDto {
     private Long id;
 
-    private Map<GrantEvaluationCategory, Double> scores = new EnumMap<>(GrantEvaluationCategory.class);
+    private List<Double> scores;
 
     private Long enrollmentId;
 
@@ -35,14 +35,19 @@ public class EvaluationDto {
     }
 
     public Map<GrantEvaluationCategory, Double> getScores() {
-        return scores;
+        // build a map with the scores
+        Map<GrantEvaluationCategory, Double> scoresMap = new EnumMap<>(GrantEvaluationCategory.class);
+        for (int i = 0; i < GrantEvaluationCategory.values().length; i++) {
+            scoresMap.put(GrantEvaluationCategory.values()[i], scores.get(i));
+        }
+        return scoresMap;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setScores(Map<GrantEvaluationCategory, Double> scores) {
+    public void setScores(List<Double> scores) {
         this.scores = scores;
     }
 

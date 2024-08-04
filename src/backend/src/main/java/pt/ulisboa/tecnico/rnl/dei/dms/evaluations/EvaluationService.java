@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.evaluations;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +13,10 @@ import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.dto.EvaluationDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.repository.EnrollmentRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.repository.EvaluationRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.grants.repository.GrantRepository;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
+import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 
 @Service
@@ -23,6 +27,9 @@ public class EvaluationService {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
+    private GrantRepository grantRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public EvaluationDto createEvaluation(Long enrollmentId, EvaluationDto evaluationDto) {
@@ -59,6 +66,21 @@ public class EvaluationService {
                 .orElseThrow(() -> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
         evaluation.update(evaluationDto);
         evaluationRepository.save(evaluation);
+        
+        // calculate the final score
+        List<Double> scores = evaluation.getScores();
+        Enrollment enrollment = enrollmentRepository.findById(evaluation.getEnrollment().getId())
+                .orElseThrow(() -> new CMSException(ErrorMessage.ENROLLMENT_NOT_FOUND));
+
+        Grant grant = grantRepository.findById(enrollment.getGrant().getId())
+                .orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
+
+        Double finalScore = scores.get(0) * grant.getCurricularEvaluationWeight()
+                + scores.get(1) * grant.getInterviewWeight() + scores.get(2) * grant.getPracticalExerciseWeight();
+            
+        enrollment.setFinalScore(finalScore);
+        enrollmentRepository.save(enrollment);
+        
         return new EvaluationDto(evaluation);
     }
 
