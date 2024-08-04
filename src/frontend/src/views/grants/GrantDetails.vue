@@ -122,6 +122,7 @@
 
   <EvaluateCandidateDialog
     :enrollment="selectedEnrollment"
+    :grant="grant"
     :visible="evaluateDialogVisible"
     @close="evaluateDialogVisible = false"
     @candidate-evaluated="fetchGrant(grant.id)"
@@ -134,7 +135,6 @@ import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
 import type CandidateDto from '@/models/candidates/CandidateDto'
-import type EvaluationDto from '@/models/evaluations/EvaluationDto'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 import EnrollCandidatesDialog from '@/views/enrollments/EnrollCandidatesDialog.vue'
 import EvaluateCandidateDialog from '@/views/evaluations/EvaluateCandidateDialog.vue'
@@ -178,7 +178,6 @@ const fetchGrant = async (id: string) => {
         console.log('Enrollment ID:', candidate)
       }
     })
-    getEvaluation()
 
     console.log('Enrolled candidates:', enrolledCandidates.value)
   } catch (error) {
@@ -222,24 +221,6 @@ const evaluateCandidate = (enrollmentId: number, candidateName: string, candidat
   }
   evaluateDialogVisible.value = true
 }
-
-const getEvaluation = async () => {
-  // for each enrollment, call the getEvaluationByEnrollmentId
-  enrolledCandidates.value.forEach((candidate: CandidateDto) => {
-    if (candidate.enrollmentId) {
-      candidate.evaluation = RemoteService.getEvaluationByEnrollmentId(candidate.enrollmentId).then(
-        (evaluation: EvaluationDto) => {
-          candidate.evaluation = evaluation
-          candidate.evaluation.candidateId = candidate.id
-          console.log('Evaluation:', evaluation)
-        }
-      )
-    }
-  })
-
-  console.log('ENROLLED CANDIDATES:', enrolledCandidates.value)
-}
-
 const unenrollCandidate = async (candidate: CandidateDto) => {
   if (grant.value) {
     try {
