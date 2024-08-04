@@ -150,7 +150,7 @@ export default class RemoteService {
 
   static async getEvaluationByEnrollmentId(enrollmentId: number): Promise<number[]> {
     return httpClient.get(`/enrollments/${enrollmentId}/evaluations`).then((response) => {
-      return response.data.scores
+      return response.data
     })
   }
   

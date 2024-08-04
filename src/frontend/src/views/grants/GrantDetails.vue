@@ -76,6 +76,7 @@
               prepend-icon="mdi-plus"
               :text="winnerButtonText"
               color="primary"
+              @click="getEvaluation(enrolledCandidates[0])"
             ></v-btn>
           </v-row>
           <v-data-table
@@ -116,8 +117,10 @@ import { useRoute, useRouter } from 'vue-router'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
 import type CandidateDto from '@/models/candidates/CandidateDto'
+import type EvaluationDto from '@/models/evaluations/EvaluationDto'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 import EnrollCandidatesDialog from '@/views/enrollments/EnrollCandidatesDialog.vue'
+import { get } from 'http'
 
 const route = useRoute()
 const router = useRouter()
@@ -126,6 +129,7 @@ const enrollDialogVisible = ref(false)
 const grant = ref<GrantDto | null>(null)
 const loading = ref(true)
 const enrolledCandidates = ref<CandidateDto | null>(null)
+const selectedEvaluation = ref<EvaluationDto | null>(null)
 
 const search = ref('')
 const headers = [
@@ -180,6 +184,15 @@ const deleteGrant = async () => {
 const enrollCandidates = () => {
   console.log('Selected grant:', grant.value)
   enrollDialogVisible.value = true
+}
+
+const getEvaluation = async (candidate: CandidateDto) => {
+  if (grant.value) {
+    console.log('Getting evaluation for candidate:', candidate)
+    const result = await RemoteService.getEvaluationByEnrollmentId(candidate.enrollmentId)
+    console.log(result)
+  }
+  console.log('Failed to get evaluation for candidate:', candidate.id)
 }
 
 const unenrollCandidate = async (candidate: CandidateDto) => {
