@@ -76,7 +76,7 @@
               prepend-icon="mdi-plus"
               :text="winnerButtonText"
               color="primary"
-              @click="getEvaluation(enrolledCandidates[0])"
+              @click="getEvaluation()"
             ></v-btn>
           </v-row>
           <v-data-table
@@ -103,11 +103,11 @@
     @grant-updated="fetchGrant(grant.id)"
   />
 
-  <EnrollCandidatesDialog 
+  <EnrollCandidatesDialog
     :grant="grant"
     :visible="enrollDialogVisible"
     @close="enrollDialogVisible = false"
-    @candidates-enrolled="fetchGrant(grant.id)" 
+    @candidates-enrolled="fetchGrant(grant.id)"
   />
 </template>
 
@@ -133,13 +133,13 @@ const selectedEvaluation = ref<EvaluationDto | null>(null)
 
 const search = ref('')
 const headers = [
-    { title: 'ID Inscrição', value: 'enrollmentId', key: 'enrollmentId' },
-    { title: 'Name', value: 'name', key: 'name' },
-    { title: 'Ist ID', value: 'istID', key: 'istID' },
-    { title: 'Actions', value: 'actions', key: 'actions' }
-  ]
+  { title: 'Name', value: 'name', key: 'name' },
+  { title: 'Ist ID', value: 'istID', key: 'istID' },
+  { title: 'Score', value: 'evaluation', key: 'evaluation' },
+  { title: 'Actions', value: 'actions', key: 'actions' }
+]
 
-  const fetchGrant = async (id: string) => {
+const fetchGrant = async (id: string) => {
   try {
     grant.value = await RemoteService.getGrantById(id)
     const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
@@ -147,12 +147,13 @@ const headers = [
     enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
 
     enrolledCandidates.value.forEach((candidate: CandidateDto) => {
-      const enrollment = fetchedCandidates.find((enrollment: any) => enrollment.candidate.id === candidate.id)
+      const enrollment = fetchedCandidates.find(
+        (enrollment: any) => enrollment.candidate.id === candidate.id
+      )
       if (enrollment) {
         candidate.enrollmentId = enrollment.id
       }
     })
-
   } catch (error) {
     console.error('Failed to fetch grant details:', error)
   } finally {
@@ -186,13 +187,19 @@ const enrollCandidates = () => {
   enrollDialogVisible.value = true
 }
 
-const getEvaluation = async (candidate: CandidateDto) => {
-  if (grant.value) {
-    console.log('Getting evaluation for candidate:', candidate)
-    const result = await RemoteService.getEvaluationByEnrollmentId(candidate.enrollmentId)
-    console.log(result)
-  }
-  console.log('Failed to get evaluation for candidate:', candidate.id)
+const getEvaluation = async () => {
+  // for each enrollment, call the getEvaluationByEnrollmentId
+  enrolledCandidates.value.forEach((candidate: CandidateDto) => {
+    if (candidate.enrollmentId) {
+      candidate.evaluation = RemoteService.getEvaluationByEnrollmentId(candidate.enrollmentId).then(
+        (evaluation: EvaluationDto) => {
+          candidate.evaluation = evaluation
+        }
+      )
+    }
+  })
+
+  console.log('ENROLLED CANDIDATES:', enrolledCandidates.value)
 }
 
 const unenrollCandidate = async (candidate: CandidateDto) => {
@@ -204,7 +211,7 @@ const unenrollCandidate = async (candidate: CandidateDto) => {
     } catch (error) {
       console.error('Failed to unenroll candidate:', error)
     }
-  } 
+  }
 }
 
 const formatDate = (date: string) => {
@@ -221,10 +228,10 @@ const winnerButtonText = computed(() => {
 })
 
 const fuzzySearch = (value: string, search: string) => {
-    // Regex to match any character in between the search characters
-    let searchRegex = new RegExp(search.split('').join('.*'), 'i')
-    return searchRegex.test(value)
-  }
+  // Regex to match any character in between the search characters
+  let searchRegex = new RegExp(search.split('').join('.*'), 'i')
+  return searchRegex.test(value)
+}
 onMounted(() => {
   const grantId = route.params.id as string
   fetchGrant(grantId)

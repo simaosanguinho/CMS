@@ -1,13 +1,15 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.evaluations.dto;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
+import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
 
 public class EvaluationDto {
     private Long id;
 
-    private Double curricularEvaluation;
-    private Double interview;
-    private Double practicalExercise;
+    private Map<GrantEvaluationCategory, Double> scores = new EnumMap<>(GrantEvaluationCategory.class);
 
     private Long enrollmentId;
 
@@ -19,56 +21,37 @@ public class EvaluationDto {
 
     public EvaluationDto(Evaluation evaluation) {
         setId(evaluation.getId());
-        setCurricularEvaluation(evaluation.getCurricularEvaluation());
-        setInterview(evaluation.getInterview());
-        setPracticalExercise(evaluation.getPracticalExercise());
         setEnrollmentId(evaluation.getEnrollment().getId());
+        setScores(evaluation.getScores());
     }
 
     public Long getId() {
         return id;
     }
 
-    public Double getCurricularEvaluation() {
-        return curricularEvaluation;
-    }
-
-    public Double getInterview() {
-        return interview;
-    }
-
-    public Double getPracticalExercise() {
-        return practicalExercise;
-    }
 
     public Long getEnrollmentId() {
         return enrollmentId;
+    }
+
+    public Map<GrantEvaluationCategory, Double> getScores() {
+        return scores;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setCurricularEvaluation(Double curricularEvaluation) {
-        this.curricularEvaluation = curricularEvaluation;
+    public void setScores(Map<GrantEvaluationCategory, Double> scores) {
+        this.scores = scores;
     }
 
-    public void setInterview(Double interview) {
-        this.interview = interview;
-    }
-
-    public void setPracticalExercise(Double practicalExercise) {
-        this.practicalExercise = practicalExercise;
-    }
-    
     public void setEnrollmentId(Long enrollmentId) {
         this.enrollmentId = enrollmentId;
     }
 
     private void setDefaultScoreValues() {
-        curricularEvaluation = 0.0;
-        interview = 0.0;
-        practicalExercise = 0.0;
+
     }
 
 }

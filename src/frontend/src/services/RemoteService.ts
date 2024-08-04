@@ -3,6 +3,7 @@ import axios from 'axios'
 import MaterialDto from '@/models/materials/MaterialDto'
 import CandidateDto from '@/models/candidates/CandidateDto'
 import GrantDto from '@/models/grants/GrantDto'
+import EvaluationDto from '@/models/evaluations/EvaluationDto'
 
 const httpClient = axios.create()
 httpClient.defaults.timeout = 10000
@@ -148,10 +149,16 @@ export default class RemoteService {
     return httpClient.post(`/enrollments/${enrollmentId}/evaluations/update`, { scores })
   }
 
-  static async getEvaluationByEnrollmentId(enrollmentId: number): Promise<number[]> {
+  static async getEvaluationByEnrollmentId(enrollmentId: number): Promise<EvaluationDto> {
     return httpClient.get(`/enrollments/${enrollmentId}/evaluations`).then((response) => {
-      return response.data
-    })
+      const data = response.data;
+      const scoresArray = Object.keys(data.scores).map(key => data.scores[key]);
+      const evaluationDto = new EvaluationDto({
+        id: data.id,
+        scores: scoresArray
+      });
+      return evaluationDto;
+    });
   }
   
 }

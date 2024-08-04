@@ -29,17 +29,16 @@ public class Evaluation {
     }
 
     public Evaluation(Enrollment enrollment, EvaluationDto evaluationDto) {
-        setCurricularEvaluation(evaluationDto.getCurricularEvaluation());
-        setInterview(evaluationDto.getInterview());
-        setPracticalExercise(evaluationDto.getPracticalExercise());
         setEnrollment(enrollment);
+        setDefaultScoreValues();
         verifyInvariants();
     }
 
     public void update(EvaluationDto evaluationDto) {
-        setCurricularEvaluation(evaluationDto.getCurricularEvaluation());
-        setInterview(evaluationDto.getInterview());
-        setPracticalExercise(evaluationDto.getPracticalExercise());
+        setCurricularEvaluation(evaluationDto.getScores().get(GrantEvaluationCategory.CURRICULAR_EVALUATION));
+        setInterview(evaluationDto.getScores().get(GrantEvaluationCategory.INTERVIEW));
+        setPracticalExercise(evaluationDto.getScores().get(GrantEvaluationCategory.PRACTICAL_EXERCISE));
+        verifyInvariants();
     }
 
     public Long getId() {
@@ -70,12 +69,22 @@ public class Evaluation {
         scores.put(GrantEvaluationCategory.PRACTICAL_EXERCISE, practicalExercise);
     }
 
+    public Map<GrantEvaluationCategory, Double> getScores() {
+        return scores;
+    }
+
     public Enrollment getEnrollment() {
         return enrollment;
     }
 
     public void setEnrollment(Enrollment enrollment) {
         this.enrollment = enrollment;
+    }
+
+    private void setDefaultScoreValues() {
+        scores.put(GrantEvaluationCategory.CURRICULAR_EVALUATION, 0.0);
+        scores.put(GrantEvaluationCategory.INTERVIEW, 0.0);
+        scores.put(GrantEvaluationCategory.PRACTICAL_EXERCISE, 0.0);
     }
 
     public void verifyInvariants() {
