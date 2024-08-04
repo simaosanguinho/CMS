@@ -5,6 +5,8 @@ import pt.ulisboa.tecnico.rnl.dei.dms.candidates.domain.Candidate;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
+import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 
 import jakarta.persistence.*;
 
@@ -29,6 +31,7 @@ public class Enrollment {
     private Evaluation evaluation; 
 
     private boolean isEvaluated = false;
+    private Double finalScore = 0.0;
 
     public Enrollment() {
     }
@@ -36,6 +39,7 @@ public class Enrollment {
     public Enrollment(Candidate candidate, Grant grant, EnrollmentDto enrollmentDto) {
         setCandidate(candidate);
         setGrant(grant);
+        setIsEvaluated(enrollmentDto.isEvaluated());
 
         verifyInvariants();
     }
@@ -67,8 +71,25 @@ public class Enrollment {
         this.isEvaluated = isEvaluated;
     }
 
+    public Double getFinalScore() {
+        return finalScore;
+    }
+
+    public void setFinalScore(Double finalScore) {
+        this.finalScore = finalScore;
+    }
+
     public void verifyInvariants() {
-        // no invarinats to be checked
+        if(candidate == null) {
+            throw new CMSException(ErrorMessage.ENROLLMENT_CANDIDATE_CANNOT_BE_EMPTY);
+        }
+        if(grant == null) {
+            throw new CMSException(ErrorMessage.ENROLLMENT_GRANT_CANNOT_BE_EMPTY);
+        }
+
+        if(finalScore > 20 || finalScore < 0) {
+            throw new CMSException(ErrorMessage.ENROLLMENT_FINAL_SCORE_INVALID);
+        }
     }
 
 }

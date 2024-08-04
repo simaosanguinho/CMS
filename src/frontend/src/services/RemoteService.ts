@@ -107,6 +107,7 @@ export default class RemoteService {
 
   static getEnrollmentsByGrantId(grantId: string): Promise<CandidateDto[]> {
     return httpClient.get(`/grants/${grantId}/enrollments`).then((response) => {
+      console.log("ELAHAHHHH", response.data)
       return response.data.map((enrollment: any) => {
         return new CandidateDto(enrollment)
       })

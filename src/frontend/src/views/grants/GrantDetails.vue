@@ -89,7 +89,7 @@
           > 
             <template v-slot:[`item.evaluation`]="{ item }">
               <v-chip v-if="item.isEvaluated" color="primary" class="white--text">
-                {{ item.evaluation.scores }}
+                {{ item.finalScore }}
               </v-chip>
               <v-chip v-else color="grey" class="white--text">
                 Não avaliado
@@ -160,8 +160,10 @@ const fetchGrant = async (id: string) => {
         (enrollment: any) => enrollment.candidate.id === candidate.id
       )
       if (enrollment) {
+        console.log('Enrollment:', enrollment)
         candidate.enrollmentId = enrollment.id
-        candidate.isEvaluated = enrollment.isEvaluated
+        candidate.isEvaluated = enrollment.evaluated  
+        candidate.finalScore = enrollment.finalScore
         console.log('Enrollment ID:', candidate)
       }
     })

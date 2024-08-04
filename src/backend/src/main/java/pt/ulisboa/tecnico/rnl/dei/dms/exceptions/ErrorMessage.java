@@ -26,6 +26,7 @@ public enum ErrorMessage {
     EVALUATION_NOT_FOUND("Evaluation was not found."),
     EVALUATION_ENROLLMENT_CANNOT_BE_EMPTY("Enrollment cannot be empty."),
     EVALUATION_CANNOT_BE_EMPTY("Evaluation cannot be empty."),
+    ENROLLMENT_FINAL_SCORE_INVALID("Final score must be between 0 and 20."),
 
     ;
 

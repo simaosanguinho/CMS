@@ -8,6 +8,7 @@ public class EnrollmentDto {
     private CandidateDto candidate;
     private Long grantId;
     private boolean isEvaluated;
+    private Double finalScore;
     
 
     public EnrollmentDto() {
@@ -18,6 +19,7 @@ public class EnrollmentDto {
         setGrantId(enrollment.getGrant().getId());
         setCandidate(new CandidateDto(enrollment.getCandidate()));
         setIsEvaluated(enrollment.isEvaluated());
+        setFinalScore(enrollment.getFinalScore());
         
     }
 
@@ -33,8 +35,12 @@ public class EnrollmentDto {
         return candidate;
     }
 
-    public boolean isisEvaluated() {
+    public boolean isEvaluated() {
         return isEvaluated;
+    }
+
+    public Double getFinalScore() {
+        return finalScore;
     }
 
     public void setCandidate(CandidateDto candidate) {
@@ -52,6 +58,10 @@ public class EnrollmentDto {
 
     public void setIsEvaluated(boolean isEvaluated) {
         this.isEvaluated = isEvaluated;
+    }
+
+    public void setFinalScore(Double finalScore) {
+        this.finalScore = finalScore;
     }
 
 }
