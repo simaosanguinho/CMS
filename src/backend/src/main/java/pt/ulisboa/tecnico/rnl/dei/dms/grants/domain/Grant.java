@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.grants.domain;
 
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.domain.Enrollment;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
@@ -8,6 +9,8 @@ import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -41,6 +44,9 @@ public class Grant {
     private static final double DEFAULT_INTERVIEW_WEIGHT = 0.4;
     private static final double DEFAULT_PRACTICAL_EXERCISE_WEIGHT = 0.2;
 
+    @OneToMany(mappedBy = "grant", cascade = CascadeType.REMOVE)
+    private List<Enrollment> enrollments = new ArrayList<>();
+
     public Grant() {
     }
 
@@ -56,12 +62,14 @@ public class Grant {
     }
 
     public void update(GrantDto grantDto) {
+
         setStartDate(DateHandler.toLocalDateTime(grantDto.getStartDate()));
         setEndDate(DateHandler.toLocalDateTime(grantDto.getEndDate()));
         setMonthlyIncome(grantDto.getMonthlyIncome());
         setVacancy(grantDto.getVacancy());
-        setWeights(grantDto.getEvaluationWeights());
-
+        setCurricularEvaluationWeight(grantDto.getCurricularEvaluationWeight());
+        setInterviewWeight(grantDto.getInterviewWeight());
+        setPracticalExerciseWeight(grantDto.getPracticalExerciseWeight());
         verifyInvariants();
     }
 
@@ -85,16 +93,36 @@ public class Grant {
         return vacancy;
     }
 
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
     public boolean isOngoing() {
         return ongoing;
     }
 
-    public Map<GrantEvaluationCategory, Double> getWeights() {
-        return Map.of(
-                GrantEvaluationCategory.CURRICULAR_EVALUATION, curricularEvaluationWeight,
-                GrantEvaluationCategory.INTERVIEW, interviewWeight,
-                GrantEvaluationCategory.PRACTICAL_EXERCISE, practicalExerciseWeight
-        );
+    public Double getCurricularEvaluationWeight() {
+        return curricularEvaluationWeight;
+    }
+
+    public Double getInterviewWeight() {
+        return interviewWeight;
+    }
+
+    public Double getPracticalExerciseWeight() {
+        return practicalExerciseWeight;
+    }
+
+    public Double getDefaultCurricularEvaluationWeight() {
+        return DEFAULT_CURRICULAR_EVALUATION_WEIGHT;
+    }
+
+    public Double getDefaultInterviewWeight() {
+        return DEFAULT_INTERVIEW_WEIGHT;
+    }
+
+    public Double getDefaultPracticalExerciseWeight() {
+        return DEFAULT_PRACTICAL_EXERCISE_WEIGHT;
     }
         
 
@@ -115,10 +143,16 @@ public class Grant {
         this.vacancy = vacancy;
     }
 
-    public void setWeights(Map<GrantEvaluationCategory, Double> weights) {
-        this.curricularEvaluationWeight = weights.get(GrantEvaluationCategory.CURRICULAR_EVALUATION);
-        this.interviewWeight = weights.get(GrantEvaluationCategory.INTERVIEW);
-        this.practicalExerciseWeight = weights.get(GrantEvaluationCategory.PRACTICAL_EXERCISE);
+    public void setCurricularEvaluationWeight(Double curricularEvaluationWeight) {
+        this.curricularEvaluationWeight = curricularEvaluationWeight;
+    }
+
+    public void setInterviewWeight(Double interviewWeight) {
+        this.interviewWeight = interviewWeight;
+    }
+
+    public void setPracticalExerciseWeight(Double practicalExerciseWeight) {
+        this.practicalExerciseWeight = practicalExerciseWeight;
     }
 
     public void setDefaultWeights() {
@@ -130,7 +164,11 @@ public class Grant {
     public void setOngoing(boolean ongoing) {
         this.ongoing = ongoing;
     }
-    
+
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
+    }
+
 
     @Override
     public String toString() {
@@ -144,12 +182,14 @@ public class Grant {
     }
 
     private void verifyInvariants() {
+        System.out.println("Verifying grant invariants");
         isValidIncome();
         isStartDateValid();
         isEndDateValid();
         isGrantDurationValid();
         isVancancyValid();
         areWeightsValid();
+        System.out.println("Grant invariants verified");
     }
 
     public void isValidIncome() {

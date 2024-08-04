@@ -36,8 +36,8 @@ public class GrantService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<GrantDto> updateGrant(GrantDto grantDto) {
-        Grant grant = grantRepository.findById(grantDto.getId()).get();
-
+        Grant grant = grantRepository.findById(grantDto.getId()).orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
+        System.out.println("Updating grant: " + grant);
         grant.update(grantDto);
         grantRepository.save(grant);
 

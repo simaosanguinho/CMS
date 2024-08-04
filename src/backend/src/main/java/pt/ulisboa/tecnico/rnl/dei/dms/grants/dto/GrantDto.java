@@ -6,7 +6,6 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
 
-
 public class GrantDto {
     private Long id;
     private String startDate;
@@ -17,6 +16,7 @@ public class GrantDto {
     private Double interviewWeight;
     private Double practicalExerciseWeight;
     private boolean ongoing;
+    private Integer numberOfEnrollments;
 
     public GrantDto() {
     }
@@ -27,11 +27,14 @@ public class GrantDto {
         setEndDate(DateHandler.toISOString(grant.getEndDate()));
         setMonthlyIncome(grant.getMonthlyIncome());
         setVacancy(grant.getVacancy());
-        setEvaluationWeights(grant.getWeights());
+        setCurricularEvaluationWeight(grant.getCurricularEvaluationWeight());
+        setInterviewWeight(grant.getInterviewWeight());
+        setPracticalExerciseWeight(grant.getPracticalExerciseWeight());
+
         setOngoing(grant.isOngoing());
+        setNumberOfEnrollments(grant.getEnrollments().size());
 
     }
-
 
     public Long getId() {
         return id;
@@ -49,21 +52,28 @@ public class GrantDto {
         return monthlyIncome;
     }
 
-
     public Integer getVacancy() {
         return vacancy;
+    }
+
+    public Integer getNumberOfEnrollments() {
+        return numberOfEnrollments;
     }
 
     public boolean isOngoing() {
         return ongoing;
     }
 
-    public Map<GrantEvaluationCategory, Double> getEvaluationWeights() {
-        return Map.of(
-                GrantEvaluationCategory.CURRICULAR_EVALUATION, curricularEvaluationWeight,
-                GrantEvaluationCategory.INTERVIEW, interviewWeight,
-                GrantEvaluationCategory.PRACTICAL_EXERCISE, practicalExerciseWeight
-        );
+    public Double getCurricularEvaluationWeight() {
+        return curricularEvaluationWeight;
+    }
+
+    public Double getInterviewWeight() {
+        return interviewWeight;
+    }
+
+    public Double getPracticalExerciseWeight() {
+        return practicalExerciseWeight;
     }
 
     public void setId(Long id) {
@@ -86,14 +96,24 @@ public class GrantDto {
         this.vacancy = vacancy;
     }
 
-    public void setEvaluationWeights(Map<GrantEvaluationCategory, Double> weights) {
-        this.curricularEvaluationWeight = weights.get(GrantEvaluationCategory.CURRICULAR_EVALUATION);
-        this.interviewWeight = weights.get(GrantEvaluationCategory.INTERVIEW);
-        this.practicalExerciseWeight = weights.get(GrantEvaluationCategory.PRACTICAL_EXERCISE);
+    public void setCurricularEvaluationWeight(Double curricularEvaluationWeight) {
+        this.curricularEvaluationWeight = curricularEvaluationWeight;
+    }
+
+    public void setInterviewWeight(Double interviewWeight) {
+        this.interviewWeight = interviewWeight;
+    }
+
+    public void setPracticalExerciseWeight(Double practicalExerciseWeight) {
+        this.practicalExerciseWeight = practicalExerciseWeight;
     }
 
     public void setOngoing(boolean ongoing) {
         this.ongoing = ongoing;
+    }
+
+    public void setNumberOfEnrollments(Integer numberOfEnrollments) {
+        this.numberOfEnrollments = numberOfEnrollments;
     }
 
     @Override

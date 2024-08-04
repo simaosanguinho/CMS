@@ -7,6 +7,9 @@ export default class GrantDto {
     endDate!: string
     monthlyIncome?: number
     candidates?: CandidateDto[]
+    curricularEvaluationWeight?: number
+    interviewWeight?: number
+    practicalExerciseWeight?: number
     vacancy?: number
     isOngoing?: boolean
 
@@ -17,8 +20,11 @@ export default class GrantDto {
             this.endDate = ISOtoString(jsonObj.endDate ?? null) 
             this.monthlyIncome = jsonObj.monthlyIncome
             this.candidates = jsonObj.candidates ? jsonObj.candidates.map(candidate => new CandidateDto(candidate)) : []
+            this.curricularEvaluationWeight = jsonObj.curricularEvaluationWeight
+            this.interviewWeight = jsonObj.interviewWeight
+            this.practicalExerciseWeight = jsonObj.practicalExerciseWeight
             this.vacancy = jsonObj.vacancy
-            this.isOngoing = jsonObj.ongoing
+            this.isOngoing = jsonObj.isOngoing
         }
     }
 }

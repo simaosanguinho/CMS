@@ -168,6 +168,7 @@ const saveGrant = async () => {
     console.log('Local grant:', localGrant.value)
     localGrant.value.startDate = convertToUTC(localGrant.value.startDate)
     localGrant.value.endDate = convertToUTC(localGrant.value.endDate)
+    console.log('Local grant after conversion:', localGrant.value)
     await RemoteService.updateGrant(localGrant.value)
     emit('grant-updated')
   } catch (error) {
