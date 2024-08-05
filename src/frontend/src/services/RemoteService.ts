@@ -101,6 +101,7 @@ export default class RemoteService {
     })
   }
 
+
   // ------------------- Enrollments -------------------
   static async enrollCandidate(candidateId: string, grantId: string): Promise<void> {
     return httpClient.post(`/grants/${grantId}/enrollments/${candidateId}`, { candidateId, grantId })

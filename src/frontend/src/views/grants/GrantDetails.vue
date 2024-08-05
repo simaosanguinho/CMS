@@ -29,7 +29,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card class="elevation-0">
-          <v-card-subtitle class="pa-6">
+          <v-card-text class="pa-6">
             <v-row>
               <v-col>
                 <div class="font-weight-black">ID</div>
@@ -54,7 +54,12 @@
             </v-row>
               <v-card-text>
                 <v-row class="mt-2" justify="center">
-                <div class="font-weight-black">Pesos de Avaliação </div>
+                <div class="font-weight-black text-h7 mr-4">Pesos de Avaliação 
+                
+                <v-btn icon density="compact" variant="plain" class="md-5" @click="editGrantWeights(grant)">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </div>
               </v-row>
             <v-row justify="center" class="mt-4">
 
@@ -71,7 +76,7 @@
             >
             </v-row>
           </v-card-text>
-          </v-card-subtitle>
+          </v-card-text>
           <v-divider></v-divider>
         </v-card>
       </v-col>
@@ -147,6 +152,13 @@
     @close="evaluateDialogVisible = false"
     @candidate-evaluated="fetchGrant(grant.id)"
   />
+
+  <EditGrantWeightsDialog
+    :grant="grant"
+    :visible="editGrantWeightsDialogVisible"
+    @close="editGrantWeightsDialogVisible = false"
+    @weights-updated="fetchGrant(grant.id)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -158,6 +170,7 @@ import type CandidateDto from '@/models/candidates/CandidateDto'
 import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 import EnrollCandidatesDialog from '@/views/enrollments/EnrollCandidatesDialog.vue'
 import EvaluateCandidateDialog from '@/views/evaluations/EvaluateCandidateDialog.vue'
+import EditGrantWeightsDialog from '@/views/grants/EditGrantWeightsDialog.vue'
 import EnrollmentDto from '../../models/enrollments/EnrollmentDto'
 
 
@@ -166,6 +179,7 @@ const router = useRouter()
 const editDialogVisible = ref(false)
 const enrollDialogVisible = ref(false)
 const evaluateDialogVisible = ref(false)
+const editGrantWeightsDialogVisible = ref(false)
 const grant = ref<GrantDto | null>(null)
 const loading = ref(true)
 const enrolledCandidates = ref<CandidateDto | null>(null)
@@ -216,6 +230,11 @@ function editGrant(newGrant: GrantDto) {
   grant.value = newGrant
   console.log('Selected grant:', grant.value)
   editDialogVisible.value = true
+}
+
+const editGrantWeights = (grant: GrantDto) => {
+  console.log('Selected grant:', grant)
+  editGrantWeightsDialogVisible.value = true
 }
 
 const deleteGrant = async () => {

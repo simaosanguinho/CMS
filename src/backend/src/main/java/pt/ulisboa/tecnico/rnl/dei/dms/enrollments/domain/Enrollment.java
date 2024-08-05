@@ -7,15 +7,12 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
-import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
-
-import java.util.EnumMap;
-import java.util.List;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "enrollments")
+@Table(name = "enrollments",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"candidate_id", "grant_id"}))  
 public class Enrollment {
 
     @Id
