@@ -71,6 +71,8 @@
       RemoteService.getEnrolledGrantsByCandidateId(props.candidate?.id ?? '').then((data) => {
         data.forEach((grant: GrantDto) => {
           console.log('Grant:', grant)
+          grant.startDate = formatDate(grant.startDate)
+          grant.endDate = formatDate(grant.endDate)
           grants.value.push(grant)
         })
       })
@@ -85,6 +87,15 @@
   const handleOutsideClick = () => {
     closeDialog()
   }
+
+  const formatDate = (date: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }
+  return new Intl.DateTimeFormat('pt-PT', options).format(new Date(date))
+}
   </script>
   
   <style scoped>
