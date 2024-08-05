@@ -23,8 +23,9 @@
     </v-row>
     <div v-else>
       <v-col cols="12" class="pt-0">
-        <v-card-title class="pt-0">
-          <h3>Detalhes de Bolsa</h3>
+        <v-card-title 
+        class="pt-0">
+          <h3>Detalhes da Bolsa</h3>
         </v-card-title>
         <v-divider></v-divider>
         <v-card class="elevation-0">
@@ -35,22 +36,41 @@
                 {{ grant.id }}
               </v-col>
               <v-col>
-                <div class="font-weight-black">Start</div>
+                <div class="font-weight-black">Início</div>
                 {{ formatDate(grant.startDate) }}
               </v-col>
               <v-col>
-                <div class="font-weight-black">End</div>
+                <div class="font-weight-black">Fim</div>
                 {{ formatDate(grant.endDate) }}
               </v-col>
               <v-col>
-                <div class="font-weight-black">Monthly Income (€)</div>
+                <div class="font-weight-black">Valor Mensal (€)</div>
                 {{ grant.monthlyIncome }}
               </v-col>
               <v-col>
-                <div class="font-weight-black">Vacancies</div>
+                <div class="font-weight-black">Vagas</div>
                 {{ grant.vacancy }}
               </v-col>
             </v-row>
+              <v-card-text>
+                <v-row class="mt-2" justify="center">
+                <div class="font-weight-black">Pesos de Avaliação </div>
+              </v-row>
+            <v-row justify="center" class="mt-4">
+
+              <v-chip class="mx-5" color="primary"
+              >Avaliação Curricular ({{
+                (grant?.curricularEvaluationWeight ?? 0) * 100
+              }}%)</v-chip
+            >
+            <v-chip class="mx-5"  color="primary"
+              >Exercício Prático ({{ (grant?.practicalExerciseWeight ?? 0) * 100 }}%)</v-chip
+            >
+            <v-chip class="mx-5" color="primary"
+              >Entrevista ({{ (grant?.interviewWeight ?? 0) * 100 }}%)</v-chip
+            >
+            </v-row>
+          </v-card-text>
           </v-card-subtitle>
           <v-divider></v-divider>
         </v-card>
@@ -140,6 +160,7 @@ import EnrollCandidatesDialog from '@/views/enrollments/EnrollCandidatesDialog.v
 import EvaluateCandidateDialog from '@/views/evaluations/EvaluateCandidateDialog.vue'
 import EnrollmentDto from '../../models/enrollments/EnrollmentDto'
 
+
 const route = useRoute()
 const router = useRouter()
 const editDialogVisible = ref(false)
@@ -152,7 +173,7 @@ const selectedEnrollment = ref<EnrollmentDto | null>(null)
 
 const search = ref('')
 const headers = [
-  { title: 'Name', value: 'name', key: 'name' },
+  { title: 'Nome', value: 'name', key: 'name' },
   { title: 'Ist ID', value: 'istID', key: 'istID' },
   { title: 'Nota Final', value: 'evaluation', key: 'evaluation' },
   { title: 'Anular Inscrição', value: 'actions', key: 'actions' }
