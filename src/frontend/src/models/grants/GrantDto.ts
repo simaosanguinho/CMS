@@ -11,7 +11,7 @@ export default class GrantDto {
     interviewWeight?: number
     practicalExerciseWeight?: number
     vacancy?: number
-    isOngoing?: boolean
+    onGoing?: boolean
 
     constructor(jsonObj: Partial<GrantDto>) {
         if (jsonObj) {
@@ -24,7 +24,7 @@ export default class GrantDto {
             this.interviewWeight = jsonObj.interviewWeight
             this.practicalExerciseWeight = jsonObj.practicalExerciseWeight
             this.vacancy = jsonObj.vacancy
-            this.isOngoing = jsonObj.isOngoing
+            this.onGoing = jsonObj.onGoing
         }
     }
 }

@@ -38,7 +38,7 @@ public class Grant {
     @Column(name = "practical_exercise_weight")
     private Double practicalExerciseWeight;
 
-    private boolean ongoing = true;
+    private boolean onGoing = true;
 
     private static final double DEFAULT_CURRICULAR_EVALUATION_WEIGHT = 0.4;
     private static final double DEFAULT_INTERVIEW_WEIGHT = 0.4;
@@ -97,8 +97,8 @@ public class Grant {
         return enrollments;
     }
 
-    public boolean isOngoing() {
-        return ongoing;
+    public boolean isOnGoing() {
+        return onGoing;
     }
 
     public Double getCurricularEvaluationWeight() {
@@ -161,8 +161,8 @@ public class Grant {
         this.practicalExerciseWeight = DEFAULT_PRACTICAL_EXERCISE_WEIGHT;
     }
     
-    public void setOngoing(boolean ongoing) {
-        this.ongoing = ongoing;
+    public void setOnGoing(boolean onGoing) {
+        this.onGoing = onGoing;
     }
 
     public void setEnrollments(List<Enrollment> enrollments) {
@@ -188,7 +188,7 @@ public class Grant {
                 ", curricularEvaluationWeight=" + curricularEvaluationWeight +
                 ", interviewWeight=" + interviewWeight +
                 ", practicalExerciseWeight=" + practicalExerciseWeight +
-                ", ongoing=" + ongoing +
+                ", onGoing=" + onGoing +
                 '}';
     }
 

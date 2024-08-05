@@ -15,7 +15,7 @@ public class GrantDto {
     private Double curricularEvaluationWeight;
     private Double interviewWeight;
     private Double practicalExerciseWeight;
-    private boolean ongoing;
+    private boolean onGoing;
     private Integer numberOfEnrollments;
 
     public GrantDto() {
@@ -31,7 +31,7 @@ public class GrantDto {
         setInterviewWeight(grant.getInterviewWeight());
         setPracticalExerciseWeight(grant.getPracticalExerciseWeight());
 
-        setOngoing(grant.isOngoing());
+        setOnGoing(grant.isOnGoing());
         setNumberOfEnrollments(grant.getEnrollments().size());
 
     }
@@ -60,8 +60,8 @@ public class GrantDto {
         return numberOfEnrollments;
     }
 
-    public boolean isOngoing() {
-        return ongoing;
+    public boolean isOnGoing() {
+        return onGoing;
     }
 
     public Double getCurricularEvaluationWeight() {
@@ -108,8 +108,8 @@ public class GrantDto {
         this.practicalExerciseWeight = practicalExerciseWeight;
     }
 
-    public void setOngoing(boolean ongoing) {
-        this.ongoing = ongoing;
+    public void setOnGoing(boolean onGoing) {
+        this.onGoing = onGoing;
     }
 
     public void setNumberOfEnrollments(Integer numberOfEnrollments) {
@@ -127,7 +127,7 @@ public class GrantDto {
                 ", curricularEvaluationWeight=" + curricularEvaluationWeight +
                 ", interviewWeight=" + interviewWeight +
                 ", practicalExerciseWeight=" + practicalExerciseWeight +
-                ", ongoing=" + ongoing +
+                ", onGoing=" + onGoing +
                 ", numberOfEnrollments=" + numberOfEnrollments +
                 '}';
     }
