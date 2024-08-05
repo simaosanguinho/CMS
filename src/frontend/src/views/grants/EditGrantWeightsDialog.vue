@@ -65,7 +65,7 @@ const handleSave = async () => {
     await saveEvaluationWeights()
     closeDialog()
   } else {
-    errorMessage.value = ' A soma do peso das componentes de avaliação tem de ser 100%'
+    errorMessage.value = 'A soma do peso das componentes de avaliação tem de ser 100%'
   }
 }
 

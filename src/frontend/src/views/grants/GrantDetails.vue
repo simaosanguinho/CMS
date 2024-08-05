@@ -101,6 +101,7 @@
               prepend-icon="mdi-plus"
               :text="winnerButtonText"
               color="primary"
+              @click="selectWinners()"
             ></v-btn>
           </v-row>
           <v-data-table
@@ -159,6 +160,7 @@
     @close="editGrantWeightsDialogVisible = false"
     @weights-updated="fetchGrant(grant.id)"
   />
+  <NotificationAlert v-if="errorWinnerMessage" :message="errorWinnerMessage" type="error" :visible="true" @close="errorWinnerMessage = ''"/>
 </template>
 
 <script setup lang="ts">
@@ -171,7 +173,8 @@ import EditGrantDialog from '@/views/grants/EditGrantDialog.vue'
 import EnrollCandidatesDialog from '@/views/enrollments/EnrollCandidatesDialog.vue'
 import EvaluateCandidateDialog from '@/views/evaluations/EvaluateCandidateDialog.vue'
 import EditGrantWeightsDialog from '@/views/grants/EditGrantWeightsDialog.vue'
-import EnrollmentDto from '../../models/enrollments/EnrollmentDto'
+import EnrollmentDto from '@/models/enrollments/EnrollmentDto'
+import NotificationAlert from '@/components/NotificationAlert.vue'
 
 
 const route = useRoute()
@@ -184,6 +187,7 @@ const grant = ref<GrantDto | null>(null)
 const loading = ref(true)
 const enrolledCandidates = ref<CandidateDto | null>(null)
 const selectedEnrollment = ref<EnrollmentDto | null>(null)
+const errorWinnerMessage = ref('')
 
 const search = ref('')
 const headers = [
@@ -269,6 +273,18 @@ const unenrollCandidate = async (candidate: CandidateDto) => {
       fetchGrant(grant.value.id)
     } catch (error) {
       console.error('Failed to unenroll candidate:', error)
+    }
+  }
+}
+
+const selectWinners = () => {
+  // check if all candidates are evaluated
+  if (enrolledCandidates.value) {
+    const unevaluatedCandidates = enrolledCandidates.value.filter(
+      (candidate: CandidateDto) => !candidate.isEvaluated
+    )
+    if (unevaluatedCandidates.length > 0) {
+      errorWinnerMessage.value = 'Existem candidatos por avaliar'
     }
   }
 }
