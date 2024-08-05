@@ -20,7 +20,6 @@ public class EvaluationController {
 
     @PostMapping("/enrollments/evaluations/{evaluationId}/update")
     public EvaluationDto updateEvaluation(@PathVariable Long evaluationId, @RequestBody EvaluationDto evaluationDto) {
-        System.out.println("EvaluationController.updateEvaluation");
         return evaluationService.updateEvaluation(evaluationId, evaluationDto);
 
     }

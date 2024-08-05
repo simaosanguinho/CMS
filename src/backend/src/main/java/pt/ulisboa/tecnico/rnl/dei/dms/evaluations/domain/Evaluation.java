@@ -71,7 +71,6 @@ public class Evaluation {
     }
 
     public List<Double> getScores() {
-        // return a list of doubles  with the scores
         return List.of(getCurricularEvaluation(), getInterview(), getPracticalExercise());
 
     }

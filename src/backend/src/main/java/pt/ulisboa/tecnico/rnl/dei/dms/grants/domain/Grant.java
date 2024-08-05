@@ -169,6 +169,13 @@ public class Grant {
         this.enrollments = enrollments;
     }
 
+    public void updateEvaluationWeights(GrantDto grantDto) {
+        setCurricularEvaluationWeight(grantDto.getCurricularEvaluationWeight());
+        setInterviewWeight(grantDto.getInterviewWeight());
+        setPracticalExerciseWeight(grantDto.getPracticalExerciseWeight());
+        areWeightsValid();
+    }
+
 
     @Override
     public String toString() {
@@ -178,18 +185,20 @@ public class Grant {
                 ", endDate=" + endDate +
                 ", monthlyIncome=" + monthlyIncome +
                 ", vacancy=" + vacancy +
+                ", curricularEvaluationWeight=" + curricularEvaluationWeight +
+                ", interviewWeight=" + interviewWeight +
+                ", practicalExerciseWeight=" + practicalExerciseWeight +
+                ", ongoing=" + ongoing +
                 '}';
     }
 
     private void verifyInvariants() {
-        System.out.println("Verifying grant invariants");
         isValidIncome();
         isStartDateValid();
         isEndDateValid();
         isGrantDurationValid();
         isVancancyValid();
         areWeightsValid();
-        System.out.println("Grant invariants verified");
     }
 
     public void isValidIncome() {

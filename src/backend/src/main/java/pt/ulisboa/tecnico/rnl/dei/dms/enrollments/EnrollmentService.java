@@ -127,9 +127,6 @@ public class EnrollmentService {
         }
 
         List<Enrollment> enrollments = enrollmentRepository.findByCandidateId(candidateId);
-        System.out.println("Grants: " + enrollments.stream()
-                .map(Enrollment::getGrant)
-                .toList());
 
         return enrollments.stream()
                 .map(Enrollment::getGrant)

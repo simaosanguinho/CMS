@@ -3,9 +3,15 @@ package pt.ulisboa.tecnico.rnl.dei.dms.grants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/grants")
@@ -39,6 +45,12 @@ public class GrantController {
     @GetMapping("/{id}")
     public GrantDto getGrantById(@PathVariable Long id) {
         return grantService.getGrantById(id);
+    }
+
+    @PutMapping("/{id}/update/weights")
+    public GrantDto updateGrantEvaluationWeights(@PathVariable Long id, @RequestBody GrantDto grantDto) {
+        return grantService.updateGrantEvaluationWeights(id, grantDto);
+
     }
     
 }

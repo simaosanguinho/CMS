@@ -90,6 +90,13 @@ export default class RemoteService {
     })
   }
 
+  static async updateGrantEvaluationWeights(grant: GrantDto): Promise<GrantDto> {
+    console.log("UPDATING GRANT EVALUATION WEIGHTS: ", grant) 
+    return httpClient.put(`/grants/${grant.id}/update/weights`, grant).then((response) => {
+      return new GrantDto(response.data)
+    })
+  }
+
   static async deleteGrant(grant: GrantDto): Promise<void> {
     return httpClient.delete(`/grants/delete/${grant.id}`)
   }

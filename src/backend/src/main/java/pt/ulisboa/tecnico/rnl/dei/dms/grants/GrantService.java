@@ -9,16 +9,25 @@ import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.ErrorMessage;
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.domain.Evaluation;
+import pt.ulisboa.tecnico.rnl.dei.dms.evaluations.repository.EvaluationRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.exceptions.CMSException;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.repository.GrantRepository;
+import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.repository.EnrollmentRepository;
 
 @Service
 public class GrantService {
 
     @Autowired
     private GrantRepository grantRepository;
+
+    @Autowired
+    private EvaluationRepository evaluationRepository;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public GrantDto createGrant(GrantDto grantDto) {
@@ -37,7 +46,6 @@ public class GrantService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<GrantDto> updateGrant(GrantDto grantDto) {
         Grant grant = grantRepository.findById(grantDto.getId()).orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
-        System.out.println("Updating grant: " + grant);
         grant.update(grantDto);
         grantRepository.save(grant);
 
@@ -59,6 +67,31 @@ public class GrantService {
         } catch (Exception e) {
             throw new CMSException(ErrorMessage.GRANT_NOT_FOUND);
         }
+    }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public GrantDto updateGrantEvaluationWeights(Long id, GrantDto grantDto) {
+        Grant grant = grantRepository.findById(id).orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
+        grant.updateEvaluationWeights(grantDto);
+        grantRepository.save(grant);
+
+        // update the final score of all enrollments
+        grant.getEnrollments().forEach(enrollment -> {
+            if(!enrollment.isEvaluated()) {
+                return;
+            }
+
+            Evaluation evaluation = evaluationRepository.findByEnrollmentId(enrollment.getId()).orElseThrow(() -> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
+           
+            List<Double> scores = evaluation.getScores();
+            Double finalScore = (scores.get(0) * grant.getCurricularEvaluationWeight())
+                + (scores.get(1) * grant.getPracticalExerciseWeight())  + (scores.get(2)* grant.getInterviewWeight());
+            enrollment.setFinalScore(finalScore);
+            enrollmentRepository.save(enrollment);
+        });
+
+        
+        return new GrantDto(grant);
     }
 
 }

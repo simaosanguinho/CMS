@@ -123,6 +123,12 @@ public class GrantDto {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", monthlyIncome=" + monthlyIncome +
+                ", vacancy=" + vacancy +
+                ", curricularEvaluationWeight=" + curricularEvaluationWeight +
+                ", interviewWeight=" + interviewWeight +
+                ", practicalExerciseWeight=" + practicalExerciseWeight +
+                ", ongoing=" + ongoing +
+                ", numberOfEnrollments=" + numberOfEnrollments +
                 '}';
     }
 

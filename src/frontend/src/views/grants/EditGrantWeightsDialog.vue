@@ -75,14 +75,14 @@ const saveEvaluationWeights = async () => {
       weights.value = [slider1.value, slider2.value, slider3.value]
       console.log('Weights:', weights.value)
 
-      const newGrant = new GrantDto({
-        id: props.grant.id,
-        curricularEvaluationWeight: weights.value[0],
-        practicalExerciseWeight: weights.value[1],
-        interviewWeight: weights.value[2]
-      })
+      // create a copy of the grant and update the weights
+      const newGrant = { ...props.grant }
+      newGrant.curricularEvaluationWeight = weights.value[0] / 100
+      newGrant.practicalExerciseWeight = weights.value[1] / 100
+      newGrant.interviewWeight = weights.value[2] / 100
 
-      await RemoteService.updateGrant(newGrant)
+
+      await RemoteService.updateGrantEvaluationWeights(newGrant)
     }
     emit('weights-updated')
   } catch (error) {
@@ -104,7 +104,7 @@ const getEvaluation = async () => {
     slider2.value = (props.grant.practicalExerciseWeight ?? 0) * 100
     slider3.value = (props.grant.interviewWeight ?? 0) * 100
 
-    console.log('Grant:', props.grant)
+    console.log('Grant com os weigth:', props.grant)
   }
 }
 

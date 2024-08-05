@@ -50,7 +50,6 @@ public class EnrollmentController {
 
     @GetMapping("/grants/{candidateId}/enrolled")
     public List<GrantDto> getEnrolledGrantsByCandidateId(@PathVariable Long candidateId) {
-        System.out.println("candidateId: " + candidateId);
         return enrollmentService.getEnrolledGrantsByCandidateId(candidateId);
     }
 }

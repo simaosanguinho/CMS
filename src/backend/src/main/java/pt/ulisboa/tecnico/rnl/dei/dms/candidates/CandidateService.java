@@ -49,10 +49,8 @@ public class CandidateService {
         Candidate candidate = candidateRepository.findById(candidateDto.getId()).get();
 
         List<Candidate> candidates = candidateRepository.findByEmail(candidateDto.getEmail());
-        System.out.println(candidates);
         if (candidates.size() > 0 && 
             candidates.stream().anyMatch(c -> !c.getId().equals(candidate.getId()))) {
-            System.out.println(candidates);
             throw new CMSException(CANDIDATE_EMAIL_ALREADY_EXISTS);
         }
 

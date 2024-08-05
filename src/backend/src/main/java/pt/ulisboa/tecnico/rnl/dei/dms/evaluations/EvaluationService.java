@@ -75,9 +75,8 @@ public class EvaluationService {
         Grant grant = grantRepository.findById(enrollment.getGrant().getId())
                 .orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
 
-        Double finalScore = scores.get(0) * grant.getCurricularEvaluationWeight()
-                + scores.get(1) * grant.getInterviewWeight() + scores.get(2) * grant.getPracticalExerciseWeight();
-            
+        Double finalScore = (scores.get(0) * grant.getCurricularEvaluationWeight())
+                + (scores.get(1) * grant.getPracticalExerciseWeight()) + (scores.get(2) * grant.getInterviewWeight());
         enrollment.setFinalScore(finalScore);
         enrollmentRepository.save(enrollment);
         
@@ -88,8 +87,6 @@ public class EvaluationService {
     public EvaluationDto getEvaluationByEnrollmentId(Long enrollmentId) {
         Evaluation evaluation = evaluationRepository.findByEnrollmentId(enrollmentId)
                 .orElseThrow(() -> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
-
-        System.out.println(evaluation);
         return new EvaluationDto(evaluation);
     }
 
