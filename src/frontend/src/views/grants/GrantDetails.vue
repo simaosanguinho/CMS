@@ -50,6 +50,10 @@
                 <div class="font-weight-black">Vagas</div>
                 {{ grant.vacancy }}
               </v-col>
+              <v-col>
+                <div class="font-weight-black">Concurso</div>
+                {{ grant.onGoing ? 'A decorrer' : 'Fechado' }}
+              </v-col>
             </v-row>
             <v-card-text>
               <v-row class="mt-2" justify="center">
