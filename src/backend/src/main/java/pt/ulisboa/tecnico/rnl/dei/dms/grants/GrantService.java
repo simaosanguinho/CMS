@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.repository.GrantRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.repository.EnrollmentRepository;
-
+import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
 @Service
 public class GrantService {
 
@@ -93,5 +94,52 @@ public class GrantService {
         
         return new GrantDto(grant);
     }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public List<CandidateDto> getGrantees(Long id) {
+        Grant grant = grantRepository.findById(id).orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
+
+        if (!grant.isOnGoing()) {
+            throw new CMSException(ErrorMessage.GRANT_IS_ALREADY_CLOSED);
+        }
+
+        if (grant.getEnrollments().isEmpty()) {
+            throw new CMSException(ErrorMessage.GRANT_HAS_NO_ENROLLMENTS);
+        }
+
+        HashMap<CandidateDto, Double> finalScores = new HashMap<>();
+
+        grant.getEnrollments().forEach(enrollment -> {
+            
+            if(!enrollment.isEvaluated()) {
+                throw new CMSException(ErrorMessage.GRANT_HAS_NON_EVALUATED_ENROLLMENTS);
+            }
+
+            CandidateDto candidateDto = new CandidateDto(enrollment.getCandidate());
+            finalScores.put(candidateDto, enrollment.getFinalScore());
+        });
+
+
+        grant.setOnGoing(false);
+
+        List<CandidateDto> grantees = finalScores.entrySet().stream()
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                .map(e -> e.getKey())
+                .collect(Collectors.toList());
+
+
+        grant.setGrantees(grantees.stream().map(CandidateDto::getId).collect(Collectors.toList()));
+
+        grantRepository.save(grant);
+
+        // delete all evaluations of the grant - had to be done at the end
+        grant.getEnrollments().forEach(enrollment -> {
+            Evaluation evaluation = evaluationRepository.findByEnrollmentId(enrollment.getId()).orElseThrow(() -> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
+            evaluationRepository.delete(evaluation);
+        });
+
+        return grantees;
+
+    }   
 
 }

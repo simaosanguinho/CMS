@@ -40,6 +40,8 @@ public class Grant {
 
     private boolean onGoing = true;
 
+    private List<Long> grantees = new ArrayList<>();
+
     private static final double DEFAULT_CURRICULAR_EVALUATION_WEIGHT = 0.4;
     private static final double DEFAULT_INTERVIEW_WEIGHT = 0.4;
     private static final double DEFAULT_PRACTICAL_EXERCISE_WEIGHT = 0.2;
@@ -124,7 +126,10 @@ public class Grant {
     public Double getDefaultPracticalExerciseWeight() {
         return DEFAULT_PRACTICAL_EXERCISE_WEIGHT;
     }
-        
+    
+    public List<Long> getGrantees() {
+        return grantees;
+    }
 
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
@@ -169,13 +174,16 @@ public class Grant {
         this.enrollments = enrollments;
     }
 
+    public void setGrantees(List<Long> grantees) {
+        this.grantees = grantees;
+    }
+
     public void updateEvaluationWeights(GrantDto grantDto) {
         setCurricularEvaluationWeight(grantDto.getCurricularEvaluationWeight());
         setInterviewWeight(grantDto.getInterviewWeight());
         setPracticalExerciseWeight(grantDto.getPracticalExerciseWeight());
         areWeightsValid();
     }
-
 
     @Override
     public String toString() {

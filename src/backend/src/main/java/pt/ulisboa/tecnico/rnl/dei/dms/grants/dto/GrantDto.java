@@ -1,11 +1,10 @@
 package pt.ulisboa.tecnico.rnl.dei.dms.grants.dto;
 
-import java.util.Map;
 
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.domain.Grant;
 import pt.ulisboa.tecnico.rnl.dei.dms.utils.DateHandler;
-import pt.ulisboa.tecnico.rnl.dei.dms.utils.GrantEvaluationCategory;
-
+import java.util.ArrayList;
+import java.util.List;
 public class GrantDto {
     private Long id;
     private String startDate;
@@ -17,6 +16,7 @@ public class GrantDto {
     private Double practicalExerciseWeight;
     private boolean onGoing;
     private Integer numberOfEnrollments;
+    private List<Double> grantees = new ArrayList<>();
 
     public GrantDto() {
     }
@@ -76,6 +76,10 @@ public class GrantDto {
         return practicalExerciseWeight;
     }
 
+    public List<Double> getGrantees() {
+        return grantees;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -114,6 +118,10 @@ public class GrantDto {
 
     public void setNumberOfEnrollments(Integer numberOfEnrollments) {
         this.numberOfEnrollments = numberOfEnrollments;
+    }
+
+    public void setGrantees(List<Double> grantees) {
+        this.grantees = grantees;
     }
 
     @Override
