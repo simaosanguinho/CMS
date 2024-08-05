@@ -108,6 +108,14 @@ export default class RemoteService {
     })
   }
 
+  static async getGrantWinners(id: number): Promise<CandidateDto[]> {
+    return httpClient.put(`/grants/${id}/winners`).then((response) => {
+      return response.data.map((candidate: any) => {
+        return new CandidateDto(candidate)
+      })
+    })
+  }
+
 
   // ------------------- Enrollments -------------------
   static async enrollCandidate(candidateId: string, grantId: string): Promise<void> {

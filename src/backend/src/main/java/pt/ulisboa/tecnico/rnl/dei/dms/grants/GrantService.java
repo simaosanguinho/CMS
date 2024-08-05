@@ -18,6 +18,7 @@ import pt.ulisboa.tecnico.rnl.dei.dms.grants.dto.GrantDto;
 import pt.ulisboa.tecnico.rnl.dei.dms.grants.repository.GrantRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.enrollments.repository.EnrollmentRepository;
 import pt.ulisboa.tecnico.rnl.dei.dms.candidates.dto.CandidateDto;
+import pt.ulisboa.tecnico.rnl.dei.dms.candidates.repository.CandidateRepository;
 @Service
 public class GrantService {
 
@@ -29,6 +30,9 @@ public class GrantService {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
+    private CandidateRepository candidateRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public GrantDto createGrant(GrantDto grantDto) {
@@ -100,7 +104,14 @@ public class GrantService {
         Grant grant = grantRepository.findById(id).orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
 
         if (!grant.isOnGoing()) {
-            throw new CMSException(ErrorMessage.GRANT_IS_ALREADY_CLOSED);
+            // get the id of the grantees, fetch the candidates and return them
+            List<CandidateDto> grantees = grant.getGrantees().stream()
+                .map(candidateRepository::findById)
+                .map(candidate -> new CandidateDto(candidate.get()))
+                .collect(Collectors.toList());
+
+                System.out.println("Grantees: " + grantees);
+            return grantees;
         }
 
         if (grant.getEnrollments().isEmpty()) {
@@ -119,13 +130,16 @@ public class GrantService {
             finalScores.put(candidateDto, enrollment.getFinalScore());
         });
 
-
         grant.setOnGoing(false);
 
         List<CandidateDto> grantees = finalScores.entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .map(e -> e.getKey())
-                .collect(Collectors.toList());
+            .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+            .map(e -> e.getKey())
+            .collect(Collectors.toList());
+
+        if (grantees.size() > grant.getVacancy()) {
+            grantees = grantees.subList(0, grant.getVacancy());
+        }
 
 
         grant.setGrantees(grantees.stream().map(CandidateDto::getId).collect(Collectors.toList()));
@@ -137,6 +151,8 @@ public class GrantService {
             Evaluation evaluation = evaluationRepository.findByEnrollmentId(enrollment.getId()).orElseThrow(() -> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
             evaluationRepository.delete(evaluation);
         });
+
+        System.out.println("Grantees: " + grantees);
 
         return grantees;
 

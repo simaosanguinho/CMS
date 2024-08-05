@@ -23,8 +23,7 @@
     </v-row>
     <div v-else>
       <v-col cols="12" class="pt-0">
-        <v-card-title 
-        class="pt-0">
+        <v-card-title class="pt-0">
           <h3>Detalhes da Bolsa</h3>
         </v-card-title>
         <v-divider></v-divider>
@@ -52,44 +51,56 @@
                 {{ grant.vacancy }}
               </v-col>
             </v-row>
-              <v-card-text>
-                <v-row class="mt-2" justify="center">
-                <div class="font-weight-black text-h7 mr-4">Pesos de Avaliação 
-                
-                <v-btn icon density="compact" variant="plain" class="md-5" @click="editGrantWeights(grant)">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </div>
-              </v-row>
-            <v-row justify="center" class="mt-4">
+            <v-card-text>
+              <v-row class="mt-2" justify="center">
+                <div class="font-weight-black text-h7 mr-4">
+                  Pesos de Avaliação
 
-              <v-chip class="mx-5" color="primary"
-              >Avaliação Curricular ({{
-                (grant?.curricularEvaluationWeight ?? 0) * 100
-              }}%)</v-chip
-            >
-            <v-chip class="mx-5"  color="primary"
-              >Exercício Prático ({{ (grant?.practicalExerciseWeight ?? 0) * 100 }}%)</v-chip
-            >
-            <v-chip class="mx-5" color="primary"
-              >Entrevista ({{ (grant?.interviewWeight ?? 0) * 100 }}%)</v-chip
-            >
-            </v-row>
-          </v-card-text>
+                  <v-btn
+                  v-if="grant.onGoing"
+                    icon
+                    density="compact"
+                    variant="plain"
+                    class="md-5"
+                    @click="editGrantWeights(grant)"
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                </div>
+              </v-row>
+              <v-row justify="center" class="mt-4">
+                <v-chip class="mx-5" color="primary"
+                  >Avaliação Curricular ({{
+                    (grant?.curricularEvaluationWeight ?? 0) * 100
+                  }}%)</v-chip
+                >
+                <v-chip class="mx-5" color="primary"
+                  >Exercício Prático ({{ (grant?.practicalExerciseWeight ?? 0) * 100 }}%)</v-chip
+                >
+                <v-chip class="mx-5" color="primary"
+                  >Entrevista ({{ (grant?.interviewWeight ?? 0) * 100 }}%)</v-chip
+                >
+              </v-row>
+            </v-card-text>
           </v-card-text>
           <v-divider></v-divider>
         </v-card>
       </v-col>
-      <v-row>
+      <v-row justify="center">
         <v-col>
           <v-row align="center">
             <v-card-title class="pt-5">
-              <v-card-title class="pt-5">
+              <v-card-title v-if="grant.onGoing" class="pt-0">
                 <h4>Candidatos Inscritos ( {{ enrolledCandidates.length }} )</h4>
+              </v-card-title>
+              <v-card-title v-else class="d-flex justify-center align-center">
+                <span class="title">Vecedores da Bolsa</span>
+                <v-icon class="close-icon ml-2">mdi-trophy</v-icon>
               </v-card-title>
             </v-card-title>
             <v-spacer></v-spacer>
             <v-btn
+              v-if="grant.onGoing"
               class="text-none font-weight-regular mr-6"
               prepend-icon="mdi-plus"
               text="Adicionar Candidato"
@@ -97,6 +108,7 @@
               @click="enrollCandidates()"
             ></v-btn>
             <v-btn
+              v-if="grant.onGoing"
               class="text-none font-weight-regular mr-6"
               prepend-icon="mdi-plus"
               :text="winnerButtonText"
@@ -105,7 +117,8 @@
             ></v-btn>
           </v-row>
           <v-data-table
-            :headers="headers"
+            v-if="grant.onGoing"
+            :headers="headersCandidates"
             :items="enrolledCandidates"
             :search="search"
             :custom-filter="fuzzySearch"
@@ -114,17 +127,41 @@
           >
             <template v-slot:[`item.evaluation`]="{ item }">
               <v-btn
-              class="elevation-0 text-none font-weight-regular"
-              @click="evaluateCandidate(item.enrollmentId, item.name, item.id)"
+                class="elevation-0 text-none font-weight-regular"
+                @click="evaluateCandidate(item.enrollmentId, item.name, item.id)"
               >
-              <v-chip v-if="item.isEvaluated" color="green" class="white--text">
-                {{ item.finalScore }}
-              </v-chip>
-              <v-chip v-else color="error" class="white--text"> Não avaliado </v-chip>
+                <v-chip v-if="item.isEvaluated" color="green" class="white--text">
+                  {{ item.finalScore }}
+                </v-chip>
+                <v-chip v-else color="error" class="white--text"> Não avaliado </v-chip>
               </v-btn>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
               <v-icon @click="unenrollCandidate(item)">mdi-delete</v-icon>
+            </template>
+          </v-data-table>
+          <v-data-table
+            v-else
+            :headers="headersWinners"
+            :items="grantWinners"
+            :search="search"
+            :custom-filter="fuzzySearch"
+            :hover="true"
+            class="text-left"
+          >
+            <template v-slot:[`item.evaluation`]="{ item }">
+              <v-chip color="green" class="white--text">
+                {{ item.email }}
+              </v-chip>
+            </template>
+
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-icon
+                class="email-icon ml-5"
+                @click="sendEmail(item.email ?? '')"
+                label="Enviar email"
+
+              >mdi-email</v-icon>
             </template>
           </v-data-table>
         </v-col>
@@ -160,7 +197,21 @@
     @close="editGrantWeightsDialogVisible = false"
     @weights-updated="fetchGrant(grant.id)"
   />
-  <NotificationAlert v-if="errorWinnerMessage" :message="errorWinnerMessage" type="error" :visible="true" @close="errorWinnerMessage = ''"/>
+
+  <GrantWinnersAlert
+    :grantees="grantWinners"
+    type="error"
+    :visible="grantWinnersAlertVisible"
+    @close="closeGrantWinnersAlert()"
+  />
+
+  <NotificationAlert
+    v-if="errorWinnerMessage"
+    :message="errorWinnerMessage"
+    type="error"
+    :visible="true"
+    @close="errorWinnerMessage = ''"
+  />
 </template>
 
 <script setup lang="ts">
@@ -175,7 +226,7 @@ import EvaluateCandidateDialog from '@/views/evaluations/EvaluateCandidateDialog
 import EditGrantWeightsDialog from '@/views/grants/EditGrantWeightsDialog.vue'
 import EnrollmentDto from '@/models/enrollments/EnrollmentDto'
 import NotificationAlert from '@/components/NotificationAlert.vue'
-
+import GrantWinnersAlert from '@/components/GrantWinnersAlert.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -188,20 +239,29 @@ const loading = ref(true)
 const enrolledCandidates = ref<CandidateDto | null>(null)
 const selectedEnrollment = ref<EnrollmentDto | null>(null)
 const errorWinnerMessage = ref('')
+const grantWinnersAlertVisible = ref(false)
+const grantWinners = ref<CandidateDto[]>([])
 
 const search = ref('')
-const headers = [
+const headersCandidates = [
   { title: 'Nome', value: 'name', key: 'name' },
-  { title: 'Ist ID', value: 'istID', key: 'istID' },
+  { title: 'IST ID', value: 'istID', key: 'istID' },
   { title: 'Nota Final', value: 'evaluation', key: 'evaluation' },
   { title: 'Anular Inscrição', value: 'actions', key: 'actions' }
+]
+
+const headersWinners = [
+  { title: 'Nome', value: 'name', key: 'name' },
+  { title: 'IST ID', value: 'istID', key: 'istID' },
+  { title: 'Email', value: 'evaluation', key: 'evaluation' },
+  { title: 'Contactar', value: 'actions', key: 'actions' }
 ]
 
 const fetchGrant = async (id: string) => {
   try {
     grant.value = await RemoteService.getGrantById(id)
     const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
-    console.log('Fetched candidates:', fetchedCandidates)
+    console.log('Grant was fetched:', grant.value)
 
     enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
 
@@ -217,8 +277,9 @@ const fetchGrant = async (id: string) => {
         console.log('Enrollment ID:', candidate)
       }
     })
-
-    console.log('Enrolled candidates:', enrolledCandidates.value)
+    if(!grant.value.onGoing) {
+      grantWinners.value = await RemoteService.getGrantWinners(grant.value.id)
+    }
   } catch (error) {
     console.error('Failed to fetch grant details:', error)
   } finally {
@@ -277,17 +338,26 @@ const unenrollCandidate = async (candidate: CandidateDto) => {
   }
 }
 
-const selectWinners = () => {
+const selectWinners = async () => {
   // check if all candidates are evaluated
   if (enrolledCandidates.value) {
+    console.log('Enrolled candidates:', enrolledCandidates.value)
     const unevaluatedCandidates = enrolledCandidates.value.filter(
       (candidate: CandidateDto) => !candidate.isEvaluated
     )
     if (unevaluatedCandidates.length > 0) {
       errorWinnerMessage.value = 'Existem candidatos por avaliar'
+    } else if (enrolledCandidates.value.length == 0) {
+      errorWinnerMessage.value = 'Não existem candidatos inscritos'
+    } else {
+      showGrantees(await RemoteService.getGrantWinners(grant.value.id))
     }
   }
 }
+
+const sendEmail = (email: string) => {
+    window.location.href = `mailto:${email}`;
+  };
 
 const formatDate = (date: string) => {
   const options: Intl.DateTimeFormatOptions = {
@@ -301,6 +371,19 @@ const formatDate = (date: string) => {
 const winnerButtonText = computed(() => {
   return grant.value && grant.value.vacancy > 1 ? 'Selecionar Vencedores' : 'Selecionar Vencedor'
 })
+
+const showGrantees = async (grantees: CandidateDto[]) => {
+  console.log('Grantees:', grantees)
+  if (grantees.length > 0) {
+    grantWinners.value = grantees
+    grantWinnersAlertVisible.value = true
+  }
+}
+
+const closeGrantWinnersAlert = () => {
+  grant.value.onGoing = false
+  grantWinnersAlertVisible.value = false
+}
 
 const fuzzySearch = (value: string, search: string) => {
   // Regex to match any character in between the search characters

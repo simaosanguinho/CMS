@@ -12,6 +12,7 @@ export default class GrantDto {
     practicalExerciseWeight?: number
     vacancy?: number
     onGoing?: boolean
+    grantees?: CandidateDto[]
 
     constructor(jsonObj: Partial<GrantDto>) {
         if (jsonObj) {
@@ -25,6 +26,7 @@ export default class GrantDto {
             this.practicalExerciseWeight = jsonObj.practicalExerciseWeight
             this.vacancy = jsonObj.vacancy
             this.onGoing = jsonObj.onGoing
+            this.grantees = jsonObj.grantees ? jsonObj.grantees.map(candidate => new CandidateDto(candidate)) : []
         }
     }
 }
