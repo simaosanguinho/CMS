@@ -107,7 +107,7 @@ const validateName = () => {
 
 const validateIstID = () => {
   if (!newCandidate.value.istID) {
-    istIDError.value = 'IST ID é obrigatório'
+    istIDError.value = 'IST ID é Inválido'
   } else {
     istIDError.value = ''
   }

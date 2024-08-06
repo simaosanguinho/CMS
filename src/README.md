@@ -1,9 +1,9 @@
-# DEI Management System - DMS
-
+# DEI Management System - CMS
+Author: Simão Sanguinho
 ## Dependencies
 
 - Require download
-  - [Java 1721](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+  - [Java 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
   - [Maven](https://maven.apache.org/download.cgi)
   - [Node 14+](https://nodejs.org/en/) ([Node Version Manager](https://github.com/nvm-sh/nvm) recommended)
   - [Docker](https://www.docker.com/)
@@ -17,13 +17,13 @@
 Clone the project
 
 ```bash
-git clone git@gitlab.rnl.tecnico.ulisboa.pt:<REPO>
+git clone git@gitlab.rnl.tecnico.ulisboa.pt:dei/candidaturas/dei-cms-sols-candidatos/dei-cms-simao-sanguinho.git
 ```
 
 Go to the project directory
 
 ```bash
-cd DMS/
+cd CMS/
 ```
 
 ### Database
@@ -48,10 +48,10 @@ docker compose down
 
 ### Backend
 
-Create a copy of the `application-local.properties` file.
+Create a copy of the `application.properties` file.
 
 ```bash
-cp ./backend/src/main/resources/application-local.properties.example ./backend/src/main/resources/application-local.properties
+cp ./backend/src/main/resources/application.properties.example ./backend/src/main/resources/application.properties
 ```
 
 If you're running your database using Docker, the datasource variables should match the ones in `Docker-compose.yml`.
@@ -84,12 +84,12 @@ To run the frontend, run the following command:
 npm run dev
 ```
 
-Access http://localhost:8081
+Access http://localhost:5173
 
 ## Access the Database
 
 In order to access the database, you can use the following command:
 
 ```bash
-mysql -u root -p<password> -h 127.0.0.1 -P 7654 dmsdb
+ psql -h localhost -p 7654 -U postgres dmsdb
 ```
