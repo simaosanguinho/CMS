@@ -32,12 +32,20 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <NotificationAlert
+    v-if="errorMessage"
+    :message="errorMessage"
+    type="error"
+    :visible="true"
+    @close="errorMessage = ''"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type CandidateDto from '@/models/candidates/CandidateDto'
+import NotificationAlert from '@/components/NotificationAlert.vue';
 
 const props = defineProps<{ candidate: CandidateDto | null; visible: boolean }>()
 const emit = defineEmits(['close', 'candidate-updated'])
@@ -47,6 +55,7 @@ const localCandidate = ref<CandidateDto | null>(null)
 const emailError = ref<string>('')
 const nameError = ref<string>('')
 const istIDError = ref<string>('')
+const errorMessage = ref<string>('')
 
 watch(
   () => props.visible,
@@ -91,7 +100,6 @@ const handleSave = async () => {
   validateIstID()
   if (!emailError.value && !emailError.value && !istIDError.value) {
     await saveCandidate()
-    closeDialog()
   }
 }
 
@@ -99,15 +107,16 @@ const saveCandidate = async () => {
   try {
     await RemoteService.updateCandidate(localCandidate.value)
   } catch (error) {
-    console.log(error)
+    errorMessage.value = error.response.data.message
+    return
   }
 
-  console.log(localCandidate.value)
   localCandidate.value = {
     name: '',
     email: '',
     istID: ''
   }
+  closeDialog()
   emit('candidate-updated')
 }
 

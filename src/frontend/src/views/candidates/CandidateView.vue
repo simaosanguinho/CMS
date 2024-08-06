@@ -82,7 +82,6 @@
   }
   
   function editCandidate(candidate: CandidateDto) {
-    console.log(editDialogVisible.value)
     selectedCandidate.value = candidate
     editDialogVisible.value = true
   }
@@ -95,7 +94,6 @@
 
   function showGrants(candidate: CandidateDto) {
     selectedCandidate.value = candidate
-    console.log('Showing grants for candidate:', candidate)
     enrolledGrantsDialogVisible.value = true
   }
   

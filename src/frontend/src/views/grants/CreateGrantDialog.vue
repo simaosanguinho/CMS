@@ -20,7 +20,7 @@
               </v-card-title>
               <v-divider></v-divider>
               <v-date-picker
-                v-model="newGrant.startDate"
+                v-model="startDate"
                 label="Start Date*"
                 required
                 :error-messages="startDateError"
@@ -35,7 +35,7 @@
               </v-card-title>
               <v-divider></v-divider>
               <v-date-picker
-                v-model="newGrant.endDate"
+                v-model="endDate"
                 label="End Date*"
                 required
                 :error-messages="endDateError"
@@ -78,6 +78,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <NotificationAlert
+      v-if="errorMessage"
+      :message="errorMessage"
+      type="error"
+      :visible="true"
+      @close="errorMessage = ''"
+    />
   </div>
 </template>
 
@@ -85,9 +92,12 @@
 import { ref } from 'vue'
 import type GrantDto from '@/models/Grants/GrantDto'
 import RemoteService from '@/services/RemoteService'
+import NotificationAlert from '@/components/NotificationAlert.vue';
+
 
 const dialog = ref(false)
 const emit = defineEmits(['grant-created'])
+const errorMessage = ref<string>('')
 
 const newGrant = ref<GrantDto>({
   startDate: null,
@@ -100,17 +110,20 @@ const endDateError = ref<string>('')
 const monthlyIncomeError = ref<string>('')
 const vacancyError = ref<string>('')
 
+const startDate = ref<Date | null>(null)
+const endDate = ref<Date | null>(null)
+
 const validateStartDate = () => {
-  if (!newGrant.value.startDate) {
-    startDateError.value = 'Start date is required'
+  if (!startDate.value) {
+    startDateError.value = 'Data de início é obrigatória'
   } else {
     startDateError.value = ''
   }
 }
 
 const validateEndDate = () => {
-  if (!newGrant.value.endDate) {
-    endDateError.value = 'End date is required'
+  if (!endDate.value) {
+    endDateError.value = 'Data de fim é obrigatória'
   } else {
     endDateError.value = ''
   }
@@ -118,9 +131,9 @@ const validateEndDate = () => {
 
 const validateMonthlyIncome = () => {
   if (!newGrant.value.monthlyIncome) {
-    monthlyIncomeError.value = 'Monthly Income is required'
+    monthlyIncomeError.value = 'O valor mensal é obrigatório'
   } else if (newGrant.value.monthlyIncome <= 0) {
-    monthlyIncomeError.value = 'Monthly Income must be greater than 0'
+    monthlyIncomeError.value = 'Valor mensal inválido'
   } else {
     monthlyIncomeError.value = ''
   }
@@ -128,9 +141,9 @@ const validateMonthlyIncome = () => {
 
 const validateVacancy = () => {
   if (!newGrant.value.vacancy) {
-    vacancyError.value = 'Vacancy is required'
+    vacancyError.value = 'Vagas são obrigatórias'
   } else if (newGrant.value.vacancy <= 0) {
-    vacancyError.value = 'Invalid Vacancy'
+    vacancyError.value = 'Número de vagas inválido'
   } else {
     vacancyError.value = ''
   }
@@ -154,17 +167,18 @@ const handleSave = async () => {
   if (!startDateError.value && !endDateError.value && !monthlyIncomeError.value) {
     console.log('newGrant.value:', newGrant.value)
     await saveGrant()
-    dialog.value = false
+    
   }
 }
 
 const saveGrant = async () => {
   try {
-    newGrant.value.startDate = convertToUTC(newGrant.value.startDate)
-    newGrant.value.endDate = convertToUTC(newGrant.value.endDate)
+    newGrant.value.startDate = convertToUTC(startDate.value?.toISOString())
+    newGrant.value.endDate = convertToUTC(endDate.value?.toISOString())
     await RemoteService.createGrant(newGrant.value)
   } catch (error) {
-    console.log((error as any).response.data.message)
+    errorMessage.value = error.response.data.message
+    return
   }
 
   newGrant.value = {
@@ -172,6 +186,7 @@ const saveGrant = async () => {
     endDate: null,
     monthlyIncome: null
   }
+  dialog.value = false
   emit('grant-created')
 }
 </script>

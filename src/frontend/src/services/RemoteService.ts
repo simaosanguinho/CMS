@@ -41,7 +41,6 @@ export default class RemoteService {
   // ------------------- Candidates -------------------
   static async getCandidates(): Promise<CandidateDto[]> {
     return httpClient.get('/candidates/all').then((response) => {
-      console.log("GETTING CANDIDATES")
       return response.data.map((candidate: any) => {
         return new CandidateDto(candidate)
       })
@@ -52,7 +51,6 @@ export default class RemoteService {
     return httpClient.post('/candidates/create', candidate).then((response) => {
       return new CandidateDto(response.data)
     }).catch((error) => {
-      console.log("ERROR CREATING CANDIDATE: ", error)
       throw error
     })
   }
@@ -91,7 +89,6 @@ export default class RemoteService {
   }
 
   static async updateGrantEvaluationWeights(grant: GrantDto): Promise<GrantDto> {
-    console.log("UPDATING GRANT EVALUATION WEIGHTS: ", grant) 
     return httpClient.put(`/grants/${grant.id}/update/weights`, grant).then((response) => {
       return new GrantDto(response.data)
     })
@@ -102,7 +99,6 @@ export default class RemoteService {
   }
 
   static async getGrantById(id: number): Promise<GrantDto> {
-    console.log("GETTING GRANT BY ID: ", id)
     return httpClient.get(`/grants/${id}`).then((response) => {
       return new GrantDto(response.data)
     })
@@ -124,7 +120,6 @@ export default class RemoteService {
 
   static getEnrollmentsByGrantId(grantId: string): Promise<CandidateDto[]> {
     return httpClient.get(`/grants/${grantId}/enrollments`).then((response) => {
-      console.log("ELAHAHHHH", response.data)
       return response.data.map((enrollment: any) => {
         return new CandidateDto(enrollment)
       })
@@ -153,10 +148,8 @@ export default class RemoteService {
   }
 
   static async getEnrolledGrantsByCandidateId(candidateId: string): Promise<GrantDto[]> {
-    console.log("GETTING ENROLLED GRANTS BY CANDIDATE ID: ", candidateId)
     return httpClient.get(`/grants/${candidateId}/enrolled`).then((response) => {
       return response.data.map((grant: any) => {
-        console.log("GRANT: ", grant)
         return new GrantDto(grant)
       })
     })

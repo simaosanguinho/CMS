@@ -59,6 +59,13 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <NotificationAlert
+    v-if="errorMessage"
+    :message="errorMessage"
+    type="error"
+    :visible="true"
+    @close="errorMessage = ''"
+  />
 </template>
 
 <script setup lang="ts">
@@ -66,6 +73,7 @@ import { ref, watch, defineProps, defineEmits } from 'vue'
 import RemoteService from '@/services/RemoteService'
 import type GrantDto from '@/models/grants/GrantDto'
 import { ISOtoString } from '@/services/ConvertDateService'
+import NotificationAlert from '@/components/NotificationAlert.vue'
 
 const props = defineProps<{ grant: GrantDto | null; visible: boolean }>()
 const emit = defineEmits(['close', 'grant-updated'])
@@ -78,6 +86,7 @@ const monthlyIncomeError = ref<string>('')
 const startDateError = ref<string>('')
 const endDateError = ref<string>('')
 const vacancyError = ref<string>('')
+const errorMessage = ref<string>('')
 
 watch(
   () => props.visible,
@@ -149,7 +158,7 @@ const handleSave = async () => {
     localGrant.value.startDate = localStartDate.value ? ISOtoString(localStartDate.value) : null
     localGrant.value.endDate = localEndDate.value ? ISOtoString(localEndDate.value) : null
     await saveGrant()
-    closeDialog()
+    
   }
 }
 
@@ -170,10 +179,13 @@ const saveGrant = async () => {
     localGrant.value.endDate = convertToUTC(localGrant.value.endDate)
     console.log('Local grant after conversion:', localGrant.value)
     await RemoteService.updateGrant(localGrant.value)
-    emit('grant-updated')
+    
   } catch (error) {
-    console.log(error.response.data.message)
+    errorMessage.value = error.response.data.message
+    return
   }
+  closeDialog()
+  emit('grant-updated')
 }
 
 const closeDialog = () => {

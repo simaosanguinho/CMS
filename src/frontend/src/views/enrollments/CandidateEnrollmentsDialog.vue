@@ -42,10 +42,10 @@
   
   const headers = [
     { title: 'ID', value: 'id', key: 'id' },
-    { title: 'Start Date', value: 'startDate', key: 'startDate' },
-    { title: 'End Date', value: 'endDate', key: 'endDate' },
-    { title: 'Monthly Income (€)', value: 'monthlyIncome', key: 'monthlyIncome' },
-    { title: 'Vacancies', value: 'vacancy', key: 'vacancy' },
+    { title: 'Início', value: 'startDate', key: 'startDate' },
+    { title: 'Fim', value: 'endDate', key: 'endDate' },
+    { title: 'Valor Mensal (€)', value: 'monthlyIncome', key: 'monthlyIncome' },
+    { title: 'Vagas', value: 'vacancy', key: 'vacancy' },
   ]
   
   watch(
@@ -70,7 +70,6 @@
     if (props.candidate) {
       RemoteService.getEnrolledGrantsByCandidateId(props.candidate?.id ?? '').then((data) => {
         data.forEach((grant: GrantDto) => {
-          console.log('Grant:', grant)
           grant.startDate = formatDate(grant.startDate)
           grant.endDate = formatDate(grant.endDate)
           grants.value.push(grant)

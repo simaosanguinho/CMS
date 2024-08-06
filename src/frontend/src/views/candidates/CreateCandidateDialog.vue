@@ -56,6 +56,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <NotificationAlert
+      v-if="errorMessage"
+      :message="errorMessage"
+      type="error"
+      :visible="true"
+      @close="errorMessage = ''"
+    />
   </div>
 </template>
 
@@ -63,6 +70,7 @@
 import { ref } from 'vue'
 import type CandidateDto from '@/models/candidates/CandidateDto'
 import RemoteService from '@/services/RemoteService'
+import NotificationAlert from '@/components/NotificationAlert.vue';
 
 const dialog = ref(false)
 const emit = defineEmits(['candidate-created'])
@@ -76,6 +84,7 @@ const newCandidate = ref<CandidateDto>({
 const emailError = ref<string>('')
 const nameError = ref<string>('')
 const istIDError = ref<string>('')
+const errorMessage = ref<string>('')
 
 const validateEmail = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -110,7 +119,6 @@ const handleSave = async () => {
   validateIstID()
   if (!nameError.value && !emailError.value && !istIDError.value) {
     await saveCandidate()
-    dialog.value = false
   }
 }
 
@@ -118,15 +126,16 @@ const saveCandidate = async () => {
   try {
     await RemoteService.createCandidate(newCandidate.value)
   } catch (error) {
-    console.log(error.response.data.message)
+    errorMessage.value = error.response.data.message
+    return
   }
-
-  console.log(newCandidate.value)
   newCandidate.value = {
     name: '',
     email: '',
     istID: ''
+    
   }
+  dialog.value = false
   emit('candidate-created')
 }
 </script>

@@ -144,11 +144,11 @@ public class GrantService {
 
         grantRepository.save(grant);
 
-        // delete all evaluations of the grant - had to be done at the end
+        /* // delete all evaluations of the grant - had to be done at the end
         grant.getEnrollments().forEach(enrollment -> {
             Evaluation evaluation = evaluationRepository.findByEnrollmentId(enrollment.getId()).orElseThrow(() -> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
             evaluationRepository.delete(evaluation);
-        });
+        }); */
 
         return grantees;
 
