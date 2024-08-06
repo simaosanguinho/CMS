@@ -54,8 +54,8 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn variant="plain" @click="closeDialog">Close</v-btn>
-        <v-btn color="primary" variant="tonal" @click="handleSave">Save</v-btn>
+        <v-btn variant="plain" @click="closeDialog">Fechar</v-btn>
+        <v-btn color="primary" variant="tonal" @click="handleSave">Guardar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -175,7 +175,6 @@ const saveGrant = async () => {
   try {
     localGrant.value.startDate = convertToUTC(localGrant.value.startDate)
     localGrant.value.endDate = convertToUTC(localGrant.value.endDate)
-    console.log('Local grant after conversion:', localGrant.value)
     await RemoteService.updateGrant(localGrant.value)
     
   } catch (error) {

@@ -20,8 +20,8 @@
         >
         </v-data-table>
         <v-card-actions class="justify-end">
-          <v-btn text="Close" variant="plain" @click="closeDialog" class="mr-4"></v-btn>
-          <v-btn color="primary" text="Save" variant="tonal" @click="handleSave"></v-btn>
+          <v-btn text="Fechar" variant="plain" @click="closeDialog" class="mr-4"></v-btn>
+          <v-btn color="primary" text="Guardar" variant="tonal" @click="handleSave"></v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

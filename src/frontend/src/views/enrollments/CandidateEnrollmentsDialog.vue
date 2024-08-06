@@ -23,7 +23,7 @@
         ></v-data-table>
   
         <v-card-actions class="justify-end">
-          <v-btn text="Close" variant="plain" @click="closeDialog" class="mr-4"></v-btn>
+          <v-btn text="Fechar" variant="plain" @click="closeDialog" class="mr-4"></v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
