@@ -94,12 +94,8 @@
         <v-col>
           <v-row align="center">
             <v-card-title class="pt-5">
-              <v-card-title v-if="grant.onGoing" class="pt-0">
+              <v-card-title class="pt-0">
                 <h4>Candidatos Inscritos ( {{ enrolledCandidates.length }} )</h4>
-              </v-card-title>
-              <v-card-title v-else class="d-flex justify-center align-center">
-                <span class="title">Vecedores da Bolsa</span>
-                <v-icon class="close-icon ml-2">mdi-trophy</v-icon>
               </v-card-title>
             </v-card-title>
             <v-spacer></v-spacer>
@@ -121,7 +117,6 @@
             ></v-btn>
           </v-row>
           <v-data-table
-            v-if="grant.onGoing"
             :headers="headersCandidates"
             :items="enrolledCandidates"
             :search="search"
@@ -131,41 +126,28 @@
           >
             <template v-slot:[`item.evaluation`]="{ item }">
               <v-btn
+              v-if="grant.onGoing"  
                 class="elevation-0 text-none font-weight-regular"
+                :disabled="!grant.onGoing"
                 @click="evaluateCandidate(item.enrollmentId, item.name, item.id)"
               >
-                <v-chip v-if="item.isEvaluated" color="green" class="white--text">
+                <v-chip v-if="item.isEvaluated" color="green" class="white--text" variant="flat">
                   {{ item.finalScore }}
                 </v-chip>
                 <v-chip v-else color="error" class="white--text"> Não avaliado </v-chip>
               </v-btn>
-            </template>
-            <template v-slot:[`item.actions`]="{ item }">
-              <v-icon @click="unenrollCandidate(item)">mdi-delete</v-icon>
-            </template>
-          </v-data-table>
-          <v-data-table
-            v-else
-            :headers="headersWinners"
-            :items="grantWinners"
-            :search="search"
-            :custom-filter="fuzzySearch"
-            :hover="true"
-            class="text-left"
-          >
-            <template v-slot:[`item.evaluation`]="{ item }">
-              <v-chip color="green" class="white--text">
-                {{ item.email }}
+              <v-chip v-else-if="!grant.onGoing" color="green" class="white--text" variant="flat">
+                {{ item.finalScore }}
               </v-chip>
             </template>
-
             <template v-slot:[`item.actions`]="{ item }">
-              <v-icon
-                class="email-icon ml-5"
-                @click="sendEmail(item.email ?? '')"
-                label="Enviar email"
-
-              >mdi-email</v-icon>
+              <v-icon v-if="grant.onGoing" @click="unenrollCandidate(item)">mdi-delete</v-icon>
+              <v-icon v-if="!grant.onGoing && isWinner(item.id)" class="ml-2" color="green">mdi-trophy</v-icon>
+              <v-icon v-if="!grant.onGoing && !isWinner(item.id)" class="ml-2" color="red">mdi-close</v-icon>
+              
+            </template>
+            <template v-slot:[`item.contact`]="{ item }">
+              <v-icon v-if="!grant.onGoing" class="ml-2" color="primary" @click="sendEmail(item.email ?? '')">mdi-email</v-icon>
             </template>
           </v-data-table>
         </v-col>
@@ -251,15 +233,10 @@ const headersCandidates = [
   { title: 'Nome', value: 'name', key: 'name' },
   { title: 'IST ID', value: 'istID', key: 'istID' },
   { title: 'Nota Final', value: 'evaluation', key: 'evaluation' },
-  { title: 'Anular Inscrição', value: 'actions', key: 'actions' }
+  { title: '', value: 'actions', key: 'actions' },
+  { title: '', value: 'contact', key: 'contact' }
 ]
 
-const headersWinners = [
-  { title: 'Nome', value: 'name', key: 'name' },
-  { title: 'IST ID', value: 'istID', key: 'istID' },
-  { title: 'Email', value: 'evaluation', key: 'evaluation' },
-  { title: 'Contactar', value: 'actions', key: 'actions' }
-]
 
 const fetchGrant = async (id: string) => {
   try {
@@ -383,6 +360,12 @@ const fuzzySearch = (value: string, search: string) => {
   let searchRegex = new RegExp(search.split('').join('.*'), 'i')
   return searchRegex.test(value)
 }
+
+// Computed property to check if a candidate is a winner
+const isWinner = (candidateId: string) => {
+  return grantWinners.value.some(winner => winner.id === candidateId)
+}
+
 onMounted(() => {
   const grantId = route.params.id as string
   fetchGrant(grantId)

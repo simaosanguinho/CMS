@@ -64,9 +64,9 @@ public class EvaluationService {
     public EvaluationDto updateEvaluation(Long id, EvaluationDto evaluationDto) {
         Evaluation evaluation = evaluationRepository.findById(id)
                 .orElseThrow(() -> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
-        evaluation.update(evaluationDto);
-        evaluationRepository.save(evaluation);
         
+        evaluation.update(evaluationDto);
+                
         // calculate the final score
         List<Double> scores = evaluation.getScores();
         Enrollment enrollment = enrollmentRepository.findById(evaluation.getEnrollment().getId())
@@ -75,9 +75,16 @@ public class EvaluationService {
         Grant grant = grantRepository.findById(enrollment.getGrant().getId())
                 .orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
 
+        // if grant is not ongoing, do not update the final score
+        if (!grant.isOnGoing()) {
+           throw new CMSException(ErrorMessage.GRANT_IS_ALREADY_CLOSED);
+        }
+
         Double finalScore = (scores.get(0) * grant.getCurricularEvaluationWeight())
                 + (scores.get(1) * grant.getPracticalExerciseWeight()) + (scores.get(2) * grant.getInterviewWeight());
         enrollment.setFinalScore(finalScore);
+        
+        evaluationRepository.save(evaluation);
         enrollmentRepository.save(enrollment);
         
         return new EvaluationDto(evaluation);

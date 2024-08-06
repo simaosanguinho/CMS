@@ -65,7 +65,7 @@
       const response = await RemoteService.getUnenrolledCandidates(props.grant?.id ?? '')
       candidates.value = response
     } catch (error) {
-      console.log('Error fetching candidates:', error)
+      console.log(error)
     }
   }
   
@@ -75,7 +75,7 @@
       selectedCandidates.value = []
       emit('candidates-enrolled', selectedCandidates.value)
     } catch (error) {
-      console.log('Error saving candidates:', error)
+      console.log(error)
     } finally {
       closeDialog()
     }
@@ -84,11 +84,11 @@
   const enrollCandidate = async (candidateId: number) => {
     try {
       if(!candidateId) {
-        throw new Error('Candidate ID is missing')
+        return
       }
       await RemoteService.enrollCandidate(candidateId, props.grant?.id ?? '')
     } catch (error) {
-      console.log('Error saving candidate:', error)
+      console.log(error)
     }
   }
   

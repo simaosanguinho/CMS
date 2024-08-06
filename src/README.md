@@ -3,7 +3,7 @@
 ## Dependencies
 
 - Require download
-  - [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+  - [Java 1721](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
   - [Maven](https://maven.apache.org/download.cgi)
   - [Node 14+](https://nodejs.org/en/) ([Node Version Manager](https://github.com/nvm-sh/nvm) recommended)
   - [Docker](https://www.docker.com/)

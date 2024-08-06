@@ -77,6 +77,11 @@ public class GrantService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public GrantDto updateGrantEvaluationWeights(Long id, GrantDto grantDto) {
         Grant grant = grantRepository.findById(id).orElseThrow(() -> new CMSException(ErrorMessage.GRANT_NOT_FOUND));
+
+        if (!grant.isOnGoing()) {
+            throw new CMSException(ErrorMessage.GRANT_IS_ALREADY_CLOSED);
+        }
+
         grant.updateEvaluationWeights(grantDto);
         grantRepository.save(grant);
 
@@ -95,7 +100,7 @@ public class GrantService {
             enrollmentRepository.save(enrollment);
         });
 
-        
+
         return new GrantDto(grant);
     }
 
