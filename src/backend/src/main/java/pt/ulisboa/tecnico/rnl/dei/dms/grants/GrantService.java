@@ -109,8 +109,6 @@ public class GrantService {
                 .map(candidateRepository::findById)
                 .map(candidate -> new CandidateDto(candidate.get()))
                 .collect(Collectors.toList());
-
-                System.out.println("Grantees: " + grantees);
             return grantees;
         }
 
@@ -151,8 +149,6 @@ public class GrantService {
             Evaluation evaluation = evaluationRepository.findByEnrollmentId(enrollment.getId()).orElseThrow(() -> new CMSException(ErrorMessage.EVALUATION_NOT_FOUND));
             evaluationRepository.delete(evaluation);
         });
-
-        System.out.println("Grantees: " + grantees);
 
         return grantees;
 

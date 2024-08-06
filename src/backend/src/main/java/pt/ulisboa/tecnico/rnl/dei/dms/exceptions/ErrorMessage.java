@@ -13,6 +13,7 @@ public enum ErrorMessage {
     GRANT_MONTHLY_INCOME_CANNOT_BE_NEGATIVE("Monthly income cannot be negative."),
     GRANT_MONTHLY_INCOME_CANNOT_BE_EMPTY("Monthly income cannot be null."),
     GRANT_START_DATE_CANNOT_BE_AFTER_END_DATE("Start date cannot be after end date."),
+    GRANT_END_DATE_CANNOT_BE_IN_THE_PAST("End date cannot be in the past."),
     GRANT_HAS_NO_ENROLLMENTS("Grant has no enrollments."),
     GRANT_IS_ALREADY_CLOSED("Grant is already closed."),
     GRANT_HAS_NON_EVALUATED_ENROLLMENTS("Grant has non evaluated enrollments."),

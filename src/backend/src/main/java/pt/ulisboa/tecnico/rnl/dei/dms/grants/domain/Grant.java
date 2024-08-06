@@ -235,6 +235,12 @@ public class Grant {
         if(this.startDate.isAfter(this.endDate)) {
             throw new CMSException(ErrorMessage.GRANT_START_DATE_CANNOT_BE_AFTER_END_DATE);
         }
+
+        if(this.endDate.isBefore(LocalDateTime.now())) {
+            System.out.println(this.endDate);
+            System.out.println(LocalDateTime.now());
+            throw new CMSException(ErrorMessage.GRANT_END_DATE_CANNOT_BE_IN_THE_PAST);
+        }
     }
 
     public void isVancancyValid() {
