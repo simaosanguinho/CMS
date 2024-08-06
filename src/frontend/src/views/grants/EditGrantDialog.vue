@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialogVisible" max-width="900" @click:outside="handleOutsideClick">
     <v-card>
-      <v-card-title>Edit Grant</v-card-title>
+      <v-card-title>Editar Bolsa</v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols="6">

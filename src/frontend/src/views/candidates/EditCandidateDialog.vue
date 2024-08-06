@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="dialogVisible" max-width="400" @click:outside="handleOutsideClick">
-    <v-card prepend-icon="mdi-account" title="Edit Candidate">
+    <v-card prepend-icon="mdi-account" title="Editar Candidato">
       <v-card-text>
         <v-text-field
           label="Nome*"
