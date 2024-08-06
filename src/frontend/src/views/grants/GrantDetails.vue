@@ -117,6 +117,7 @@
             ></v-btn>
           </v-row>
           <v-data-table
+            v-if="grant.onGoing"
             :headers="headersCandidates"
             :items="enrolledCandidates"
             :search="search"
@@ -136,18 +137,37 @@
                 </v-chip>
                 <v-chip v-else color="error" class="white--text"> Não avaliado </v-chip>
               </v-btn>
-              <v-chip v-else-if="!grant.onGoing" color="green" class="white--text" variant="flat">
-                {{ item.finalScore }}
-              </v-chip>
             </template>
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-icon v-if="grant.onGoing" @click="unenrollCandidate(item)">mdi-delete</v-icon>
+            </template>
+          </v-data-table>
+          <v-data-table
+            v-else
+            :headers="headersWinners"
+            :items="enrolledCandidates"
+            :hover="true"
+            class="text-left"
+          > 
+          <template v-slot:[`item.evaluation`]="{ item }">
+            <v-chip  color="green" class="white--text" variant="flat">
+                  {{ item.finalScore }}
+                </v-chip>
+            </template>
+            <template v-slot:[`item.result`]="{ item }">
+              <v-icon v-if="isWinner(item.id)" color="green">mdi-trophy</v-icon>
+              <v-icon v-else color="red">mdi-close</v-icon>
+            </template>
+
+            <template v-slot:[`item.contact`]="{ item }">
+              <v-icon @click="sendEmail(item.email)">mdi-email</v-icon>
+            </template>
+
             <template v-slot:[`item.actions`]="{ item }">
               <v-icon v-if="grant.onGoing" @click="unenrollCandidate(item)">mdi-delete</v-icon>
               <v-icon v-if="!grant.onGoing && isWinner(item.id)" class="ml-2" color="green">mdi-trophy</v-icon>
               <v-icon v-if="!grant.onGoing && !isWinner(item.id)" class="ml-2" color="red">mdi-close</v-icon>
               
-            </template>
-            <template v-slot:[`item.contact`]="{ item }">
-              <v-icon v-if="!grant.onGoing" class="ml-2" color="primary" @click="sendEmail(item.email ?? '')">mdi-email</v-icon>
             </template>
           </v-data-table>
         </v-col>
@@ -233,8 +253,15 @@ const headersCandidates = [
   { title: 'Nome', value: 'name', key: 'name' },
   { title: 'IST ID', value: 'istID', key: 'istID' },
   { title: 'Nota Final', value: 'evaluation', key: 'evaluation' },
-  { title: '', value: 'actions', key: 'actions' },
-  { title: '', value: 'contact', key: 'contact' }
+  { title: '', value: 'actions', key: 'actions' }
+]
+
+const headersWinners = [
+  { title: 'Nome', value: 'name', key: 'name' },
+  { title: 'IST ID', value: 'istID', key: 'istID' },
+  { title: 'Nota Final', value: 'evaluation', key: 'evaluation' },
+  { title: 'Resultado', value: 'result', key: 'result' },
+  { title: 'Contactar', value: 'contact', key: 'contact' }
 ]
 
 
@@ -257,6 +284,7 @@ const fetchGrant = async (id: string) => {
     })
     if(!grant.value.onGoing) {
       grantWinners.value = await RemoteService.getGrantWinners(grant.value.id)
+
     }
   } catch (error) {
     console.error(error)
