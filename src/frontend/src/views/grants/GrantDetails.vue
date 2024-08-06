@@ -66,7 +66,7 @@
                     density="compact"
                     variant="plain"
                     class="md-5"
-                    @click="editGrantWeights(grant)"
+                    @click="editGrantWeights()"
                   >
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
@@ -265,7 +265,6 @@ const fetchGrant = async (id: string) => {
   try {
     grant.value = await RemoteService.getGrantById(id)
     const fetchedCandidates = await RemoteService.getEnrollmentsByGrantId(id)
-    console.log('Grant was fetched:', grant.value)
 
     enrolledCandidates.value = fetchedCandidates.map((enrollment: any) => enrollment.candidate)
 
@@ -274,18 +273,16 @@ const fetchGrant = async (id: string) => {
         (enrollment: any) => enrollment.candidate.id === candidate.id
       )
       if (enrollment) {
-        console.log('Enrollment:', enrollment)
         candidate.enrollmentId = enrollment.id
         candidate.isEvaluated = enrollment.evaluated
         candidate.finalScore = Math.round(enrollment.finalScore * 100) / 100
-        console.log('Enrollment ID:', candidate)
       }
     })
     if(!grant.value.onGoing) {
       grantWinners.value = await RemoteService.getGrantWinners(grant.value.id)
     }
   } catch (error) {
-    console.error('Failed to fetch grant details:', error)
+    console.error(error)
   } finally {
     loading.value = false
   }
@@ -297,12 +294,10 @@ const goBack = () => {
 
 function editGrant(newGrant: GrantDto) {
   grant.value = newGrant
-  console.log('Selected grant:', grant.value)
   editDialogVisible.value = true
 }
 
-const editGrantWeights = (grant: GrantDto) => {
-  console.log('Selected grant:', grant)
+const editGrantWeights = () => {
   editGrantWeightsDialogVisible.value = true
 }
 
@@ -312,13 +307,12 @@ const deleteGrant = async () => {
       await RemoteService.deleteGrant(grant.value)
       router.push({ name: 'grants' })
     } catch (error) {
-      console.error('Failed to delete grant:', error)
+      console.error(error)
     }
   }
 }
 
 const enrollCandidates = () => {
-  console.log('Selected grant:', grant.value)
   enrollDialogVisible.value = true
 }
 
@@ -333,19 +327,15 @@ const evaluateCandidate = (enrollmentId: number, candidateName: string, candidat
 const unenrollCandidate = async (candidate: CandidateDto) => {
   if (grant.value) {
     try {
-      console.log('Unenrolling candidate:', candidate.enrollmentId)
       await RemoteService.unenrollCandidate(candidate.enrollmentId)
       fetchGrant(grant.value.id)
     } catch (error) {
-      console.error('Failed to unenroll candidate:', error)
+      console.error(error)
     }
   }
 }
 
-const selectWinners = async () => {
-  // check if all candidates are evaluated
-  if (enrolledCandidates.value) {
-    console.log('Enrolled candidates:', enrolledCandidates.value)
+const selectWinners = async () => {  if (enrolledCandidates.value) {
     const unevaluatedCandidates = enrolledCandidates.value.filter(
       (candidate: CandidateDto) => !candidate.isEvaluated
     )
@@ -377,7 +367,6 @@ const winnerButtonText = computed(() => {
 })
 
 const showGrantees = async (grantees: CandidateDto[]) => {
-  console.log('Grantees:', grantees)
   if (grantees.length > 0) {
     grantWinners.value = grantees
     grantWinnersAlertVisible.value = true

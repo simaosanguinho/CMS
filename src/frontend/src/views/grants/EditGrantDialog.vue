@@ -93,7 +93,6 @@ watch(
   (newVal) => {
     dialogVisible.value = newVal
     if (props.grant) {
-      console.log('Type of props.grant.startDate:', typeof props.grant.startDate)
       localGrant.value = { ...props.grant }
       localStartDate.value = props.grant.startDate ? new Date(props.grant.startDate) : null
       localEndDate.value = props.grant.endDate ? new Date(props.grant.endDate) : null
@@ -174,7 +173,6 @@ const convertToUTC = (date: string | null): string | null => {
 
 const saveGrant = async () => {
   try {
-    console.log('Local grant:', localGrant.value)
     localGrant.value.startDate = convertToUTC(localGrant.value.startDate)
     localGrant.value.endDate = convertToUTC(localGrant.value.endDate)
     console.log('Local grant after conversion:', localGrant.value)

@@ -76,12 +76,10 @@ const selectedGrant = ref<GrantDto | null>(null)
 
 async function getGrants() {
   grants.value = await RemoteService.getGrants()
-  console.log("Grants: ", grants.value)
 }
 
 function editGrant(grant: GrantDto) {
   selectedGrant.value = grant
-  console.log("Selected grant: ", selectedGrant.value)
   editDialogVisible.value = true
 }
 
@@ -92,7 +90,6 @@ function deleteGrant(grant: GrantDto) {
 }
 
 function onRowClick(grant: GrantDto) {
-  console.log("Grant: ", grant)
   editDialogVisible.value = false
   router.push({ name: 'grant-details', params: { id: grant.id } })
 }

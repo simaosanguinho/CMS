@@ -62,16 +62,14 @@
   
   async function getUnenrolledCandidates() {
     try {
-      console.log('Getting unenrolled candidates', props.grant)
       const response = await RemoteService.getUnenrolledCandidates(props.grant?.id ?? '')
-      candidates.value = response // Assuming response contains the list of candidates
+      candidates.value = response
     } catch (error) {
       console.log('Error fetching candidates:', error)
     }
   }
   
   const handleSave = async () => {
-    console.log('Selected candidates:', selectedCandidates.value)
     try {
       await Promise.all(selectedCandidates.value.map(candidate => enrollCandidate(candidate)))
       selectedCandidates.value = []
@@ -91,7 +89,6 @@
       await RemoteService.enrollCandidate(candidateId, props.grant?.id ?? '')
     } catch (error) {
       console.log('Error saving candidate:', error)
-      throw error
     }
   }
   

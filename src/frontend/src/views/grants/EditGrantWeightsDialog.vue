@@ -73,9 +73,7 @@ const saveEvaluationWeights = async () => {
   try {
     if (props.grant) {
       weights.value = [slider1.value, slider2.value, slider3.value]
-      console.log('Weights:', weights.value)
 
-      // create a copy of the grant and update the weights
       const newGrant = { ...props.grant }
       newGrant.curricularEvaluationWeight = weights.value[0] / 100
       newGrant.practicalExerciseWeight = weights.value[1] / 100
@@ -86,7 +84,7 @@ const saveEvaluationWeights = async () => {
     }
     emit('weights-updated')
   } catch (error) {
-    console.log('ERROR:', error)
+    console.log(error)
   }
 }
 
@@ -97,14 +95,10 @@ const closeDialog = () => {
 }
 
 const getEvaluation = async () => {
-  console.log('Grant:', props.grant)
   if (props.grant) {
-    // set sliders values
     slider1.value = (props.grant.curricularEvaluationWeight ?? 0) * 100
     slider2.value = (props.grant.practicalExerciseWeight ?? 0) * 100
     slider3.value = (props.grant.interviewWeight ?? 0) * 100
-
-    console.log('Grant com os weigth:', props.grant)
   }
 }
 

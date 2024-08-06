@@ -98,7 +98,6 @@ const saveEvaluation = async () => {
         Math.round(slider3.value * 10) / 10
       ]
 
-      console.log('Scores:', scores.value)
       const evaluation = new EvaluationDto({
         id: evaluationId.value ?? undefined,
         scores: scores.value
@@ -107,7 +106,7 @@ const saveEvaluation = async () => {
     }
     emit('candidate-evaluated')
   } catch (error) {
-    console.log('ERROR:', error)
+    console.log(error)
   }
 }
 
@@ -117,9 +116,8 @@ const closeDialog = () => {
 }
 
 const getEvaluation = async () => {
-  console.log('Grant:', props.grant)
   if (props.enrollment && props.enrollment.id) {
-    const evaluation = RemoteService.getEvaluationByEnrollmentId(props.enrollment.id ?? '').then(
+    RemoteService.getEvaluationByEnrollmentId(props.enrollment.id ?? '').then(
       (data) => {
         evaluationId.value = data.id ?? null
         scores.value = data.scores ?? []
@@ -130,7 +128,6 @@ const getEvaluation = async () => {
         slider3.value = scores.value[2] ?? 0
       }
     )
-    console.log('Evaluation:', evaluation)
   }
 }
 

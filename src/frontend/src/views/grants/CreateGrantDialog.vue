@@ -165,7 +165,6 @@ const handleSave = async () => {
   validateMonthlyIncome()
   validateVacancy()
   if (!startDateError.value && !endDateError.value && !monthlyIncomeError.value) {
-    console.log('newGrant.value:', newGrant.value)
     await saveGrant()
     
   }
