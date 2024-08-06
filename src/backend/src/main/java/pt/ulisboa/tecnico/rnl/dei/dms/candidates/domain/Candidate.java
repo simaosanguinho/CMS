@@ -23,7 +23,7 @@ public class Candidate {
 
     private String email;
 
-    private String istID;
+    private Long istID;
 
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.REMOVE)
     private List<Enrollment> enrollments = new ArrayList<>();
@@ -59,7 +59,7 @@ public class Candidate {
         return email;
     }
 
-    public String getIstID() {
+    public Long getIstID() {
         return istID;
     }
 
@@ -75,7 +75,7 @@ public class Candidate {
         this.email = email;
     }
 
-    public void setIstID(String istID) {
+    public void setIstID(Long istID) {
         this.istID = istID;
     }
 
@@ -130,15 +130,10 @@ public class Candidate {
     }
 
     public void isValidIstID() {
-        if(this.istID == null || this.istID.isEmpty()) {
+        if(this.istID == null || this.istID < 0) {
             System.err.println("IST ID is invalid");
             throw new CMSException(ErrorMessage.CANDIDATE_IST_ID_CANNOT_BE_EMPTY);
         }
-    }
-
-    public Candidate orElseThrow(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
     }
 
 }

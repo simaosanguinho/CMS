@@ -17,11 +17,12 @@
           @input="validateEmail"
         ></v-text-field>
         <v-text-field
-          label="IstID*"
+          label="IST ID*"
           required
           v-model="localCandidate.istID"
           :error-messages="istIDError"
           @input="validateIstID"
+          type="number"
         ></v-text-field>
       </v-card-text>
       <v-divider></v-divider>
@@ -70,9 +71,9 @@ watch(
 const validateEmail = () => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!localCandidate.value.email) {
-    emailError.value = 'Email is required'
+    emailError.value = 'Email é obrigatório'
   } else if (!emailPattern.test(localCandidate.value.email)) {
-    emailError.value = 'Invalid email address'
+    emailError.value = 'Email inválido'
   } else {
     emailError.value = ''
   }
@@ -80,7 +81,7 @@ const validateEmail = () => {
 
 const validateName = () => {
   if (!localCandidate.value.name) {
-    nameError.value = 'Name is required'
+    nameError.value = 'Nome é obrigatório'
   } else {
     nameError.value = ''
   }
@@ -88,7 +89,7 @@ const validateName = () => {
 
 const validateIstID = () => {
   if (!localCandidate.value.istID) {
-    istIDError.value = 'Ist ID is required'
+    istIDError.value = 'IST ID é inválido'
   } else {
     istIDError.value = ''
   }

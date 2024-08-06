@@ -60,11 +60,11 @@
   const search = ref('')
   const headers = [
     { title: 'ID', value: 'id', key: 'id' },
-    { title: 'Name', value: 'name', key: 'name' },
+    { title: 'Nome', value: 'name', key: 'name' },
     { title: 'Email', value: 'email', key: 'email' },
-    { title: 'Ist ID', value: 'istID', key: 'istID' },
+    { title: 'IST ID', value: 'istID', key: 'istID' },
     { title: 'Bolsas Inscrito', value: 'grants', key: 'grants' },
-    { title: 'Actions', value: 'actions', key: 'actions' },
+    { title: '', value: 'actions', key: 'actions' },
   ]
   
   const candidates: CandidateDto[] = reactive([])

@@ -16,12 +16,12 @@
           <v-row>
             <v-col cols="6">
               <v-card-title class="text-center justify-center">
-                <h4>Start Date</h4>
+                <h4>Data de Início</h4>
               </v-card-title>
               <v-divider></v-divider>
               <v-date-picker
                 v-model="startDate"
-                label="Start Date*"
+                label="Início*"
                 required
                 :error-messages="startDateError"
                 @input="validateStartDate"
@@ -31,12 +31,12 @@
 
             <v-col cols="6">
               <v-card-title class="text-center justify-center">
-                <h4>End Date</h4>
+                <h4>Data de Fim</h4>
               </v-card-title>
               <v-divider></v-divider>
               <v-date-picker
                 v-model="endDate"
-                label="End Date*"
+                label="Fim*"
                 required
                 :error-messages="endDateError"
                 @input="validateEndDate"
@@ -46,7 +46,7 @@
           </v-row>
           <v-row>
             <v-text-field
-              label="Monthly Income (€)*"
+              label="Valor Mensal (€)*"
               required
               v-model="newGrant.monthlyIncome"
               type="number"
@@ -56,7 +56,7 @@
             ></v-text-field>
 
             <v-text-field
-              label="Vacancy*"
+              label="Vagas*"
               required
               v-model="newGrant.vacancy"
               type="number"

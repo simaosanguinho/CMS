@@ -62,12 +62,12 @@ const router = useRouter()
 
 const headers = [
   { title: 'ID', value: 'id', key: 'id' },
-  { title: 'Start Date', value: 'startDate', key: 'startDate' },
-  { title: 'End Date', value: 'endDate', key: 'endDate' },
-  { title: 'Monthly Income (€)', value: 'monthlyIncome', key: 'monthlyIncome' },
-  { title: 'Vacancies', value: 'vacancy', key: 'vacancy' },
+  { title: 'Início', value: 'startDate', key: 'startDate' },
+  { title: 'Fim', value: 'endDate', key: 'endDate' },
+  { title: 'Valor Mensal (€)', value: 'monthlyIncome', key: 'monthlyIncome' },
+  { title: 'Vagas', value: 'vacancy', key: 'vacancy' },
   { title: 'Concurso', value: 'onGoing', key: 'onGoing' },
-  { title: 'Actions', value: 'actions', key: 'actions' }
+  { title: '', value: 'actions', key: 'actions' }
 ]
 
 const grants: Ref<GrantDto[]> = ref([])

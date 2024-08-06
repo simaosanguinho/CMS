@@ -6,24 +6,24 @@
         <v-row>
           <v-col cols="6">
             <v-card-title class="text-center justify-center">
-              <h4>Start Date</h4>
+              <h4>Data de Início</h4>
             </v-card-title>
             <v-divider></v-divider>
             <v-date-picker
               v-model="localStartDate"
-              label="Start Date*"
+              label="Data de Início*"
               required
               class="mt-3"
             ></v-date-picker>
           </v-col>
           <v-col cols="6">
             <v-card-title class="text-center justify-center">
-              <h4>End Date</h4>
+              <h4>Data de Fim</h4>
             </v-card-title>
             <v-divider></v-divider>
             <v-date-picker
               v-model="localEndDate"
-              label="End Date*"
+              label="Data de Fim*"
               required
               class="mt-3"
             ></v-date-picker>
@@ -31,7 +31,7 @@
         </v-row>
         <v-row>
           <v-text-field
-            label="Monthly Income (€)*"
+            label="Valor Mensal (€)*"
             required
             v-model="localGrant.monthlyIncome"
             type="number"
@@ -41,7 +41,7 @@
           ></v-text-field>
 
           <v-text-field
-            label="Vacancy*"
+            label="Vagas*"
             required
             v-model="localGrant.vacancy"
             type="number"
@@ -111,7 +111,7 @@ watch(
 
 const validateMonthlyIncome = () => {
   if (!localGrant.value.monthlyIncome) {
-    monthlyIncomeError.value = 'Monthly income is required'
+    monthlyIncomeError.value = 'Valor mensal é obrigatório'
   } else {
     monthlyIncomeError.value = ''
   }
@@ -119,9 +119,9 @@ const validateMonthlyIncome = () => {
 
 const validateVacancy = () => {
   if (!localGrant.value.vacancy) {
-    vacancyError.value = 'Vacancy is required'
+    vacancyError.value = 'Vaga é obrigatória'
   } else if (localGrant.value.vacancy <= 0) {
-    vacancyError.value = 'Invalid Vacancy'
+    vacancyError.value = 'Número de vagas inválido'
   } else {
     vacancyError.value = ''
   }
@@ -129,7 +129,7 @@ const validateVacancy = () => {
 
 const validateStartDate = () => {
   if (!localGrant.value.startDate) {
-    startDateError.value = 'Start date is required'
+    startDateError.value = 'Data de Início é obrigatória'
   } else {
     startDateError.value = ''
   }
@@ -137,7 +137,7 @@ const validateStartDate = () => {
 
 const validateEndDate = () => {
   if (!localGrant.value.endDate) {
-    endDateError.value = 'End date is required'
+    endDateError.value = 'Data de Fim é obrigatória'
   } else {
     endDateError.value = ''
   }

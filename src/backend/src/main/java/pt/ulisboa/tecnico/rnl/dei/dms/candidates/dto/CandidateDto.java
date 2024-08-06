@@ -6,7 +6,7 @@ public class CandidateDto {
     private Long id;
     private String name;
     private String email;
-    private String istID;
+    private Long istID;
     private Integer numberOfEnrollments;
 
     public CandidateDto() {
@@ -32,7 +32,7 @@ public class CandidateDto {
         return email;
     }
 
-    public String getIstID() {
+    public Long getIstID() {
         return istID;
     }
 
@@ -56,7 +56,7 @@ public class CandidateDto {
         this.email = email;
     }
 
-    public void setIstID(String istID) {
+    public void setIstID(Long istID) {
         this.istID = istID;
     }
 
