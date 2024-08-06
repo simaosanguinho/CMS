@@ -29,11 +29,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn text="Close" variant="plain" @click="dialog = false"></v-btn>
+          <v-btn text="Fechar" variant="plain" @click="dialog = false"></v-btn>
 
           <v-btn
             color="primary"
-            text="Save"
+            text="Guardar"
             variant="tonal"
             @click="
               dialog = false;
